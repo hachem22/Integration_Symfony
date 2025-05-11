@@ -1,0 +1,185 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+{% block stylesheets %}
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+{% endblock %}
+
+{% block body %}
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar" style="margin-top: 600px; width: 2000px;margin-left: -350px;heigth: 1000px;">
+        <div class="layout-container">
+            <!-- Layout container -->
+            <div class="layout-page">
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
+                    <!-- Content -->
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card mb-6">
+                                    <!-- Compte -->
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-start align-items-sm-center gap-6 pb-4 border-bottom">
+                                            <img src="{{ asset('uploads/images/' ~ user.image) }}" alt="avatar-utilisateur" class="rounded-circle" width="100" height="100" />
+                                        </div>
+                                    </div>
+                                    <div class="card-body pt-4">
+                                        <form id="formAccountSettings" method="POST" onsubmit="return false">
+                                            <div class="row g-6">
+                                                <!-- Remplace les inputs par des cartes -->
+                                                <div class="col-md-6">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">
+                                                                Nom
+                                                            </h5>
+                                                            <p class="card-text">
+                                                                {{ user.Nom }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">
+                                                                Prénom
+                                                            </h5>
+                                                            <p class="card-text">
+                                                                {{ user.Prenom }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">
+                                                                Email
+                                                            </h5>
+                                                            <p class="card-text">
+                                                                {{ user.Email }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">
+                                                                Numéro de téléphone
+                                                            </h5>
+                                                            <p class="card-text">
+                                                                TUN (+216)
+                                                                {{ user.Tel }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">
+                                                                Adresse
+                                                            </h5>
+                                                            <p class="card-text">
+                                                                {{ user.Adress }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <!-- Ajoutez d'autres champs si nécessaire -->
+                                            </div>
+                                            <div class="mt-6">
+                                                <a href="{{ path('app_utilisateur_edit_profil', {'id': user.id}) }}">
+                                                    Modifier
+                                                </a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                <!-- /Compte -->
+                                </div>
+                                <div class="card">
+                                    <h5 class="card-header">
+                                        Supprimer le compte
+                                    </h5>
+                                    <div class="card-body">
+                                        <div class="mb-6 col-12 mb-0">
+                                            <div class="alert alert-warning">
+                                                <h5 class="alert-heading mb-1">
+                                                    Êtes-vous sûr de vouloir supprimer votre compte ?
+                                                </h5>
+                                                <p class="mb-0">
+                                                    Une fois votre compte supprimé, il n’y aura pas de retour en arrière. Veuillez en être certain.
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Add a checkbox for confirmation -->
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="confirmDelete" name="confirmDelete">
+                                                <label class="form-check-label" for="confirmDelete">
+                                                    Je confirme que je souhaite supprimer mon compte.
+                                                </label>
+                                            </div>
+
+                                            <!-- Delete button (initially disabled) -->
+                                            <form method="post" action="{{ path('app_utilisateur_delete_profil', {'id': user.id}) }}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                                    <button id="deleteButton" class="btn btn-danger deactivate-account" disabled>
+                                                        Supprimer le compte
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- / Contenu -->
+
+                            <div class="content-backdrop fade"></div>
+                        </div>
+                    <!-- Wrapper du contenu -->
+                    </div>
+                <!-- / Page de mise en page -->
+                </div>
+
+                <!-- Overlay -->
+                <div class="layout-overlay layout-menu-toggle"></div>
+            </div>
+        <!-- / Wrapper de mise en page -->
+        {% endblock %}
+
+        {% block javascripts %}
+            <!-- Core JS -->
+            <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
+            <script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
+            <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
+            <script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+            <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
+
+            <!-- JS Principal -->
+            <script src="{{ asset('assets/js/main.js') }}"></script>
+
+            <!-- JS de la page -->
+            <script src="{{ asset('assets/js/pages-account-settings-account.js') }}"></script>
+
+            <!-- Custom JavaScript for Checkbox Logic -->
+            <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const confirmDeleteCheckbox = document.getElementById('confirmDelete');
+            const deleteButton = document.getElementById('deleteButton');
+
+            confirmDeleteCheckbox.addEventListener('change', function () {
+                // Enable or disable the delete button based on checkbox state
+                deleteButton.disabled = !this.checked;
+            });
+        });
+    </script>
+        {% endblock %}
+        

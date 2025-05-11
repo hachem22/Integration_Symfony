@@ -1,0 +1,206 @@
+{% extends "chambre/baseNav.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect - Liste des lits</title>
+    <meta name="description" content="" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #eef1f6;
+            font-family: 'Public Sans', sans-serif;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .container-xxl {
+            margin-top: 30px;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .badge {
+            font-size: 1rem;
+            padding: 5px 10px;
+            animation: popIn 0.3s ease-in-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .btn-custom {
+            border-radius: 25px;
+            transition: all 0.3s ease-in-out;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-custom:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(0, 234, 255, 0.5);
+        }
+
+        .btn-custom:after {
+            content: "";
+            background: rgba(255, 255, 255, 0.3);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .btn-custom:hover:after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .btn-custom i {
+            margin-right: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-custom:hover i {
+            animation: bounce 0.5s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .text-muted {
+            color: #6c757d;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row">
+            {% for lit in lits %}
+                <div class="col-md-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Lit N° {{ lit.num }}</h5>
+                            <p class="card-text">Chambre : {{ lit.chambre.num }}</p>
+                            <p class="card-text">
+                                {% if lit.type == 'libre' %}
+                                    <span class="badge bg-success">Disponible</span>
+                                {% else %}
+                                    <span class="badge bg-danger">
+                                        Occupé par
+                                        {% if lit.patient %}
+                                            {{ lit.patient.nom }} {{ lit.patient.prenom }}
+                                        {% else %}
+                                            Information patient non disponible
+                                        {% endif %}
+                                    </span>
+                                    <a href="{{ path('lit.desaffecter', { id: lit.id }) }}" class="btn btn-success btn-sm btn-custom">
+            <i class="fas fa-user-plus"></i> desaffecter
+        </a>
+                                {% endif %}
+                            </p>
+                            {% if lit.type == 'libre' %}
+                                <a href="{{ path('lit.affecter', { id: lit.id }) }}" class="btn btn-success btn-sm btn-custom">
+                                    <i class="fas fa-user-plus"></i> Affecter
+                                </a>
+                            {% endif %}
+                            <div class="d-flex justify-content-center mt-3 gap-2">
+                                <a href="{{ path('lit.editfront', { id: lit.id }) }}" class="btn btn-warning btn-sm btn-custom">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </a>
+                                <a href="javascript:void(0);" onclick="confirmSuppression('{{ path('lit.deletefront', { id: lit.id }) }}')" class="btn btn-danger btn-sm btn-custom">
+                                    <i class="fas fa-trash-alt"></i> Supprimer
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center text-muted">
+                    <p>Aucun lit disponible</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="text-end mt-3">
+            <a href="{{ path('lit.newfront') }}" class="btn btn-success btn-lg btn-custom">
+                <i class="fas fa-bed"></i> Ajouter un lit
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function confirmSuppression(deleteUrl) {
+            Swal.fire({
+                title: "Supprimer ce lit ?",
+                text: "Cette action est irréversible !",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#e53935",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Oui, supprimer",
+                cancelButtonText: "Annuler",
+                customClass: {
+                    popup: 'animated bounceIn'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Supprimé !",
+                        text: "Le lit a été supprimé.",
+                        icon: "success",
+                        customClass: {
+                            popup: 'animated fadeOut'
+                        }
+                    }).then(() => {
+                        window.location.href = deleteUrl;
+                    });
+                }
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}

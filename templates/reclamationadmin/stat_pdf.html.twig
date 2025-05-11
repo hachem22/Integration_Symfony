@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Statistiques des Réclamations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #34495e;
+            font-size: 20px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <h1>Statistiques des Réclamations</h1>
+
+    <!-- Tableau des statistiques par statut -->
+    <h2>Statut des Réclamations</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Statut</th>
+                <th>Nombre de Réclamations</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>En Attente</td>
+                <td>{{ reclamationsEnAttente }}</td>
+            </tr>
+            <tr>
+                <td>En Cours</td>
+                <td>{{ reclamationsEnCours }}</td>
+            </tr>
+            <tr>
+                <td>Résolues</td>
+                <td>{{ reclamationsResolues }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Tableau des statistiques par type -->
+    <h2>Type des Réclamations</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Nombre de Réclamations</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Service</td>
+                <td>{{ reclamationsService }}</td>
+            </tr>
+            <tr>
+                <td>Système</td>
+                <td>{{ reclamationsSysteme }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Statistiques par jour -->
+    <h2>Réclamations par Jour</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Jour</th>
+                <th>Nombre de Réclamations</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for day in reclamationsParJour %}
+                <tr>
+                    <td>{{ day.day }}</td>
+                    <td>{{ day.count }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Statistiques par mois -->
+    <h2>Réclamations par Mois</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Mois</th>
+                <th>Nombre de Réclamations</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for month in reclamationsParMois %}
+                <tr>
+                    <td>{{ month.month }}</td>
+                    <td>{{ month.count }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pied de page -->
+    <div class="footer">
+        Généré le {{ "now"|date("d/m/Y H:i") }} par CareConnect
+    </div>
+</body>
+</html>

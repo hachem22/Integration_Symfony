@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}CareConnect{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚕️</text></svg>">
+
+    <!-- Bootstrap CSS -->
+   
+   {% block stylesheets %}
+<link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    
+<link rel="stylesheet" href="{{ asset('css/styleee.css') }}">
+
+
+    <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/boxicons.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/theme-default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
+    <script src="{{ asset('assets/js/config.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
+            <!-- Menu -->
+            <!-- / Menu -->
+
+            <!-- Layout container -->
+            <div class="layout-page">
+                <!-- Navbar -->
+              <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+    <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+            <i class="bx bx-menu bx-sm"></i>
+        </a>
+    </div>
+    
+    <!-- Logo CareConnect -->
+    <div class="navbar-nav-left d-flex align-items-center">
+        <a class="navbar-brand" href="#">
+            <img src="{{ asset('assets/images/logo2.png') }}" alt="CareConnect" width="60" height="60">
+            <span class="ms-2">CareConnect</span>
+        </a>
+    </div>
+
+    <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+        <ul class="navbar-nav flex-row align-items-center ms-auto">
+            <!-- Accueil -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('Home_Medecin')}}"><i class="fa-solid fa-house"></i> Accueil</a>
+            </li>
+
+            <!-- Rendez-vous Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-calendar-alt"></i> Rendez-Vous
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                    <li><a class="dropdown-item" href="{{ path('gere_rendezvous')}}"><i class="fas fa-calendar-check"></i> Gerer Rendez-vous</a></li>
+                    <li><a class="dropdown-item" href="{{ path('Mon_dossier_medical')}}"><i class="fas fa-calendar-check"></i> Gerer Dossier Médical</a></li>
+                </ul>
+            </li>
+
+            <!-- Evénements Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bell"></i> Événements
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="eventsDropdown">
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-calendar-day"></i> Événements à venir</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-calendar-check"></i> Historique des Événements</a></li>
+                </ul>
+            </li>
+
+            <!-- Réclamations Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="complaintsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-comment-dots"></i> Réclamations
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="complaintsDropdown">
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-alt"></i> Soumettre une Réclamation</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-history"></i> Suivre mes Réclamations</a></li>
+                </ul>
+            </li>
+
+            <!-- Profil Dropdown -->
+            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="{{ asset('assets/images/lhech.jpg') }}" alt="Profil" class="w-px-40 h-auto rounded-circle" />
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar avatar-online">
+                                        <img src="{{ asset('assets/images/lhech.jpg') }}" alt="Profil" class="w-px-40 h-auto rounded-circle" />
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <span class="fw-semibold d-block">Medecin</span>
+                                    <small class="text-muted">Medecin</small>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li><div class="dropdown-divider"></div></li>
+                    <li><a class="dropdown-item" href="#"><i class="bx bx-user me-2"></i> <span class="align-middle">Mon Profil</span></a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bx bx-cog me-2"></i> <span class="align-middle">Paramètres</span></a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bx bx-power-off me-2"></i> <span class="align-middle">Déconnexion</span></a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
+    <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+{% endblock %}

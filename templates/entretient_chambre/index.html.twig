@@ -1,0 +1,111 @@
+
+{% extends "utilisateur/sidenav.html.twig" %}
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect - Liste des entretiens</title>
+    <meta name="description" content="" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="card shadow">
+            <h5 class="card-header">Liste des entretiens</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Chambre</th>
+                            <th>Type</th>
+                            <th>Date de début</th>
+                            <th>Date de fin</th>
+                            <th>Statut</th>
+                            <th>Détails</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entretient in entretients %}
+                            <tr>
+                                <td>{{ entretient.chambre.num }}</td>
+                                <td>{{ entretient.type.value }}</td>
+                                <td>{{ entretient.datedebut|date('d/m/Y H:i') }}</td>
+                                <td>{{ entretient.datefin|date('d/m/Y H:i') }}</td>
+                                <td>
+                                    {% if entretient.statut.value == 'En cours' %}
+                                        <span class="badge bg-warning">{{ entretient.statut.value }}</span>
+                                    {% elseif entretient.statut.value == 'Terminé' %}
+                                        <span class="badge bg-success">{{ entretient.statut.value }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ entretient.statut.value }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ entretient.details }}</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <a href="{{ path('entretient_chambre.edit', {id: entretient.id}) }}" class="btn btn-warning btn-sm me-2">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ path('entretient_chambre.delete', {id: entretient.id}) }}" class="btn btn-danger btn-sm" >
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">Aucun entretien disponible</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="text-end mt-3">
+            <a href="{{ path('entretient_chambre.new') }}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Ajouter un entretien
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function confirmDelete(event) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Êtes-vous sûr?',
+                text: "Vous ne pourrez pas revenir en arrière!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, supprimer!',
+                cancelButtonText: 'Annuler'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = event.target.href;
+                }
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('../assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/menu.js') }}"></script>
+    <script src="{{ asset('../assets/js/main.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "chambre/baseNav.html.twig" %}
+{% block content %}
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card shadow-lg p-4" style="max-width: 500px; border-radius: 15px;">
+            <div class="card-header text-center bg-primary text-white" style="border-radius: 10px;">
+                <h4 class="mb-0">🛏️ Ajouter un Nouveau Lit</h4>
+                <small class="text-light">Remplissez les informations ci-dessous</small>
+            </div>
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}) }}
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bx bx-hash"></i> Numéro du lit
+                    </label>
+                    {{ form_widget(form.num, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 101' }}) }}
+                    {% if form.num.vars.errors|length > 0 %}
+                        <span class="text-danger small">{{ form_errors(form.num) }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bx bx-bed"></i> Type de lit
+                    </label>
+                    {{ form_widget(form.type, {'attr': {'class': 'form-select' }}) }}
+                    {% if form.type.vars.errors|length > 0 %}
+                        <span class="text-danger small">{{ form_errors(form.type) }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bx bx-building"></i> Chambre associée
+                    </label>
+                    {{ form_widget(form.chambre, {'attr': {'class': 'form-select' }}) }}
+                    {% if form.chambre.vars.errors|length > 0 %}
+                        <span class="text-danger small">{{ form_errors(form.chambre) }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="text-center">
+                    <button class="btn btn-success w-100" style="border-radius: 10px; font-size: 18px;">
+                        <i class="bx bx-plus-circle"></i> Ajouter
+                    </button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        body {
+            background: linear-gradient(135deg,rgb(248, 250, 251), #0984e3);
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        .card {
+            background: white;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-success {
+            background-color: #2ecc71;
+            border: none;
+            transition: background 0.3s;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+    </style>
+{% endblock %}

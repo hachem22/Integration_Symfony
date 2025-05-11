@@ -1,0 +1,16 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+ajouter_visite:
+    path: /newVisite/{id}
+    controller: App\Controller\DossierMedicalController::newVisite
+
+generate_diagnostic:
+    path: /api/generate-diagnostic
+    controller: App\Controller\AIController::generateDiagnostic
+
+generate_ordonnance:
+    path: /api/generate-ordonnance
+    controller: App\Controller\AIController::generateOrdonnance

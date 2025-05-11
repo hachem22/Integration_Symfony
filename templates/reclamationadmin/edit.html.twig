@@ -1,0 +1,170 @@
+{% extends 'patient/baseRendezVous.html.twig' %} 
+
+{% block title %}Modifier une Réclamation{% endblock %}
+
+{% block body %}
+<!-- Navbar -->
+<nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+<div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+<a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+<i class="bx bx-menu bx-sm"></i>
+</a>
+</div>
+
+<!-- Logo CareConnect -->
+<div class="navbar-nav-left d-flex align-items-center">
+<a class="navbar-brand" href="#">
+<img src="{{ asset('assets/images/logo2.png') }}" alt="CareConnect" width="60" height="60">
+<span class="ms-2">CareConnect</span>
+</a>
+</div>
+
+<div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+<ul class="navbar-nav flex-row align-items-center ms-auto">
+<!-- Accueil -->
+<li class="nav-item">
+  <a class="nav-link" href="{{ path('app_patient_dashboard')}}"><i class="fa-solid fa-house"></i> Accueil</a>
+</li>
+
+<!-- Rendez-vous Dropdown -->
+<li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-calendar-alt"></i> Rendez-Vous
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                      <li><a class="dropdown-item" href="{{ path('demande_rendezvous') }}"><i class="fas fa-calendar-check"></i> Demander Rendez-vous</a></li>
+                      <li><a class="dropdown-item" href="{{ path('ListRendezVous') }}"><i class="fas fa-calendar-check"></i> Mes Rendez-vous</a></li>
+                      <li><a class="dropdown-item" href="{{ path('Mon_dossier_medical') }}"><i class="fas fa-file-medical"></i> Mon Dossier Médical</a></li>
+                  </ul>
+              </li>
+
+<!-- Evénements Dropdown -->
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="fas fa-bell"></i> Événements
+  </a>
+  <ul class="dropdown-menu" aria-labelledby="eventsDropdown">
+      <li><a class="dropdown-item" href="#"><i class="fas fa-calendar-day"></i> Événements à venir</a></li>
+      <li><a class="dropdown-item" href="#"><i class="fas fa-calendar-check"></i> Historique des Événements</a></li>
+  </ul>
+</li>
+
+<!-- Réclamations Dropdown -->
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="complaintsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="fas fa-comment-dots"></i> Réclamations
+  </a>
+  <ul class="dropdown-menu" aria-labelledby="complaintsDropdown">
+      <li><a class="dropdown-item" href="{{ path('reclamation_new') }}"><i class="fas fa-file-alt"></i> Soumettre une Réclamation</a></li>
+      <li><a class="dropdown-item" href="{{ path('reclamation_index') }}"><i class="fas fa-history"></i> Suivre mes Réclamations</a></li>
+  </ul>
+</li>
+
+<!-- Profil Dropdown -->
+<li class="nav-item navbar-dropdown dropdown-user dropdown">
+  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+      <div class="avatar avatar-online">
+          <img src="{{ asset('assets/images/lhech.jpg') }}" alt="Profil" class="w-px-40 h-auto rounded-circle" />
+      </div>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end">
+      <li>
+          <a class="dropdown-item" href="#">
+              <div class="d-flex">
+                  <div class="flex-shrink-0 me-3">
+                      <div class="avatar avatar-online">
+                          <img src="{{ asset('assets/images/lhech.jpg') }}" alt="Profil" class="w-px-40 h-auto rounded-circle" />
+                      </div>
+                  </div>
+                  <div class="flex-grow-1">
+                      <span class="fw-semibold d-block">Medecin</span>
+                      <small class="text-muted">Medecin</small>
+                  </div>
+              </div>
+          </a>
+      </li>
+      <li><div class="dropdown-divider"></div></li>
+      <li><a class="dropdown-item" href="#"><i class="bx bx-user me-2"></i> <span class="align-middle">Mon Profil</span></a></li>
+      <li><a class="dropdown-item" href="#"><i class="bx bx-cog me-2"></i> <span class="align-middle">Paramètres</span></a></li>
+      <li><a class="dropdown-item" href="#"><i class="bx bx-power-off me-2"></i> <span class="align-middle">Déconnexion</span></a></li>
+  </ul>
+</li>
+</ul>
+</div>
+</nav>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="col-xl" style="margin-left: 120px; width: 500px; margin-top: 200px;">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-edit"></i> Modifier la Réclamation
+                        </h5>
+                        <small class="text-body float-end">Mettez à jour les informations</small>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+
+                        <!-- 📌 CHAMP DESCRIPTION -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bx bx-message-square-detail"></i> Description
+                            </label>
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                            {% if form.description.vars.errors|length > 0 %}
+                                <span class="text-danger">{{ form_errors(form.description) }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- 📌 CHAMP TYPE -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bx bx-category"></i> Type de Réclamation
+                            </label>
+                            {{ form_widget(form.type, {'attr': {'class': 'form-select'}}) }}
+                            {% if form.type.vars.errors|length > 0 %}
+                                <span class="text-danger">{{ form_errors(form.type) }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- 📌 CHAMP CIBLE -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bx bx-user"></i> Cible
+                            </label>
+                            {{ form_widget(form.cible, {'attr': {'class': 'form-control'}}) }}
+                            {% if form.cible.vars.errors|length > 0 %}
+                                <span class="text-danger">{{ form_errors(form.cible) }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- 📌 CHAMP CATÉGORIE -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bx bx-list-check"></i> Catégorie
+                            </label>
+                            {{ form_widget(form.categorie, {'attr': {'class': 'form-select'}}) }}
+                            {% if form.categorie.vars.errors|length > 0 %}
+                                <span class="text-danger">{{ form_errors(form.categorie) }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- 📌 BOUTONS -->
+                        <div class="card-footer d-flex justify-content-between align-items-center gap-2">
+                            <a href="{{ path('reclamation_index') }}" class="btn btn-secondary d-flex align-items-center gap-2">
+                                <i class="fas fa-arrow-left"></i> Retour
+                            </a>
+                            <button type="submit" class="btn btn-primary d-flex align-items-center gap-2">
+                                <i class="fas fa-save"></i> Mettre à jour
+                            </button>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

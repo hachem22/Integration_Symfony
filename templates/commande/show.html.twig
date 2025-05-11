@@ -1,0 +1,142 @@
+{% extends "stock_pharmacie/navbar.html.twig" %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- En-tête -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="fw-bold mb-2">Détails de la Commande #{{ commande.id }}</h4>
+                            <p class="text-muted mb-0">
+                                <span class="badge bg-{{ commande.statut == 'Livrée' ? 'success' : (commande.statut == 'En attente' ? 'warning' : 'danger') }} me-2">
+                                    {{ commande.statut }}
+                                </span>
+                                Commandé le {{ commande.dateCommande|date('d/m/Y à H:i') }}
+                            </p>
+                        </div>
+                        <div class="button-group">
+                            {% if commande.statut == 'En attente' %}
+                                <a href="{{ path('app_commande_edit', {'id': commande.id}) }}" class="btn btn-primary me-2">
+                                    <i class="bx bx-edit me-1"></i> Modifier
+                                </a>
+                            {% endif %}
+                            <a href="{{ path('app_commande_index') }}" class="btn btn-secondary">
+                                <i class="bx bx-arrow-back me-1"></i> Retour aux commandes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Détails du produit -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Produit commandé</h5>
+                    <div class="text-center mb-3">
+                        {% if commande.stockPharmacie.image %}
+                            <img src="{{ asset('uploads/images/' ~ commande.stockPharmacie.image) }}" 
+                                 alt="{{ commande.stockPharmacie.nom }}" 
+                                 class="img-fluid rounded"
+                                 style="max-height: 200px; object-fit: cover;">
+                        {% endif %}
+                    </div>
+                    <div class="product-details">
+                        <h6 class="fw-bold">{{ commande.stockPharmacie.nom }}</h6>
+                        <p class="text-muted mb-3">{{ commande.stockPharmacie.type }}</p>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Prix unitaire:</span>
+                            <span class="fw-bold">{{ commande.stockPharmacie.prix|number_format(2, ',', ' ') }} €</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Quantité:</span>
+                            <span class="fw-bold">{{ commande.quantite }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Total:</span>
+                            <span class="fw-bold text-primary">{{ (commande.stockPharmacie.prix * commande.quantite)|number_format(2, ',', ' ') }} €</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Détails de la commande -->
+        <div class="col-md-8">
+            <div class="row">
+                <!-- Informations de livraison -->
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Informations de livraison</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Date de commande</label>
+                                        <p class="fw-semibold">{{ commande.dateCommande|date('d/m/Y à H:i') }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Date de livraison prévue</label>
+                                        <p class="fw-semibold">{{ commande.dateLivraison|date('d/m/Y') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if commande.commentaire %}
+                                <div class="mt-3">
+                                    <label class="form-label text-muted">Commentaire</label>
+                                    <p class="mb-0">{{ commande.commentaire }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statut et actions -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Statut et actions</h5>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="me-3">
+                                    <span class="badge bg-{{ commande.statut == 'Livrée' ? 'success' : (commande.statut == 'En attente' ? 'warning' : 'danger') }} p-2">
+                                        <i class="bx {{ commande.statut == 'Livrée' ? 'bx-check' : (commande.statut == 'En attente' ? 'bx-time' : 'bx-x') }} me-1"></i>
+                                        {{ commande.statut }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {% if commande.statut == 'En attente' %}
+                                <div class="alert alert-warning" role="alert">
+                                    <i class="bx bx-info-circle me-2"></i>
+                                    Cette commande est en attente de traitement.
+                                </div>
+                                <div class="mt-3">
+                                    {{ include('commande/_delete_form.html.twig') }}
+                                </div>
+                            {% elseif commande.statut == 'Livrée' %}
+                                <div class="alert alert-success" role="alert">
+                                    <i class="bx bx-check-circle me-2"></i>
+                                    Cette commande a été livrée avec succès.
+                                </div>
+                            {% else %}
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="bx bx-x-circle me-2"></i>
+                                    Cette commande a été annulée.
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

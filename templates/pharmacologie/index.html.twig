@@ -1,0 +1,242 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pharmacologie - CareConnect{% endblock %}
+
+{% block body %}
+<div class="pharmacy-header text-center py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">Pharmacologie</h1>
+                <p class="lead mb-0">Découvrez notre catalogue complet de médicaments</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="pharmacy-content py-5">
+    <div class="container">
+        <!-- Barre de recherche -->
+        <div class="search-bar mb-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="fa fa-search text-primary"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0" id="searchMedicament" 
+                               placeholder="Rechercher un médicament...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4" id="medicamentsList">
+            {% for medicament in medicaments %}
+                <div class="col-lg-4 col-md-6 medicament-item">
+                    <div class="product-card h-100">
+                        <div class="product-status position-absolute top-0 end-0 m-3">
+                            <span class="badge bg-{{ medicament.statu == 'En stock' ? 'success' : 
+                                medicament.statu == 'Stock faible' ? 'warning' : 'danger' }}">
+                                {{ medicament.statu }}
+                            </span>
+                        </div>
+                        <div class="product-image">
+                            {% if medicament.image %}
+                                <img src="{{ asset('uploads/images/' ~ medicament.image) }}" 
+                                     alt="{{ medicament.nom }}" 
+                                     class="img-fluid">
+                            {% else %}
+                                <img src="{{ asset('img/default-medicine.png') }}" 
+                                     alt="Image par défaut" 
+                                     class="img-fluid">
+                            {% endif %}
+                        </div>
+                        <div class="product-details">
+                            <h3 class="product-title text-primary">{{ medicament.nom }}</h3>
+                            <div class="product-info">
+                                {% if medicament.description %}
+                                <div class="info-row">
+                                    <p class="description">{{ medicament.description }}</p>
+                                </div>
+                                {% endif %}
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="label">Prix</span>
+                                        <span class="value fw-bold text-primary">{{ medicament.prix }} €</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="label">Expire le</span>
+                                        <span class="value">{{ medicament.dateExpiration|date('d/m/Y') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center py-4">
+                        <i class="fa fa-info-circle fa-2x mb-3"></i>
+                        <p class="mb-0">Aucun médicament disponible pour le moment.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+.pharmacy-header {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    margin-bottom: 2rem;
+}
+
+.search-bar .input-group {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.search-bar .input-group-text,
+.search-bar .form-control {
+    border: none;
+    padding: 0.8rem 1.5rem;
+}
+
+.search-bar .form-control:focus {
+    box-shadow: none;
+}
+
+.product-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+}
+
+.product-image {
+    height: 220px;
+    overflow: hidden;
+    position: relative;
+    background: #f8f9fa;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+.product-details {
+    padding: 1.5rem;
+}
+
+.product-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.product-info {
+    font-size: 0.9rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.info-item {
+    text-align: center;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.info-item .label {
+    display: block;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+
+.info-item .value {
+    display: block;
+    font-size: 1rem;
+}
+
+.description {
+    font-size: 0.9rem;
+    color: #6c757d;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.badge {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    font-size: 0.8rem;
+    border-radius: 50px;
+}
+
+/* Animation pour les cartes */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.medicament-item {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.medicament-item:nth-child(2) { animation-delay: 0.1s; }
+.medicament-item:nth-child(3) { animation-delay: 0.2s; }
+.medicament-item:nth-child(4) { animation-delay: 0.3s; }
+.medicament-item:nth-child(5) { animation-delay: 0.4s; }
+.medicament-item:nth-child(6) { animation-delay: 0.5s; }
+</style>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchMedicament');
+    const medicamentsList = document.getElementById('medicamentsList');
+    const medicamentItems = document.querySelectorAll('.medicament-item');
+
+    searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+
+        medicamentItems.forEach(item => {
+            const title = item.querySelector('.product-title').textContent.toLowerCase();
+            const description = item.querySelector('.description')?.textContent.toLowerCase() || '';
+
+            if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 

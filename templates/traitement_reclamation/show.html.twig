@@ -1,0 +1,63 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block title %}Détails du Traitement{% endblock %}
+
+{% block body %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="col-xl" style="margin-left: 120px; width: 500px; margin-top: 200px;">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-eye"></i> Détails du Traitement
+                        </h5>
+                        <small class="text-body float-end">
+                            Informations détaillées
+                        </small>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <strong>ID :</strong> {{ traitement.id }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Commentaire :</strong> {{ traitement.commentaire }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>État :</strong> 
+                                {% if traitement.etat.value == 'en cours' %}
+                                    <span class="badge bg-info text-dark">🔄 {{ traitement.etat.value }}</span>
+                                {% elseif traitement.etat.value == 'résolue' %}
+                                    <span class="badge bg-success">✅ {{ traitement.etat.value }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">❌ {{ traitement.etat.value }}</span>
+                                {% endif %}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Date :</strong> {{ traitement.dateTraitement|date('d/m/Y H:i') }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Note attribuée :</strong>
+                                {% if traitement.rating %}
+                                    {{ traitement.rating }}/5
+                                {% else %}
+                                    <span class="text-muted">Aucune note attribuée</span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="{{ path('app_traitement_index') }}" class="btn btn-secondary d-flex align-items-center gap-2">
+                                <i class="fas fa-arrow-left"></i> Retour à la liste
+                            </a>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

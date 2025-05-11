@@ -1,0 +1,226 @@
+{% extends "stock_pharmacie/navbar.html.twig" %}
+
+{% block content %}
+    <!doctype html>
+
+    <html lang="fr" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('../assets/') }}" data-template="vertical-menu-template-free" data-style="light">
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+            <title>
+                Ajouter un Médicament
+            </title>
+
+            <meta name="description" content="" />
+
+            <!-- Favicon -->
+            <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+
+            <!-- Fonts -->
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+            <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+
+            <!-- Core CSS -->
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+            <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+
+            <!-- Vendors CSS -->
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+
+            <!-- Helpers -->
+            <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+            <script src="{{ asset('../assets/js/config.js') }}"></script>
+        </head>
+
+        {% block body %}
+            <!-- Layout wrapper -->
+            <div class="layout-wrapper layout-content-navbar">
+                <div class="layout-container">
+                    <!-- Menu -->
+
+                    <!-- Content -->
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <!-- En-tête -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 class="fw-bold mb-2">Ajouter un nouveau médicament</h4>
+                                                <p class="text-muted mb-0">Remplissez le formulaire ci-dessous pour ajouter un nouveau médicament au stock</p>
+                                            </div>
+                                            <a href="{{ path('app_stock_pharmacie_index') }}" class="btn btn-secondary">
+                                                <i class="bx bx-arrow-back me-1"></i> Retour à la liste
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Formulaire -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        {{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
+                                            
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-3">
+                                                    {{ form_label(form.nom, 'Nom du médicament', {'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(form.nom, {'attr': {
+                                                        'class': 'form-control',
+                                                        'placeholder': 'Entrez le nom du médicament'
+                                                    }}) }}
+                                                    {{ form_errors(form.nom) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-3">
+                                                    {{ form_label(form.type, 'Type de produit', {'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(form.type, {'attr': {
+                                                        'class': 'form-select'
+                                                    }}) }}
+                                                    {{ form_errors(form.type) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group mb-3">
+                                                    {{ form_label(form.prix, 'Prix', {'label_attr': {'class': 'form-label'}}) }}
+                                                    <div class="input-group">
+                                                        {{ form_widget(form.prix, {'attr': {
+                                                            'class': 'form-control',
+                                                            'placeholder': 'Prix unitaire'
+                                                        }}) }}
+                                                        <span class="input-group-text">€</span>
+                                                    </div>
+                                                    {{ form_errors(form.prix) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group mb-3">
+                                                    {{ form_label(form.quantite, 'Quantité en stock', {'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(form.quantite, {'attr': {
+                                                        'class': 'form-control',
+                                                        'placeholder': 'Quantité disponible'
+                                                    }}) }}
+                                                    {{ form_errors(form.quantite) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group mb-3">
+                                                    {{ form_label(form.dateExpiration, 'Date d\'expiration', {'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(form.dateExpiration, {'attr': {
+                                                        'class': 'form-control'
+                                                    }}) }}
+                                                    {{ form_errors(form.dateExpiration) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="form-group mb-3">
+                                                    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(form.description, {'attr': {
+                                                        'class': 'form-control',
+                                                        'rows': '3',
+                                                        'placeholder': 'Description détaillée du médicament...'
+                                                    }}) }}
+                                                    {{ form_errors(form.description) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="form-group mb-3">
+                                                    {{ form_label(form.details, 'Détails supplémentaires', {'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(form.details, {'attr': {
+                                                        'class': 'form-control',
+                                                        'rows': '3',
+                                                        'placeholder': 'Informations complémentaires...'
+                                                    }}) }}
+                                                    {{ form_errors(form.details) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-3">
+                                                    {{ form_label(form.statu, 'Statut du stock', {'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(form.statu, {'attr': {
+                                                        'class': 'form-select'
+                                                    }}) }}
+                                                    {{ form_errors(form.statu) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 mt-4">
+                                                <div class="d-flex gap-2">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="bx bx-save me-1"></i>
+                                                        Enregistrer le médicament
+                                                    </button>
+                                                    <button type="reset" class="btn btn-secondary">
+                                                        <i class="bx bx-reset me-1"></i>
+                                                        Réinitialiser
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        {{ form_end(form) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / Content -->
+
+                    <div class="content-backdrop fade"></div>
+                </div>
+            <!-- Content wrapper -->
+            </div>
+            <!-- / Layout page -->
+
+            <!-- Overlay -->
+            <div class="layout-overlay layout-menu-toggle"></div>
+            <!-- / Layout wrapper -->
+
+            <!-- Core JS -->
+            <script src="{{ asset('../assets/vendor/libs/jquery/jquery.js') }}"></script>
+            <script src="{{ asset('../assets/vendor/libs/popper/popper.js') }}"></script>
+            <script src="{{ asset('../assets/vendor/js/bootstrap.js') }}"></script>
+            <script src="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+            <script src="{{ asset('../assets/vendor/js/menu.js') }}"></script>
+
+            <!-- Main JS -->
+            <script src="{{ asset('../assets/js/main.js') }}"></script>
+
+            <!-- Custom Script -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const imageInput = document.querySelector('.image-upload');
+                    const imagePreview = document.getElementById('imagePreview');
+
+                    imageInput.addEventListener('change', function(e) {
+                        if (e.target.files && e.target.files[0]) {
+                            const reader = new FileReader();
+                            
+                            reader.onload = function(e) {
+                                imagePreview.innerHTML = `<img src="${e.target.result}" alt="Aperçu" style="max-width: 100%; max-height: 200px; border-radius: 8px;">`;
+                            }
+                            
+                            reader.readAsDataURL(e.target.files[0]);
+                        }
+                    });
+                });
+            </script>
+        {% endblock %}
+    </html>
+{% endblock %}

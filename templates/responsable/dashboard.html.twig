@@ -1,0 +1,384 @@
+{% extends 'chambre/baseNav.html.twig' %} 
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect - Liste des lits</title>
+    <meta name="description" content="" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Animations CSS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animated-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Effet de survol pour les cartes */
+        .card-hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card-hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Style pour les boutons */
+        .btn-custom {
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Style pour les graphiques */
+        .chart-container {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style pour l'en-tête */
+        .welcome-header {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .welcome-header h2 {
+            font-weight: 700;
+        }
+
+        .welcome-header p {
+            font-size: 1.1rem;
+        }
+
+        /* Style pour les statistiques */
+        .stat-card {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h5 {
+            font-weight: 600;
+        }
+
+        .stat-card h2 {
+            font-weight: 700;
+        }
+
+        .stat-card .avatar {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        /* Style pour les lits */
+        .lit-card {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .lit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .lit-card h5 {
+            font-weight: 600;
+        }
+
+        .lit-card .badge {
+            font-size: 0.9rem;
+            padding: 0.5em 0.75em;
+        }
+
+        /* Style pour les boutons d'action */
+        .action-buttons .btn {
+            margin: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid py-4">
+        <!-- En-tête de bienvenue -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="welcome-header animated-cardd">
+                    <h2 class="mb-1">Bienvenue dans votre espace Responsable! 👋</h2>
+                    <p class="mb-0">Supervisez l'occupation des lits et des chambres de l'hôpital.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="row mb-4">
+            <!-- Lits occupés -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stat-card card-hover-effect animated-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-0">Lits Occupés</h5>
+                                <h2 class="mt-2 mb-0 text-danger">{{ litsOccupes }}</h2>
+                                <p class="text-muted mb-0">sur {{ totalLits }} lits</p>
+                            </div>
+                            <div class="avatar bg-danger-subtle rounded">
+                                <i class="bx bx-bed fs-3 text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lits disponibles -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stat-cardd card-hover-effect animated-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-0">Lits Disponibles</h5>
+                                <h2 class="mt-2 mb-0 text-success">{{ litsDisponibles }}</h2>
+                                <p class="text-muted mb-0">prêts à l'usage</p>
+                            </div>
+                            <div class="avatar bg-success-subtle rounded">
+                                <i class="bx bx-check-circle fs-3 text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chambres occupées -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stat-card card-hover-effect animated-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-0">Chambres Occupées</h5>
+                                <h2 class="mt-2 mb-0 text-warning">{{ chambresOccupees }}</h2>
+                                <p class="text-muted mb-0">sur {{ totalChambres }} chambres</p>
+                            </div>
+                            <div class="avatar bg-warning-subtle rounded">
+                                <i class="bx bx-door-open fs-3 text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chambres disponibles -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stat-card card-hover-effect animated-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-0">Chambres Disponibles</h5>
+                                <h2 class="mt-2 mb-0 text-info">{{ chambresDisponibles }}</h2>
+                                <p class="text-muted mb-0">disponibles</p>
+                            </div>
+                            <div class="avatar bg-info-subtle rounded">
+                                <i class="bx bx-door-open fs-3 text-info"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section des lits en cartes -->
+        <div class="card card-hover-effect animated-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">État des Lits</h5>
+                <div>
+                    <a href="{{ path('lit.new') }}" class="btn btn-primary btn-sm btn-custom">
+                        <i class="bx bx-plus me-1"></i> Ajouter un lit
+                    </a>
+                    <a class="btn btn-success btn-sm btn-custom ms-2" href="{{ path('export_statistiques_csv') }}">
+                        <i class="bx bx-download me-1"></i> Exporter
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for lit in lits %}
+                        <div class="col-md-4 mb-4">
+                            <div class="lit-card card-hover-effect animated-card">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Lit N° {{ lit.num }}</h5>
+                                    <p class="card-text">Chambre : {{ lit.chambre.num }}</p>
+                                    <p class="card-text">
+                                        {% if lit.type == 'libre' %}
+                                            <span class="badge bg-success">Disponible</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">
+                                                Occupé par
+                                                {% if lit.patient %}
+                                                    {{ lit.patient.nom }} {{ lit.patient.prenom }}
+                                                {% else %}
+                                                    Information patient non disponible
+                                                {% endif %}
+                                            </span>
+                                        {% endif %}
+                                    </p>
+                                    {% if lit.type == 'libre' %}
+                                        <a href="{{ path('lit.affecter', { id: lit.id }) }}" class="btn btn-success btn-sm btn-custom">
+                                            <i class="fas fa-user-plus"></i> Affecter
+                                        </a>
+                                    {% endif %}
+                                    <div class="d-flex justify-content-center mt-3 gap-2 action-buttons">
+                                        <a href="{{ path('lit.edit', { id: lit.id }) }}" class="btn btn-warning btn-sm btn-custom">
+                                            <i class="fas fa-edit"></i> Modifier
+                                        </a>
+                                        <a href="javascript:void(0);" onclick="confirmSuppression('{{ path('lit.deletefront', { id: lit.id }) }}')" class="btn btn-danger btn-sm btn-custom">
+                                            <i class="fas fa-trash-alt"></i> Supprimer
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-12 text-center text-muted">
+                            <p>Aucun lit disponible</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Graphiques -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="chart-container card-hover-effect animated-card">
+                    <h5 class="card-title">Statistiques des Chambres et Lits</h5>
+                    <canvas id="statChart"></canvas>
+                </div>
+            </div>
+           
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Confirmation de suppression avec SweetAlert2
+        function confirmSuppression(deleteUrl) {
+            Swal.fire({
+                title: "Supprimer ce lit ?",
+                text: "Cette action est irréversible !",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#e53935",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Oui, supprimer",
+                cancelButtonText: "Annuler",
+                customClass: {
+                    popup: 'animated bounceIn'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Supprimé !",
+                        text: "Le lit a été supprimé.",
+                        icon: "success",
+                        customClass: {
+                            popup: 'animated fadeOut'
+                        }
+                    }).then(() => {
+                        window.location.href = deleteUrl;
+                    });
+                }
+            });
+        }
+
+        // Initialisation des graphiques avec Chart.js
+       document.addEventListener('DOMContentLoaded', function () {
+    // Créer un seul canvas pour les deux graphiques
+    const statChartCtx = document.getElementById('statChart').getContext('2d');
+    
+    // Utiliser Chart.js avec la configuration pour des graphiques multiples
+    new Chart(statChartCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Statut'],
+            datasets: [
+                {
+                    label: 'Chambres Disponibles',
+                    data: [{{ chambresDisponibles }}],
+                    backgroundColor: '#4caf50',
+                    stack: 'Chambres'
+                },
+                {
+                    label: 'Chambres Occupées',
+                    data: [{{ chambresOccupees }}],
+                    backgroundColor: '#f44336',
+                    stack: 'Chambres'
+                },
+                {
+                    label: 'Chambres en Maintenance',
+                    data: [{{ chambresMaintenance }}],
+                    backgroundColor: '#ff9800',
+                    stack: 'Chambres'
+                },
+                {
+                    label: 'Lits Disponibles',
+                    data: [{{ litsDisponibles }}],
+                    backgroundColor: '#81c784', // Vert plus clair
+                    stack: 'Lits'
+                },
+                {
+                    label: 'Lits Occupés',
+                    data: [{{ litsOccupes }}],
+                    backgroundColor: '#e57373', // Rouge plus clair
+                    stack: 'Lits'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' },
+                title: { 
+                    display: true, 
+                    text: 'Statut des Chambres et des Lits',
+                    font: { size: 16 }
+                }
+            },
+            scales: {
+                x: { stacked: false },
+                y: { 
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Nombre'
+                    }
+                }
+            }
+        }
+    });
+});
+    </script>
+{% endblock %}

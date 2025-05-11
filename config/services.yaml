@@ -1,0 +1,49 @@
+parameters:
+    # Define the parameter using the environment variable
+    rapidapi_key: '%env(RAPIDAPI_KEY)%'
+    images_directory: '%kernel.project_dir%/public/uploads/images'
+    uploads_directory: '%kernel.project_dir%/public/uploads'
+    signature_directory: '%kernel.project_dir%/public/signatures'
+
+services:
+    # Default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    App\EventListener\LoginSuccessListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'Symfony\Component\Security\Http\Event\LoginSuccessEvent', method: 'onLoginSuccess' }
+    # Makes classes in src/ available to be used as services
+    # This creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+
+            - '../src/Kernel.php'
+            
+    App\Service\DiagnosticAIService:
+        arguments:
+            $httpClient: '@http_client'
+           
+    App\Service\TwilioService:
+        arguments:
+         $twilioSid: '%env(TWILIO_SID)%'
+         $twilioToken: '%env(TWILIO_TOKEN)%'
+         $twilioFromNumber: '%env(TWILIO_FROM_NUMBER)%'
+    App\Service\TranslationService:
+        arguments:
+            $apiKey: 'AIzaSyCN7lWbRUs3AaRyE8ICiwdBPfBcjMk2nc4'
+    Twilio\Rest\Client:
+        arguments:
+            $username: '%env(TWILIO_ACCOUNT_SID)%'
+            $password: '%env(TWILIO_AUTH_TOKEN)%'
+    App\Service\SwearWordFilter: ~
+
+    App\Service\GeminiService:
+        arguments:
+            $apiKey: 'AIzaSyCndF1vvpjJVZsvT5eCUe1jL8aAJgtwbe8'
+        
+        
+     

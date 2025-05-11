@@ -1,0 +1,133 @@
+{% extends 'dossier_medical/BaseDossierMedical.html.twig' %}
+
+{% block content %}
+  
+
+        
+             <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="card" style="padding: 20px;">
+            <div class="container mt-5">
+                <h1 class="mb-4">Ajouter un Dossier Médical</h1>
+                                        <small class="text-body float-end">Remplissez les détails</small>
+                                    </div>
+                                    <div class="card-body">
+                                        {% for message in app.flashes('success') %}
+                                            <div class="toast bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+                                                <div class="toast-header bg-success text-white">
+                                                    <strong class="mr-auto">Succès</strong>
+                                                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="toast-body">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        {% for message in app.flashes('error') %}
+                                            <div class="toast bg-danger text-white" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+                                                <div class="toast-header bg-danger text-white">
+                                                    <strong class="mr-auto">Erreur</strong>
+                                                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="toast-body">
+                                                    {{ message }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+
+                                        {{ form_start(form, {'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'}}) }}
+                                        <div class="mb-3">
+                                            {{ form_label(form.groupeSanguin, 'Groupe Sanguin', {'label_attr': {'class': 'form-label'}}) }}
+                                            {{ form_widget(form.groupeSanguin, {'attr': {'class': 'form-control'}}) }}
+                                            {% if form.groupeSanguin.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.groupeSanguin) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            {{ form_label(form.allergies, 'Allergies', {'label_attr': {'class': 'form-label'}}) }}
+                                            {{ form_widget(form.allergies, {'attr': {'class': 'form-control'}}) }}
+                                            {% if form.allergies.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.allergies) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            {{ form_label(form.vaccinations, 'Vaccinations', {'label_attr': {'class': 'form-label'}}) }}
+                                            {{ form_widget(form.vaccinations, {'attr': {'class': 'form-control'}}) }}
+                                            {% if form.vaccinations.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.vaccinations) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            {{ form_label(form.antecedentsMedicaux, 'Antécédents Médicaux', {'label_attr': {'class': 'form-label'}}) }}
+                                            {{ form_widget(form.antecedentsMedicaux, {'attr': {'class': 'form-control'}}) }}
+                                            {% if form.antecedentsMedicaux.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.antecedentsMedicaux) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            {{ form_label(form.traitementsEnCours, 'Traitements en Cours', {'label_attr': {'class': 'form-label'}}) }}
+                                            {{ form_widget(form.traitementsEnCours, {'attr': {'class': 'form-control'}}) }}
+                                            {% if form.traitementsEnCours.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.traitementsEnCours) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            {{ form_label(form.remarques, 'Remarques', {'label_attr': {'class': 'form-label'}}) }}
+                                            {{ form_widget(form.remarques, {'attr': {'class': 'form-control'}}) }}
+                                            {% if form.remarques.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.remarques) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            {{ form_label(form.patient, 'Patient', {'label_attr': {'class': 'form-label'}}) }}
+                                            {{ form_widget(form.patient, {'attr': {'class': 'form-control'}}) }}
+                                            {% if form.patient.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.patient) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <button type="submit" class="btn btn-success">Enregistrer</button>
+                                        {{ form_end(form) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    let form = document.getElementById('dossierMedicalForm');
+                    form.addEventListener('submit', function(event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    });
+                });
+            </script>
+        {% endblock %}

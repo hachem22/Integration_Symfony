@@ -1,0 +1,114 @@
+{% extends "utilisateur/dashboardHachem/sidenavv.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect</title>
+    <meta name="description" content="" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.googleapis.com') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.gstatic.com') }}" crossorigin />
+    <link href="{{ asset('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+    <script src="{{ asset('../assets/js/config.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="layout-wrapper layout-4"style="margin-top: 80px;width: 1200px;height: 500px;margin-left: 40px;">
+
+<div class="container mt-5">
+                <class="container-xxl flex-grow-1 container-p-y"style="width: 1000px;">
+            <h1 class="mb-4 text-center text-primary">Liste des Dossiers Médicaux</h1>
+
+            {# Tableau des dossiers médicaux #}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Groupe Sanguin</th>
+                            <th>Allergies</th>
+                            <th>Vaccinations</th>
+                            <th>Patient</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dossier in dossier_medicals %}
+                            <tr class="align-middle">
+                                <td>{{ dossier.id }}</td>
+                                <td>{{ dossier.GroupeSanguin }}</td>
+                                <td>{{ dossier.Allergies }}</td>
+                                <td>{{ dossier.Vaccinations }}</td>
+                                <td>{{ dossier.patient ? dossier.patient.nom : 'Aucun' }}</td>
+                                <td>
+                                    <a href="{{ path('telecharger_pdf_dossier_medical', {'id': dossier.id}) }}" class="btn btn-info btn-sm">
+                                        <i class="bx bx-download"></i> 
+                                    </a>
+                                    <a href="{{ path('indexVS', {'id': dossier.id}) }}" class="btn btn-success btn-sm">
+                                        <i class="bx bx-history"></i>
+                                    </a>
+                                    <a href="{{ path('consulter', {'id': dossier.id}) }}" class="btn btn-primary btn-sm">
+                                        <i class="bx bx-show-alt"></i> 
+                                    </a>
+                                    <a href="{{ path('editDossier', {'id': dossier.id}) }}" class="btn btn-warning btn-sm">
+                                        <i class="bx bx-edit"></i> 
+                                    </a>
+                                    <form action="{{ path('delete', {'id': dossier.id}) }}" method="POST" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce dossier médical ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ dossier.id) }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="bx bx-trash"></i> 
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="fas fa-calendar-times fa-2x"></i><br>
+                                    Aucun dossier médical trouvé.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {# Bouton Ajouter #}
+            <div class="text-center mt-3">
+                <a href="{{ path('newDos') }}" class="btn btn-primary">Ajouter un Dossier Médical</a>
+            </div>
+        </div>
+    </div>
+
+    {# Ajout des styles personnalisés pour améliorer la présentation #}
+    <style>
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .card {
+            border-radius: 10px;
+        }
+
+        .btn-sm {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-success, .btn-info, .btn-primary, .btn-warning, .btn-danger {
+            border-radius: 5px;
+        }
+    </style>
+
+    {# Ajout de FontAwesome et Boxicons pour les icônes #}
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.0/dist/boxicons.min.js"></script>
+{% endblock %}

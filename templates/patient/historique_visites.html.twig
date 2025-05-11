@@ -1,0 +1,75 @@
+{% extends 'patient/baseRendezVous.html.twig' %}
+
+{% block title %}Historique des Visites{% endblock %}
+
+ {% block content %}
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4">
+            <h1 class="mb-4 text-center text-primary">Historique des Visites - Dossier Médical de {{ dossierMedical.patient.nom }}</h1>
+
+            {# Si aucune visite n'existe, afficher un message #}
+            {% if visites|length == 0 %}
+                <div class="alert alert-warning text-center">
+                    Aucune visite enregistrée pour ce dossier médical.
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover text-center">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Date de Visite</th>
+                                <th>Diagnostic</th>
+                                <th>Ordonnance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for visite in visites %}
+                                <tr>
+                                    <td>{{ visite.dateVisite|date('d/m/Y') }}</td>
+                                    <td>{{ visite.diagnostic }}</td>
+                                    <td>{{ visite.ordonnance ? 'Oui' : 'Non' }}</td>
+                                    <td>
+                                        <a href="{{ path('app_visite_consulter', {'id': visite.id}) }}" class="btn btn-info btn-sm">Consulter</a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                        <i class="fas fa-calendar-times fa-2x"></i><br>
+                                        Aucun historique de visite trouvé.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Ajout des styles personnalisés #}
+    <style>
+     :root {
+            --primary-blue: #0D47A1;     /* Deep Blue */
+            --secondary-blue: #1565C0;   /* Strong Blue */
+            --accent-blue: #2196F3;      /* Bright Blue */
+            --light-blue: #64B5F6;       /* Light Blue */
+            --background-blue: #E3F2FD;  /* Very Light Blue */
+        }
+        body {
+            background-color: var(--background-blue);
+            font-family: 'Inter', sans-serif;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+            transition: background-color 0.3s ease-in-out;
+        }
+        .card {
+            border-radius: 10px;
+        }
+    </style>
+
+    {# Ajout de FontAwesome pour les icônes #}
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+{% endblock %}

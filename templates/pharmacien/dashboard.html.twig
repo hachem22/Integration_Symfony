@@ -1,0 +1,202 @@
+{% extends 'stock_pharmacie/navbar.html.twig' %}
+
+{% block content %}
+    <div class="container-fluid py-4">
+        <!-- En-tête de bienvenue -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <div>
+                            <h2 class="card-title mb-1">Bienvenue dans votre espace Pharmacien! 👋</h2>
+                            <p class="text-muted mb-0">Gérez votre stock, suivez les commandes et restez informé.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques rapides -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-0">Stock Total</h5>
+                                <h2 class="mt-2 mb-0">{{ stock_total }}</h2>
+                                <p class="text-muted mb-0">Produits en stock</p>
+                            </div>
+                            <div class="avatar avatar-lg bg-primary-subtle rounded">
+                                <i class="bx bx-package fs-3 text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-0">Alertes Stock</h5>
+                                <h2 class="mt-2 mb-0">{{ stock_alerte }}</h2>
+                                <p class="text-muted mb-0">Produits en alerte</p>
+                            </div>
+                            <div class="avatar avatar-lg bg-warning-subtle rounded">
+                                <i class="bx bx-error fs-3 text-warning"></i>
+                            </div>
+                        </div>
+                        {% if stock_alerte > 0 %}
+                            <div class="mt-3">
+                                <small class="text-danger">
+                                    <i class="bx bx-info-circle"></i>
+                                    {{ stock_alerte }} produit(s) avec un stock faible
+                                </small>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-0">Réclamations</h5>
+                             
+                                <p class="text-muted mb-0">Non traitées</p>
+                            </div>
+                            <div class="avatar avatar-lg bg-danger-subtle rounded">
+                                <i class="bx bx-message-square-dots fs-3 text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title mb-0">Événements</h5>
+                                <h2 class="mt-2 mb-0">{{ evenements is not empty ? evenements|length : 0 }}</h2>
+                                <p class="text-muted mb-0">À venir</p>
+                            </div>
+                            <div class="avatar avatar-lg bg-success-subtle rounded">
+                                <i class="bx bx-calendar-event fs-3 text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stock et Notifications -->
+        <div class="row">
+            <!-- Liste du stock -->
+            <div class="col-xl-8 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Stock en alerte</h5>
+                        <a href="{{ path('app_stock_pharmacie_index') }}" class="btn btn-primary btn-sm">
+                            <i class="bx bx-plus me-1"></i>Voir tout
+                        </a>
+                         <a href="{{ path('app_stock_alert_pdf') }}" class="btn btn-danger btn-sm">
+            <i class="bx bx-file me-1"></i>Exporter en PDF
+        </a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Quantité</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if stock_pharmacies is not empty %}
+                                    {% for produit in stock_pharmacies %}
+                                        <tr>
+                                            <td>{{ produit.nom }}</td>
+                                            <td>{{ produit.quantite }}</td>
+                                            <td>
+                                                {% if produit.quantite < 10 %}
+                                                    <span class="badge bg-danger">Critique</span>
+                                                {% elseif produit.quantite < 20 %}
+                                                    <span class="badge bg-warning">Alerte</span>
+                                                {% else %}
+                                                    <span class="badge bg-success">Normal</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{{ path('app_stock_pharmacie_show', {'id': produit.id}) }}" class="btn btn-sm btn-info">
+                                                    <i class="bx bx-show"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">Aucun produit en alerte</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications et Événements -->
+            <div class="col-xl-4">
+                <!-- Notifications récentes -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Notifications récentes</h5>
+                        <span class="badge bg-primary rounded-pill">{{ notifications is not empty ? notifications|length : 0 }}</span>
+                    </div>
+                    <div class="card-body" style="max-height: 280px; overflow-y: auto;">
+                        <div class="list-group list-group-flush">
+                            {% if notifications is not empty %}
+                                {% for notif in notifications %}
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">
+                                                    <i class="bx bx-package text-warning me-2"></i>
+                                                    {{ notif.message }}
+                                                </h6>
+                                                <small class="text-muted">
+                                                    Prévu le {{ notif.date|date('d/m/Y à H:i') }}
+                                                </small>
+                                            </div>
+                                            <a href="{{ path('app_commande_show', {'id': notif.id}) }}" 
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="bx bx-show me-1"></i> Voir
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center text-muted py-4">
+                                    <i class="bx bx-bell-off mb-2" style="font-size: 2rem;"></i>
+                                    <p>Aucune notification</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Événements à venir -->
+                
+            </div>
+        </div>
+
+      
+    </div>
+{% endblock %} 

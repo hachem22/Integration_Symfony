@@ -1,0 +1,176 @@
+{% extends 'patient/baseRendezVous.html.twig' %}
+
+{% block title %}Sélectionner une heure{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Variables de couleur */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #2e7bf6, #1a56c4);
+        --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        --form-bg: #ffffff;
+        --border-radius: 12px;
+        --input-border: #e2e8f0;
+        --input-focus: #3b82f6;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --error-color: #ef4444;
+    }
+
+    /* Styles communs */
+    .appointment-card {
+        border-radius: var(--border-radius);
+        border: none;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .appointment-card:hover {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    }
+    
+    .card-header-modern {
+        background: var(--primary-gradient);
+        padding: 1.5rem 1rem;
+        border-bottom: none;
+    }
+    
+    .card-body-modern {
+        padding: 2rem;
+        background-color: var(--form-bg);
+    }
+    
+    .form-label {
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+    }
+    
+    .form-select, .form-control {
+        border-radius: 8px;
+        border: 1.5px solid var(--input-border);
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        width: 100%;
+        color: var(--text-primary);
+    }
+    
+    .form-select:focus, .form-control:focus {
+        border-color: var(--input-focus);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        outline: none;
+    }
+    
+    .btn-modern-primary {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.875rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-modern-primary:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+    
+    .btn-modern-secondary {
+        background-color: #f1f5f9;
+        color: var(--text-secondary);
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.875rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-modern-secondary:hover {
+        background-color: #e2e8f0;
+    }
+    
+    .page-heading {
+        color: #fff;
+        font-weight: 600;
+        margin: 0;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .page-subheading {
+        color: rgba(255,255,255,0.9);
+        font-weight: 400;
+        margin-top: 0.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .date-display {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 1rem;
+    }
+    
+    .date-value {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="appointment-card">
+                <div class="card-header-modern text-center">
+                    <h3 class="page-heading">Sélectionner une heure</h3>
+                    <p class="page-subheading">Choisissez l'horaire qui vous convient</p>
+                </div>
+                <div class="card-body-modern">
+                    <p class="date-display text-center">
+                        Date du rendez-vous: <span class="date-value">{{ rendezVous.getDate()|date('d/m/Y') }}</span>
+                    </p>
+                    
+                    {{ form_start(form) }}
+                    <div class="form-group mb-4">
+                        {{ form_label(form.heure_selectionnee, 'Heure disponible :', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.heure_selectionnee, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-modern-primary btn-lg" style={{"width:620px;"}}>Confirmer l'heure</button>
+                        <a href="{{ path('ListRendezVous') }}" class="btn btn-modern-secondary btn-lg">Annuler</a>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const timeSelect = document.querySelector('.form-select');
+        
+        // Ajouter des effets visuels
+        if (timeSelect) {
+            timeSelect.addEventListener('change', function() {
+                if (this.value) {
+                    this.style.borderColor = '#3b82f6';
+                    document.querySelector('button[type="submit"]').classList.add('pulse-animation');
+                } else {
+                    this.style.borderColor = '#e2e8f0';
+                    document.querySelector('button[type="submit"]').classList.remove('pulse-animation');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

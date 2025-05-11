@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}CareConnect{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚕️</text></svg>">
+
+    <!-- Bootstrap & FontAwesome -->
+    <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+
+    <!-- Sidebar (à gauche) -->
+    <div class="sidebar">
+        <h2>Tableau de Bord</h2>
+        <ul>
+            <li><a href="{{ path('app_chambre') }}"><i class="fas fa-calendar-check"></i> Les chambres</a></li>
+            <li><a href="{{ path('app_lit') }}"><i class="fas fa-file-medical"></i> les lits</a></li>
+            <li><a href="{{ path('app_entretient_chambre') }}"><i class="fas fa-bell"></i> Entretitents</a></li>
+            <li><a href="#"><i class="fas fa-user-md"></i> Trouver un Médecin</a></li>
+        </ul>
+    </div>
+
+    <!-- Navbar -->
+    <header class="header">
+        <div class="container-fluid">
+            <div class="nav-content">
+                <a href="#" class="logo">
+<img src="{{ asset('assets/images/logo2.png') }}" alt="CareConnect" width="60" height="60">
+                </a>
+                <div class="profile-dropdown">
+                    <button class="profile-btn">
+                        <img src="{{ asset('assets/images/lhech.jpg') }}" alt="Profil" class="profile-img">
+                        <span>Responsable</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"><i class="fas fa-user"></i> Mon Profil</a></li>
+                        <li><a href="#"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="content">
+        {% block body %}{% endblock %}
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ asset('jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        // Gestion du menu déroulant du profil
+        document.querySelector(".profile-btn").addEventListener("click", function() {
+            document.querySelector(".dropdown-menu").classList.toggle("show");
+        });
+
+        // Fermer le menu si on clique ailleurs
+        document.addEventListener("click", function(event) {
+            if (!document.querySelector(".profile-dropdown").contains(event.target)) {
+                document.querySelector(".dropdown-menu").classList.remove("show");
+            }
+        });
+    </script>
+
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,44 @@
+
+{% extends "stock_pharmacie/navbar.html.twig" %}
+{% block title %}Mon Panier{% endblock %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold mb-4">Mon Panier</h4>
+
+    {% if panierItems is empty %}
+        <div class="alert alert-info" role="alert">
+            <i class="bx bx-info-circle me-2"></i>
+            Votre panier est vide.
+        </div>
+    {% else %}
+        <div class="row">
+            {% for item in panierItems %}
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1">{{ item.produit.nom }}</h5>
+                            <p class="text-muted small mb-2">{{ item.produit.type }}</p>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-primary">{{ item.produit.prix|number_format(2, ',', ' ') }} €</span>
+                                <span class="text-muted small">Quantité: {{ item.quantite }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{{ path('app_stock_pharmacie_show', {'id': item.produit.id}) }}" 
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="bx bx-info-circle me-1"></i> Détails
+                                </a>
+                                <form action="{{ path('app_panier_supprimer', {'id': item.id}) }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bx bx-trash me-1"></i> Supprimer
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

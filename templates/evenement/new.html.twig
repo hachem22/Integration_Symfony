@@ -1,0 +1,109 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect - Nouvel Événement</title>
+    <meta name="description" content="" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="{{ asset('https://fonts.googleapis.com') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.gstatic.com') }}" crossorigin />
+    <link href="{{ asset('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+{% endblock %}
+
+{% block body %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- En-tête -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h2 class="card-title mb-1">Créer un nouvel événement</h2>
+                                <p class="text-muted">Remplissez le formulaire pour créer un nouvel événement</p>
+                            </div>
+                            <a href="{{ path('evenement_index') }}" class="btn btn-secondary">
+                                <i class="bx bx-arrow-back me-1"></i> Retour à la liste
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        {{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
+                            
+                            <div class="col-md-6">
+                                {{ form_label(form.Nom, 'Nom de l\'événement', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.Nom, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom de l\'événement'}}) }}
+                                {{ form_errors(form.Nom) }}
+                            </div>
+
+                            <div class="col-md-6">
+                                {{ form_label(form.Capacite, 'Capacité', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.Capacite, {'attr': {'class': 'form-control', 'placeholder': 'Nombre de participants maximum'}}) }}
+                                {{ form_errors(form.Capacite) }}
+                            </div>
+
+                            <div class="col-12">
+                                {{ form_label(form.Description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.Description, {'attr': {'class': 'form-control', 'rows': '4', 'placeholder': 'Décrivez l\'événement...'}}) }}
+                                {{ form_errors(form.Description) }}
+                            </div>
+
+                            <div class="col-md-6">
+                                {{ form_label(form.lieu, 'Lieu', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.lieu, {'attr': {'class': 'form-control', 'placeholder': 'Lieu de l\'événement'}}) }}
+                                {{ form_errors(form.lieu) }}
+                            </div>
+
+                            <div class="col-md-6">
+                                {{ form_label(form.formations, 'Formation associée', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.formations, {'attr': {'class': 'form-select'}}) }}
+                                {{ form_errors(form.formations) }}
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bx bx-save me-1"></i>
+                                        Sauvegarder l'événement
+                                    </button>
+                                    <button type="reset" class="btn btn-secondary">
+                                        <i class="bx bx-reset me-1"></i>
+                                        Réinitialiser
+                                    </button>
+                                </div>
+                            </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- Core JS -->
+    <script src="{{ asset('../assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/menu.js') }}"></script>
+    <!-- Main JS -->
+    <script src="{{ asset('../assets/js/main.js') }}"></script>
+{% endblock %} 

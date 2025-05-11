@@ -1,0 +1,14 @@
+Array
+(
+    [symptoms] => Array
+        (
+            [0] => douleur thoracique
+        )
+
+    [patientInfo] => Array
+        (
+            [age] => 30
+            [gender] => male
+        )
+
+)

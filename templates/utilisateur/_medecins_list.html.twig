@@ -1,0 +1,85 @@
+{# _medecins_list.html.twig #}
+{% for utilisateur in medecins %}
+    {% if utilisateur.utilisateurRole.value == 'Medecin' %}
+        <tr>
+            <td>{{ utilisateur.Nom }}</td> <!-- Column 0: Nom -->
+            <td>{{ utilisateur.Prenom }}</td> <!-- Column 1: Prénom -->
+            <td>{{ utilisateur.Email }}</td> <!-- Column 2: Email -->
+            <td>{{ utilisateur.Adress }}</td> <!-- Column 3: Adresse -->
+            <td>{{ utilisateur.Tel }}</td> <!-- Column 4: Téléphone -->
+            <td>
+                <span class="chip chip-success">{{ utilisateur.medecinSpecilaite.value }}</span> <!-- Column 5: Spécialité -->
+            </td>
+            <td>
+                <div>
+                    <a href="{{ path('app_utilisateur_show', {'id': utilisateur.id}) }}" class="me-2">
+                        <i class="bx bx-show-alt me-1"></i>
+                    </a>
+                    <a href="{{ path('app_utilisateur_edit', {'id': utilisateur.id}) }}">
+                        <i class="bx bx-edit-alt me-1"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    {% endif %}
+{% endfor %}
+{% if medecins|length == 0 %}
+    <tr>
+        <td colspan="7">No records found</td>
+    </tr>
+{% endif %}
+{% block scripts %}
+    <!-- Core JS -->
+    <script src="{{ asset('../assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/menu.js') }}"></script>
+    <!-- Main JS -->
+    <script src="{{ asset('../assets/js/main.js') }}"></script>
+
+    <!-- Dynamic Search Script -->
+    <script>
+        $(document).ready(function () {
+            console.log("Document is ready!"); // Debugging
+
+            // Function to filter the table rows
+            function filterTable() {
+                console.log("Filtering table..."); // Debugging
+
+                const searchValue = $('#globalSearch').val().toLowerCase(); // Get the global search value
+
+                console.log("Search Value:", searchValue); // Debugging
+
+                $('#medecinsTable tbody tr').each(function () {
+                    const row = $(this);
+                    let rowMatches = false;
+
+                    // Loop through all columns (except the last one for actions)
+                    row.find('td').each(function (index) {
+                        if (index < 6) { // Only check the first 6 columns (Nom, Prénom, Email, Adresse, Téléphone, Spécialité)
+                            const cellText = $(this).text().toLowerCase();
+                            if (cellText.includes(searchValue)) {
+                                rowMatches = true;
+                                return false; // Exit the loop early if a match is found
+                            }
+                        }
+                    });
+
+                    // Show or hide the row based on whether it matches the search value
+                    if (rowMatches) {
+                        row.show();
+                    } else {
+                        row.hide();
+                    }
+                });
+            }
+
+            // Attach input event listener to the global search field
+            $('#globalSearch').on('input', function () {
+                console.log("Input detected!"); // Debugging
+                filterTable();
+            });
+        });
+    </script>
+{% endblock %}

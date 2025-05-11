@@ -1,0 +1,19 @@
+# config/packages/messenger.yaml
+
+framework:
+    messenger:
+        buses:
+            # Default bus
+            default:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - doctrine_transaction
+                    - validation
+
+        transports:
+            # Use doctrine transport for async processing
+            async: '%env(MESSENGER_TRANSPORT_DSN)%'
+
+        routing:
+            # Map the UserCreationEmailMessage to the async transport
+            'App\Message\UserCreationEmailMessage': async

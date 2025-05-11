@@ -1,0 +1,162 @@
+{% extends 'patient/baseRendezVous.html.twig' %}
+
+{% block title %}Mon Dossier Médical{% endblock %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect</title>
+    <meta name="description" content="Gestion des rendez-vous médicaux" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.googleapis.com') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.gstatic.com') }}" crossorigin />
+    <link href="{{ asset('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <!-- Font Awesome CDN pour de meilleures icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+    <script src="{{ asset('../assets/js/config.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="card shadow-lg">
+        <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0">
+                <i class="fas fa-file-medical text-primary me-2"></i>Mon Dossier Médical
+            </h5>
+        </div>
+
+        <div class="card-body">
+            {% if dossier_medical %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr class="text-nowrap">
+                                <th class="bg-light">#</th>
+                                <th class="bg-light"><i class="fas fa-tint me-1"></i>Groupe Sanguin</th>
+                                <th class="bg-light"><i class="fas fa-allergies me-1"></i>Allergies</th>
+                                <th class="bg-light"><i class="fas fa-syringe me-1"></i>Vaccinations</th>
+                                <th class="bg-light text-center"><i class="fas fa-cog me-1"></i>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="align-middle">
+                                <td>{{ dossier_medical.id }}</td>
+                                <td>{{ dossier_medical.groupeSanguin }}</td>
+                                <td>{{ dossier_medical.allergies }}</td>
+                                <td>{{ dossier_medical.vaccinations }}</td>
+                                                     <td class="d-flex align-items-center"> 
+                                                        <a href="{{ path('telecharger_pdf_dossier_medical', {'id': dossier_medical.id}) }}" class="text-primary me-3">
+
+                                                   <i class="fas fa-download"></i>
+                                               </a>
+                                               <a href="{{ path('MesVisite', {'id': dossier_medical.id}) }}" class="text-info me-3">
+                                                   <i class="fas fa-history"></i>
+                                               </a>
+                                               <a href="{{ path('consulter', {'id': dossier_medical.id}) }}" class="text-success me-3">
+                                                   <i class="fas fa-eye"></i>
+                                               </a>
+                                                <form action="{{ path('delete', {'id': dossier_medical.id}) }}" method="POST" 
+                                                     onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce dossier médical ?');">
+                                                   <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ dossier_medical.id) }}">
+                                                   <button type="submit" class="border-0 bg-transparent text-danger p-0">
+                                                       <i class="fas fa-trash-alt"></i>
+                                                   </button>
+                                               </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                    <h6 class="text-muted">Aucun dossier médical trouvé</h6>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+ :root {
+            --primary-blue: #0D47A1;     /* Deep Blue */
+            --secondary-blue: #1565C0;   /* Strong Blue */
+            --accent-blue: #2196F3;      /* Bright Blue */
+            --light-blue: #64B5F6;       /* Light Blue */
+            --background-blue: #E3F2FD;  /* Very Light Blue */
+        }
+        body {
+            background-color: var(--background-blue);
+            font-family: 'Inter', sans-serif;
+        }    .card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .table th {
+        font-weight: 600;
+        color: #566a7f;
+        white-space: nowrap;
+        padding: 0.75rem 1.25rem;
+        border-bottom: 2px solid #f8f9fa;
+    }
+    
+    .table td {
+        padding: 1rem 1.25rem;
+        border-color: #f0f0f0;
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: rgba(105, 108, 255, 0.08);
+        transition: all 0.2s ease;
+    }
+    
+    .btn-icon {
+        padding: 0.4rem;
+        border-radius: 50%;
+    }
+    
+    .btn-icon:hover {
+        background-color: #f0f0f0;
+    }
+    
+    .dropdown-item {
+        padding: 0.5rem 1rem;
+    }
+</style>
+
+<!-- Assurer que Bootstrap et FontAwesome sont correctement chargés -->
+<script>
+    $(document).ready(function() {
+        $('.dropdown-toggle').dropdown();
+        
+        // Close dropdowns when clicking outside
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('.dropdown-toggle, .dropdown-menu').length) {
+                $('.dropdown-menu.show').removeClass('show');
+            }
+        });
+
+        // Toggle dropdowns
+        $('.dropdown-toggle').on('click', function (e) {
+            e.stopPropagation();
+            var $dropdownMenu = $(this).next('.dropdown-menu');
+            $('.dropdown-menu').not($dropdownMenu).removeClass('show');
+            $dropdownMenu.toggleClass('show');
+        });
+    });
+</script>
+{% endblock %}

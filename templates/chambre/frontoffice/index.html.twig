@@ -1,0 +1,255 @@
+{% extends "chambre/baseNav.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect - Liste des chambres</title>
+    <meta name="description" content="" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+    th a {
+    text-decoration: none;
+    color: inherit;
+}
+
+th a:hover {
+    color: #007bff;
+}
+
+th a::after {
+    margin-left: 5px;
+    font-size: 0.8em;
+}
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Public Sans', sans-serif;
+        }
+        .container-xxl {
+            margin-top: 30px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .table th {
+            background-color: #e9ecef;
+        }
+        .badge {
+            font-size: 0.9rem;
+        }
+        .text-muted {
+            color: #6c757d;
+        }
+        .btn-custom {
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 8px rgba(0, 234, 255, 0.4);
+        }
+        .patient-occupe {
+            color: red;
+            font-weight: bold;
+        }
+        .text-center-muted {
+            color: #6c757d;
+        }
+    </style>
+{% endblock %}
+
+ {% block content %}
+ <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="card shadow">
+            <h5 class="card-header">Liste des chambres</h5>
+             <form action="{{ path('chambre.recherchefront') }}" method="get" class="mb-4">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" placeholder="Rechercher par numéro, position ou état..." value="{{ searchTerm ?? '' }}">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bx bx-search"></i> Rechercher
+                        </button>
+                    </div>
+                </form>
+            </div>
+            </div>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="card shadow">
+            <h5 class="card-header">Liste des chambres</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>
+                            <a href="{{ path('chambre.tri', {
+                                'sortBy': 'num', 
+                                'sortDirection': (sortBy|default('') == 'num' and sortDirection|default('ASC')) == 'ASC' ? 'DESC' : 'ASC',
+                                 'search': searchTerm|default(''),
+                                 'order': order|default('ASC')
+                            }) }}">
+                                Numéro 
+                                {% if sortBy|default('') == 'num' %}
+                                    <i class="fas fa-sort-{{ sortDirection|default('ASC') == 'ASC' ? 'up' : 'down' }}"></i>
+                                {% endif %}
+                            </a>
+                        </th>
+                        <th>
+            <a href="{{ path('chambre.tri', {
+                'sortBy': 'type', 
+                'sortDirection': (sortBy|default('') == 'type' and sortDirection|default('ASC')) == 'ASC' ? 'DESC' : 'ASC',
+                'search': searchTerm|default(''),
+                'order': order|default('ASC')
+            }) }}">
+                Type
+                {% if sortBy|default('') == 'type' %}
+                    <i class="fas fa-sort-{{ sortDirection|default('ASC') == 'ASC' ? 'up' : 'down' }}"></i>
+                {% endif %}
+            </a>
+        </th>
+        <th>
+            <a href="{{ path('chambre.tri', {
+                'sortBy': 'localisation', 
+                'sortDirection': (sortBy|default('') == 'localisation' and sortDirection|default('ASC')) == 'ASC' ? 'DESC' : 'ASC',
+                'search': searchTerm|default(''),
+                'order': order|default('ASC')
+            }) }}">
+                Localisation
+                {% if sortBy|default('') == 'localisation' %}
+                    <i class="fas fa-sort-{{ sortDirection|default('ASC') == 'ASC' ? 'up' : 'down' }}"></i>
+                {% endif %}
+            </a>
+        </th>
+        <th>
+            <a href="{{ path('chambre.tri', {
+                'sortBy': 'position', 
+                'sortDirection': (sortBy|default('') == 'position' and sortDirection|default('ASC')) == 'ASC' ? 'DESC' : 'ASC',
+                'search': searchTerm|default(''),
+                'order': order|default('ASC')
+            }) }}">
+                Position
+                {% if sortBy|default('') == 'position' %}
+                    <i class="fas fa-sort-{{ sortDirection|default('ASC') == 'ASC' ? 'up' : 'down' }}"></i>
+                {% endif %}
+            </a>
+        </th>
+        <th>
+            <a href="{{ path('chambre.tri', {
+                'sortBy': 'capacite', 
+                'sortDirection': (sortBy|default('') == 'capacite' and sortDirection|default('ASC')) == 'ASC' ? 'DESC' : 'ASC',
+                'search': searchTerm|default(''),
+                'order': order|default('ASC')
+            }) }}">
+                Capacité
+                {% if sortBy|default('') == 'capacite' %}
+                    <i class="fas fa-sort-{{ sortDirection|default('ASC') == 'ASC' ? 'up' : 'down' }}"></i>
+                {% endif %}
+            </a>
+        </th>
+        <th>
+            <a href="{{ path('chambre.tri', {
+                'sortBy': 'etat', 
+                'sortDirection': (sortBy|default('') == 'etat' and sortDirection|default('ASC')) == 'ASC' ? 'DESC' : 'ASC',
+                'search': searchTerm|default(''),
+                'order': order|default('ASC')
+            }) }}">
+                État
+                {% if sortBy|default('') == 'etat' %}
+                    <i class="fas fa-sort-{{ sortDirection|default('ASC') == 'ASC' ? 'up' : 'down' }}"></i>
+                {% endif %}
+            </a>
+        </th>
+
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                    <tbody class="table-border-bottom-0">
+                        {% set hasChambres = false %}
+                        {% for chambre in chambres %}
+                            {% set hasChambres = true %}
+                            <tr>
+                                <td>{{ chambre.num }}</td>
+                                <td>{{ chambre.type }}</td>
+                                <td>{{ chambre.localisation }}</td>
+                                <td>
+                                    {% if chambre.position %}
+                                        <a href="{{ path('chambre.service', { id: chambre.position.id }) }}" class="text-decoration-none text-primary">
+                                            Bloc {{ chambre.position.nom }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Aucune</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ chambre.capacite }}</td>
+                                <td>
+                                    {% if chambre.active == 'disponible' %}
+                                        <span class="badge bg-success">Disponible</span>
+                                    {% elseif chambre.active == 'occupee' %}
+                                        <span class="badge bg-danger">Occupée</span>
+                                    {% elseif chambre.active == 'maintenance' %}
+                                        <span class="badge bg-warning">Maintenance</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Inconnu</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-start">
+                                        <a href="{{ path('chambre.entretientsfront', {id: chambre.id}) }}" class="btn btn-warning btn-sm btn-custom me-2">
+                                            <i class="bx bx-wrench"></i>
+                                        </a>
+                                        <a href="{{ path('chambre.visualisation', {id: chambre.id}) }}" class="btn btn-info btn-sm btn-custom me-2">
+                                            <i class="bx bx-cube"></i>
+                                        </a>
+                                        <a href="{{ path('chambre.litsfront', {id: chambre.id}) }}" class="btn btn-success btn-sm btn-custom me-2">
+                                            <i class="bx bx-bed"></i>
+                                        </a>
+                                      
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% if not hasChambres %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">Aucune chambre disponible</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        
+    </div>
+
+    <script>
+        function confirmDelete() {
+            return confirm("Êtes-vous sûr de vouloir supprimer cette chambre ?");
+        }
+    </script>
+
+    <!-- SweetAlert2 pour des alertes modernes -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('../assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/menu.js') }}"></script>
+    <script src="{{ asset('../assets/js/main.js') }}"></script>
+{% endblock %}

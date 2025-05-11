@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Document PDF - CareConnect</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            margin: 40px;
+            padding: 0;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header img {
+            width: 150px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #0056b3;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+        .infos {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background: #f2f2f2;
+            border-radius: 8px;
+        }
+        .infos p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .contenu {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f9f9f9;
+            white-space: pre-wrap;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #777;
+        }
+        .cachet {
+            margin-top: 30px;
+            text-align: right;
+        }
+        .cachet img {
+            width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{asset('assets/images/logo2.png') }}" alt="CareConnect">
+        <h1>CareConnect - Centre Médical</h1>
+    </div>
+
+    <div class="infos">
+        <p><strong>Médecin :</strong> {{ medecin_nom }} {{ medecin_prenom }}</p>
+        <p><strong>Patient :</strong> {{ patient_nom }} {{ patient_prenom }}</p>
+        <p><strong>Date :</strong> {{ "now"|date("d/m/Y") }}</p>
+    </div>
+
+    <div class="contenu">
+        {{ contenu|nl2br }}
+    </div>
+
+    <div class="cachet">
+        <p><strong>Cachet et Signature</strong></p>
+        <img src="{{ absolute_url(asset('assets/images/cachet.png')) }}" alt="Cachet Médical">
+    </div>
+
+    <div class="footer">
+        <p>CareConnect - Tous droits réservés - {{ "now"|date("Y") }}</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block content %}
+    <!doctype html>
+
+    <html lang="fr" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('../assets/') }}" data-template="vertical-menu-template-free" data-style="light">
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+            <title>
+                Ajouter une formation
+            </title>
+
+            <meta name="description" content="" />
+            <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+            <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" />
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" />
+            <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+            <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+            <script src="{{ asset('../assets/js/config.js') }}"></script>
+        </head>
+
+        {% block body %}
+            <div class="layout-wrapper layout-content-navbar">
+                <div class="layout-container">
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="row">
+                            <div class="col-xl" style="margin-left: 250px; margin-top: 750px; width: 500px;">
+                                <div class="card mb-6">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">Ajouter une formation</h5>
+                                        <small class="text-body float-end">Remplissez les détails</small>
+                                    </div>
+                                    <div class="card-body">
+                                        {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}) }}
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.Nom">
+                                                <i class="bx bx-book"></i>
+                                                Nom de la formation
+                                            </label>
+                                            {{ form_row(form.Nom, {'attr': {'class': 'form-control' }}) }}
+                                        </div>
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.Description">
+                                                <i class="bx bx-detail"></i>
+                                                Description
+                                            </label>
+                                            {{ form_row(form.Description, {'attr': {'class': 'form-control' }}) }}
+                                        </div>
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.Type">
+                                                <i class="bx bx-category"></i>
+                                                Type
+                                            </label>
+                                            {{ form_row(form.Type, {'attr': {'class': 'form-control' }}) }}
+                                        </div>
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.Date">
+                                                <i class="bx bx-calendar"></i>
+                                                Date
+                                            </label>
+                                            {{ form_row(form.Date, {'attr': {'class': 'form-control' }}) }}
+                                        </div>
+                                         <button class="btn btn-primary">
+                                            {{ button_label|default('Sauvegarder') }}
+                                        </button>
+                                        {{ form_end(form) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-backdrop fade"></div>
+                </div>
+            </div>
+            <div class="layout-overlay layout-menu-toggle"></div>
+            <script src="{{ asset('../assets/vendor/libs/jquery/jquery.js') }}"></script>
+            <script src="{{ asset('../assets/vendor/libs/popper/popper.js') }}"></script>
+            <script src="{{ asset('../assets/vendor/js/bootstrap.js') }}"></script>
+            <script src="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+            <script src="{{ asset('../assets/vendor/js/menu.js') }}"></script>
+            <script src="{{ asset('../assets/js/main.js') }}"></script>
+        {% endblock %}
+    </html>
+{% endblock %}

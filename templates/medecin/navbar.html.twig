@@ -1,0 +1,104 @@
+
+{# navbar.html.twig #}
+<nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+    <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+            <i class="bx bx-menu bx-sm"></i>
+        </a>
+    </div>
+    
+    <!-- Logo CareConnect -->
+    <div class="navbar-nav-left d-flex align-items-center">
+        <a class="navbar-brand" href="{{ path('Home_Medecin') }}">
+            <img src="{{ asset('assets/images/logo2.png') }}" alt="CareConnect" width="60" height="60">
+            <span class="ms-2 fw-bold text-primary">CareConnect</span>
+        </a>
+    </div>
+
+    <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+        <ul class="navbar-nav flex-row align-items-center ms-auto">
+            <!-- Accueil -->
+            <li class="nav-item me-2">
+                <a class="nav-link {{ app.request.get('_route') == 'Home_Medecin' ? 'active' : '' }}" href="{{ path('Home_Medecin') }}">
+                    <i class="fa-solid fa-house me-1"></i> Accueil
+                </a>
+            </li>
+
+            <!-- Rendez-vous Dropdown -->
+            <li class="nav-item dropdown me-2">
+                <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-calendar-alt me-1"></i> Rendez-Vous
+                </a>
+                <ul class="dropdown-menu shadow" aria-labelledby="servicesDropdown">
+                    <li><a class="dropdown-item" href="{{ path('gere_rendezvous') }}"><i class="fas fa-calendar-check me-2"></i> Gérer </br>Rendez-vous</a></li>
+                    <li><a class="dropdown-item" href="{{ path('GererDossier') }}"><i class="fas fa-folder-open me-2"></i> Gérer</br> Dossier Médical</a></li>
+                    <li><a class="dropdown-item" href="{{ path('ajouter_date_non_disponible') }}"><i class="fas fa-calendar-times me-2"></i> Date </br>Non Disponible</a></li>
+                    <li><a class="dropdown-item" href="{{ path('calendrier') }}"><i class="fas fa-calendar me-2"></i> Mon Planning</a></li>
+                </ul>
+            </li>
+
+            <!-- Evénements Dropdown -->
+            <li class="nav-item dropdown me-2">
+                <a class="nav-link dropdown-toggle" href="#" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bell me-1"></i> Événements
+                </a>
+                <ul class="dropdown-menu shadow" aria-labelledby="eventsDropdown">
+                    <li><a class="dropdown-item" href="{{ path('evenement_index') }}"><i class="fas fa-calendar-check me-2"></i> Historique </br>des Événements</a></li>
+                    <li><a class="dropdown-item" href="{{ path('evenement_new') }}"><i class="fas fa-calendar-check me-2"></i> Ajouter</br> Événement</a></li>
+
+                </ul>
+            </li>
+            <li class="nav-item dropdown me-2">
+                <a class="nav-link dropdown-toggle" href="#" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bell me-1"></i> Formation
+                </a>
+                <ul class="dropdown-menu shadow" aria-labelledby="eventsDropdown">
+                    <li><a class="dropdown-item" href="{{ path('formation_index') }}"><i class="fas fa-calendar-check me-2"></i> Historique </br>des Événements</a></li>
+                    <li><a class="dropdown-item" href="{{ path('formation_new') }}"><i class="fas fa-calendar-check me-2"></i> Ajouter</br> formation</a></li>
+
+                </ul>
+            </li>
+
+            <!-- Réclamations Dropdown -->
+            <li class="nav-item dropdown me-2">
+                <a class="nav-link dropdown-toggle" href="#" id="complaintsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-comment-dots me-1"></i> Réclamations
+                </a>
+                <ul class="dropdown-menu shadow" aria-labelledby="complaintsDropdown">
+                    <li><a class="dropdown-item" href="{{ path('reclamation_new') }}"><i class="fas fa-file-alt me-2"></i> Soumettre </br>bune Réclamation</a></li>
+                    <li><a class="dropdown-item" href="{{ path('reclamation_index') }}"><i class="fas fa-history me-2"></i> Suivre mes</br> Réclamations</a></li>
+                </ul>     
+            </li>
+
+            <!-- Profil Dropdown -->
+            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                        <img src="{{ asset('assets/images/lhech.jpg') }}" alt="Profil" class="w-px-40 h-auto rounded-circle" />
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar avatar-online">
+                                        <img src="{{ asset('assets/images/lhech.jpg') }}" alt="Profil" class="w-px-40 h-auto rounded-circle" />
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <span class="fw-semibold d-block">Dr. {{ app.user.nom ?? 'Médecin' }}</span>
+                                    <small class="text-muted">Médecin</small>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li><div class="dropdown-divider"></div></li>
+                    <li><a class="dropdown-item" href="/utilisateur/profileUtilisateur"><i class="bx bx-user me-2"></i> <span class="align-middle">Mon Profil</span></a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bx bx-cog me-2"></i> <span class="align-middle">Paramètres</span></a></li>
+                    <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bx bx-power-off me-2"></i> <span class="align-middle">Déconnexion</span></a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

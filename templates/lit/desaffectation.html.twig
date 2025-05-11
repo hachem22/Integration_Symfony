@@ -1,0 +1,44 @@
+
+
+{% block title %}Désaffectation Patient{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Désaffectation du patient</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Confirmation de désaffectation</h2>
+        </div>
+        <div class="card-body">
+            <p>Vous êtes sur le point de désaffecter le patient suivant :</p>
+            
+            <div class="alert alert-info">
+                <strong>Patient :</strong> {{ patient.nom }} {{ patient.prenom }}<br>
+                <strong>Lit :</strong> {{ lit.num }} ({{ lit.chambre.num }})<br>
+            </div>
+            
+            <p>Cette action va :</p>
+            <ul>
+                <li>Désaffecter le patient du lit</li>
+                <li>Marquer le lit comme libre</li>
+                <li>Créer automatiquement un entretien pour la chambre</li>
+                {% if lit.chambre.lits|length == 1 or lit.chambre.lits|filter(l => l.type == 'occupe')|length == 1 %}
+                    <li>Mettre la chambre en maintenance pour entretien</li>
+                {% endif %}
+            </ul>
+            
+            <div class="alert alert-warning">
+                <strong>Attention :</strong> Cette action est irréversible.
+            </div>
+            
+            <form method="post">
+                <div class="d-flex justify-content-between">
+                    <a href="{{ path('app_lit') }}" class="btn btn-secondary">Annuler</a>
+                    <button type="submit" class="btn btn-danger">Confirmer la désaffectation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

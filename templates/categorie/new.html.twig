@@ -1,0 +1,52 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block title %}Créer une Catégorie{% endblock %}
+
+{% block body %}
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="row justify-content-center">
+                <div class="col-xl" style="margin-left: 250px; margin-top: 200px; width: 500px;">
+                    <div class="card mb-6">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Nouvelle Catégorie</h5>
+                            <small class="text-body float-end">Remplissez les détails</small>
+                        </div>
+                        <div class="card-body">
+                            {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}) }}
+
+                            <!-- 📌 CHAMP NOM -->
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="bx bx-label"></i> Nom
+                                </label>
+                                {{ form_widget(form.nom, {'attr': {'class': 'form-control' }}) }}
+                                {% if form.nom.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.nom) }}</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- 📌 CHAMP DESCRIPTION -->
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="bx bx-comment"></i> Description
+                                </label>
+                                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4 }}) }}
+                                {% if form.description.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.description) }}</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- 📌 BOUTON CRÉER -->
+                            <button class="btn btn-primary btn-lg w-100">Créer la catégorie</button>
+
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

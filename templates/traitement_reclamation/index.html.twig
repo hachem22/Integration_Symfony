@@ -1,0 +1,118 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect - Traitements</title>
+    <meta name="description" content="" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <!-- Intégration de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Intégration de Boxicons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="container-xxl flex-grow-1 container-p-y" margin-top: 700px;>
+        <form method="GET" action="{{ path('app_traitement_index') }}" class="mb-3">
+            <div class="row">
+                <!-- Filtrage par État -->
+                <div class="col-md-4" style= "margin-top: 230px;">
+                    <label for="etat" class="form-label">Filtrer par État</label>
+                    <select name="etat" id="etat" class="form-control">
+                        <option value="">Tous</option>
+                        <option value="rejeté" {{ selectedEtat is defined and selectedEtat == 'rejeté' ? 'selected' : '' }}>Rejeté</option>
+                        <option value="en cours" {{ selectedEtat is defined and selectedEtat == 'en cours' ? 'selected' : '' }}>En cours</option>
+                        <option value="résolue" {{ selectedEtat is defined and selectedEtat == 'résolue' ? 'selected' : '' }}>Résolue</option>
+                    </select>
+                </div>
+            </div>
+        
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bx bx-search"></i> Rechercher
+                </button>
+                <a href="{{ path('app_traitement_index') }}" class="btn btn-secondary">Réinitialiser</a>
+            </div>
+        </form>
+        
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Liste des Traitements</h5>
+                {# Le bouton d'ajout sera disponible uniquement depuis la page de réclamation #}
+            </div>
+            <div class="table-responsive text-nowrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Commentaire</th>
+                            <th>État</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {% for traitement in traitements %}
+                            <tr>
+                                <td>{{ traitement.id }}</td>
+                                <td title="{{ traitement.commentaire}}">
+                                    {{ traitement.commentaire|slice(0, 50) ~ (traitement.commentaire|length > 50 ? '...' : '') }}
+                                </td>
+                                <td>
+                                    {% set etat = traitement.etat.value %}
+                                    <span class="badge 
+                                        {% if etat == 'en cours' %} badge bg-info text-dark
+                                        {% elseif etat == 'résolue' %} bg-success 
+                                        {% else %} bg-secondary {% endif %}">
+                                        {% if etat == 'en cours' %}
+                                            🔄
+                                        {% elseif etat == 'résolue' %}
+                                            ✅
+                                        {% else %}
+                                           ❌ 
+                                        {% endif %}
+                                        {{ etat }}
+                                    </span>
+                                </td>
+                                
+                                <td>{{ traitement.dateTraitement|date('d/m/Y H:i') }}</td>
+                                
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <!-- Bouton "Voir" -->
+                                        <a href="{{ path('app_traitement_show', {'id': traitement.id}) }}" class="btn btn-icon btn-primary" title="Voir">
+                                            <i class="bx bx-show-alt fa-lg"></i> <!-- Icône "Voir" agrandie -->
+                                        </a>
+                                        <!-- Bouton "Modifier" -->
+                                        <a href="{{ path('app_traitement_edit', {'id': traitement.id}) }}" class="btn btn-icon btn-warning" title="Modifier">
+                                            <i class="bx bx-edit-alt fa-lg"></i> <!-- Icône "Modifier" agrandie -->
+                                        </a>
+                                        <!-- Bouton "Supprimer" -->
+                                        <form method="post" action="{{ path('app_traitement_delete', {'id': traitement.id}) }}" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réclamation ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ traitement.id) }}">
+                                            <button type="submit" class="btn btn-icon btn-danger" title="Supprimer">
+                                                <i class="bx bx-trash fa-lg"></i> <!-- Icône "Supprimer" agrandie -->
+                                            </button>
+                                        </form>
+                                        <!-- Bouton "Statistiques de rating" -->
+                                        <a href="{{ path('app_traitement_rating_stats', {'id': traitement.id}) }}" class="btn btn-icon btn-info" title="Statistiques de rating">
+                                            <i class="bx bx-bar-chart-alt fa-lg"></i> <!-- Icône "Statistiques" agrandie -->
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="8" class="text-center">Aucune traitement trouvée.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

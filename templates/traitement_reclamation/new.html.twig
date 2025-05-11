@@ -1,0 +1,112 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block title %}Ajouter un Traitement{% endblock %}
+
+{% block body %}
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="row justify-content-center">
+                <div class="col-xl" style="margin-left: 250px; margin-top: 200px; width: 500px;">
+                    <div class="card mb-6">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Nouveau Traitement</h5>
+                            <small class="text-body float-end">Remplissez les détails</small>
+                        </div>
+                        <div class="card-body">
+                            {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}) }}
+                            <input type="hidden" id="reclamation-id" value="{{ reclamation.id }}">
+
+                            <!-- 📌 CHAMP COMMENTAIRE -->
+                            <div class="mb-3">
+                                <label class="form-label" for="form.commentaire">
+                                    <i class="bx bx-comment"></i> Commentaire
+                                </label>
+                                {{ form_widget(form.commentaire, {'attr': {'class': 'form-control', 'rows': 3, 'id': 'commentaire-input' }}) }}
+                                <div id="suggestions-container" class="list-group mt-2" style="display: none;"></div>
+                                {% if form.commentaire.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.commentaire) }}</span>
+                                {% endif %}
+                                <button type="button" id="generate-comment-btn" class="btn btn-secondary mt-2">
+                                    <i class="bx bx-refresh"></i> Générer un Commentaire
+                                </button>
+                            </div>
+
+                            <!-- 📌 CHAMP DATE DE TRAITEMENT -->
+                            <div class="mb-3">
+                                <label class="form-label" for="form.dateTraitement">
+                                    <i class="bx bx-calendar"></i> Date de Traitement
+                                </label>
+                                {{ form_widget(form.dateTraitement, {'attr': {'class': 'form-control' }}) }}
+                                {% if form.dateTraitement.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.dateTraitement) }}</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- 📌 CHAMP ÉTAT DU TRAITEMENT -->
+                            <div class="mb-3">
+                                <label class="form-label" for="form.etat">
+                                    <i class="bx bx-check-circle"></i> État du Traitement
+                                </label>
+                                {{ form_widget(form.etat, {'attr': {'class': 'form-select' }}) }}
+                                {% if form.etat.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.etat) }}</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- 📌 BOUTONS -->
+                            <button class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-save"></i> Ajouter le Traitement
+                            </button>
+
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('generate-comment-btn').addEventListener('click', function () {
+        const commentaireInput = document.getElementById('traitement_reclamation_commentaire');
+        
+        if (!commentaireInput) {
+            console.error("L'élément traitement_reclamation_commentaire n'a pas été trouvé.");
+            return;
+        }
+    
+        // Récupérer l'ID de la réclamation à partir de la page ou d'une autre source
+        const reclamationId = document.getElementById('reclamation-id').value;
+    
+        // Effectuer la requête pour générer le commentaire
+        fetch('/traitement/reclamation/generate-comment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'reclamationId': reclamationId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Données reçues de l\'API:', data);  // Ajouté pour inspecter la réponse
+    
+            if (data.commentaire) {
+                if (commentaireInput) {
+                    commentaireInput.value = data.commentaire;
+                }
+                console.log('Commentaire généré:', data.commentaire);
+            } else if (data.error) {
+                console.error('Erreur:', data.error);
+            }
+        })
+        .catch(error => console.error('Erreur lors de la requête:', error));
+    });
+    
+</script>
+
+
+
+{% endblock %}

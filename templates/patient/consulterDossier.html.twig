@@ -1,0 +1,52 @@
+{% extends 'patient/baseRendezVous.html.twig' %}
+
+{% block title %}Consulter Dossier Médical{% endblock %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="card" style="padding: 20px;">
+        <h1 class="mb-4 text-center text-primary">Dossier Médical de {{ dossierMedical.patient.nom }}</h1>
+
+        <div class="mb-3">
+            <h5 class="card-subtitle mb-2 text-muted">ID : {{ dossierMedical.id }}</h5>
+            <div class="list-group list-group-flush">
+                <div class="list-group-item"><strong>Patient :</strong> {{ dossierMedical.patient.nom }}</div>
+                <div class="list-group-item"><strong>Groupe Sanguin :</strong> {{ dossierMedical.GroupeSanguin }}</div>
+                <div class="list-group-item"><strong>Allergies :</strong> {{ dossierMedical.Allergies }}</div>
+                <div class="list-group-item"><strong>Vaccinations :</strong> {{ dossierMedical.Vaccinations }}</div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ path('Mon_dossier_medical') }}" class="btn btn-primary">Retour à la liste</a>
+            
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 10px;
+    }
+    .text-primary {
+        color: #007bff; 
+    }
+    .btn-primary {
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+    .list-group-item {
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+    .card-subtitle {
+        font-size: 0.9em;
+    }
+</style>
+{% endblock %}

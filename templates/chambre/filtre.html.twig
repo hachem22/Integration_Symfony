@@ -1,0 +1,64 @@
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Filtres</h5>
+    </div>
+    <div class="card-body">
+        <form id="filterForm" action="{{ path('chambre.filtre') }}" method="get" class="row g-3">
+            <div class="col-md-3">
+                <label for="type" class="form-label">Type de chambre</label>
+                <select name="type" id="type" class="form-select">
+                    <option value="">Tous</option>
+                    <option value="simple" {% if filters.type is defined and filters.type == 'simple' %}selected{% endif %}>Simple</option>
+                    <option value="double" {% if filters.type is defined and filters.type == 'double' %}selected{% endif %}>Double</option>
+                    <option value="suite" {% if filters.type is defined and filters.type == 'suite' %}selected{% endif %}>Suite</option>
+                </select>
+            </div>
+            
+            <div class="col-md-3">
+                <label for="active" class="form-label">Statut</label>
+                <select name="active" id="active" class="form-select">
+                    <option value="">Tous</option>
+                    <option value="disponible" {% if filters.active is defined and filters.active == 'disponible' %}selected{% endif %}>Disponible</option>
+                    <option value="occupee" {% if filters.active is defined and filters.active == 'occupee' %}selected{% endif %}>Occupée</option>
+                    <option value="maintenance" {% if filters.active is defined and filters.active == 'maintenance' %}selected{% endif %}>Maintenance</option>
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <label for="capaciteMin" class="form-label">Capacité min</label>
+                <input type="number" name="capaciteMin" id="capaciteMin" class="form-control" min="1" max="10" 
+                       value="{{ filters.capaciteMin|default('') }}">
+            </div>
+            
+            <div class="col-md-2">
+                <label for="capaciteMax" class="form-label">Capacité max</label>
+                <input type="number" name="capaciteMax" id="capaciteMax" class="form-control" min="1" max="10"
+                       value="{{ filters.capaciteMax|default('') }}">
+            </div>
+            
+            <div class="col-md-2">
+                <label for="service" class="form-label">Service</label>
+                <select name="service" id="service" class="form-select">
+                    <option value="">Tous</option>
+                    {% for service in services %}
+                        <option value="{{ service.id }}" {% if filters.service is defined and filters.service == service.id %}selected{% endif %}>
+                            {{ service.nom }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-8">
+                <label for="search" class="form-label">Recherche</label>
+                <input type="text" name="search" id="search" class="form-control" 
+                       placeholder="Numéro ou localisation..." value="{{ filters.search|default('') }}">
+            </div>
+            
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary me-2">Filtrer</button>
+                <a href="{{ path('app_chambre') }}" class="btn btn-secondary">Réinitialiser</a>
+            </div>
+        </form>
+    </div>
+</div>

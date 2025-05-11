@@ -1,0 +1,36 @@
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-xl" style="margin-left: 250px; margin-top: 50px; width: 500px;">
+            <div class="card mb-6">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Passer une commande</h5>
+                    <small class="text-body float-end">Remplissez les détails</small>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}) }}
+                    <div class="mb-3">
+                        <label class="form-label" for="form.stockPharmacie"><i class="bx bx-capsule"></i> Produit</label>
+                        {{ form_row(form.stockPharmacie, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="form.quantite"><i class="bx bx-list-ol"></i> Quantité</label>
+                        {{ form_row(form.quantite, {'attr': {'class': 'form-control', 'min': 1}}) }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="form.dateLivraison"><i class="bx bx-calendar"></i> Date de livraison</label>
+                        {{ form_row(form.dateLivraison, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="form.statut"><i class="bx bx-info-circle"></i> Statut</label>
+                        {{ form_row(form.statut, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                    <button class="btn btn-primary">{{ button_label|default('Commander') }}</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

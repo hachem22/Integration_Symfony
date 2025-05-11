@@ -1,0 +1,174 @@
+
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- En-tête -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="fw-bold mb-2">Catalogue des Médicaments</h4>
+                            <p class="text-muted mb-0">Découvrez notre gamme complète de médicaments</p>
+                        </div>
+                        <div class="search-box">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un médicament...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" id="filterType">
+                                <option value="">Tous les types</option>
+                                <option value="Comprimé">Comprimé</option>
+                                <option value="Sirop">Sirop</option>
+                                <option value="Injectable">Injectable</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Disponibilité</label>
+                            <select class="form-select" id="filterStatus">
+                                <option value="">Tout</option>
+                                <option value="en-stock">En stock</option>
+                                <option value="rupture">En rupture</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Prix</label>
+                            <select class="form-select" id="filterPrice">
+                                <option value="">Tous les prix</option>
+                                <option value="asc">Prix croissant</option>
+                                <option value="desc">Prix décroissant</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des produits -->
+    <div class="row" id="productGrid">
+        {% for medicament in medicaments %}
+        <div class="col-md-4 col-lg-3 mb-4 product-card" 
+             data-type="{{ medicament.type }}" 
+             data-status="{{ medicament.statu ? 'en-stock' : 'rupture' }}"
+             data-price="{{ medicament.prix }}">
+            <div class="card h-100">
+                <div class="position-relative">
+                    {% if medicament.image %}
+                        <img src="{{ asset('uploads/images/' ~ medicament.image) }}" 
+                             class="card-img-top" 
+                             alt="{{ medicament.nom }}"
+                             style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="position-absolute top-0 end-0 m-2">
+                        <span class="badge bg-{{ medicament.statu ? 'success' : 'danger' }}">
+                            {{ medicament.statu ? 'En stock' : 'Rupture' }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title mb-1">{{ medicament.nom }}</h5>
+                    <p class="text-muted small mb-2">{{ medicament.type }}</p>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold text-primary">{{ medicament.prix|number_format(2, ',', ' ') }} €</span>
+                        <span class="text-muted small">Stock: {{ medicament.quantite }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ path('app_stock_pharmacie_show', {'id': medicament.id}) }}" 
+                           class="btn btn-outline-primary btn-sm">
+                            <i class="bx bx-info-circle me-1"></i> Détails
+                        </a>
+                        {% if medicament.statu %}
+                                <form action="{{ path('app_panier_ajouter', {'id': medicament.id}) }}" method="POST" class="d-inline">
+        <button type="submit" class="btn btn-primary btn-sm">
+            <i class="bx bx-cart-add me-1"></i> Ajouter au panier
+        </button>
+    </form>
+                        {% else %}
+                            <button class="btn btn-secondary btn-sm" disabled>
+                                <i class="bx bx-x-circle me-1"></i> Indisponible
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                <i class="bx bx-info-circle me-2"></i>
+                Aucun médicament disponible dans le catalogue.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const filterType = document.getElementById('filterType');
+    const filterStatus = document.getElementById('filterStatus');
+    const filterPrice = document.getElementById('filterPrice');
+    const productCards = document.querySelectorAll('.product-card');
+
+    function filterProducts() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedType = filterType.value.toLowerCase();
+        const selectedStatus = filterStatus.value;
+        const selectedPrice = filterPrice.value;
+
+        // Convertir les cartes en tableau pour le tri
+        let cards = Array.from(productCards);
+
+        // Trier par prix si nécessaire
+        if (selectedPrice) {
+            cards.sort((a, b) => {
+                const priceA = parseFloat(a.dataset.price);
+                const priceB = parseFloat(b.dataset.price);
+                return selectedPrice === 'asc' ? priceA - priceB : priceB - priceA;
+            });
+        }
+
+        cards.forEach(card => {
+            const type = card.dataset.type.toLowerCase();
+            const status = card.dataset.status;
+            const title = card.querySelector('.card-title').textContent.toLowerCase();
+
+            const matchesSearch = title.includes(searchTerm);
+            const matchesType = !selectedType || type === selectedType;
+            const matchesStatus = !selectedStatus || status === selectedStatus;
+
+            if (matchesSearch && matchesType && matchesStatus) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Réorganiser les cartes dans la grille
+        const productGrid = document.getElementById('productGrid');
+        cards.forEach(card => productGrid.appendChild(card));
+    }
+
+    searchInput.addEventListener('input', filterProducts);
+    filterType.addEventListener('change', filterProducts);
+    filterStatus.addEventListener('change', filterProducts);
+    filterPrice.addEventListener('change', filterProducts);
+});
+</script>
+{% endblock %}
+{% endblock %} 

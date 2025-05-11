@@ -1,0 +1,106 @@
+{% extends "stock_pharmacie/navbar.html.twig" %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="card">
+        <div class="card-header">
+            <h5>Liste des médicaments</h5>
+            <div class="d-flex gap-2">
+                <a href="{{ path('app_stock_pharmacie_new') }}" class="btn btn-primary">
+                    <i class="bx bxs-capsule me-1"></i>
+                    Ajouter un médicament
+                </a>
+                <a href="{{ path('app_commande_index') }}" class="btn btn-success">
+                    <i class="bx bxs-cart-download me-1"></i>
+                    Voir les commandes
+                </a>
+                <a href="{{ path('app_catalogue_index') }}" class="btn btn-primary">
+                    <i class="bx bx-book-content me-1"></i> Consulter le catalogue
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Quantité</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stock_pharmacie in stock_pharmacies %}
+                            <tr>
+                                <td>{{ stock_pharmacie.nom }}</td>
+                                <td>{{ stock_pharmacie.quantite }}</td>
+                                <td>
+                                    {% if stock_pharmacie.statu %}
+                                        <span class="badge bg-success"><i class="bx bxs-check-circle me-1"></i>En stock</span>
+                                    {% else %}
+                                        <span class="badge bg-danger"><i class="bx bxs-x-circle me-1"></i>Stock épuisé</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-3 justify-content-center align-items-center">
+                                        <a href="{{ path('app_stock_pharmacie_show', {'id': stock_pharmacie.id}) }}" 
+                                           class="text-info" 
+                                           data-bs-toggle="tooltip" 
+                                           title="Voir les détails"
+                                        >
+                                            <i class="bx bxs-show fs-5"></i>
+                                        </a>
+                                        <a href="{{ path('app_stock_pharmacie_edit', {'id': stock_pharmacie.id}) }}" 
+                                           class="text-warning" 
+                                           data-bs-toggle="tooltip" 
+                                           title="Modifier"
+                                        >
+                                            <i class="bx bxs-edit fs-5"></i>
+                                        </a>
+                                        <a href="{{ path('app_commande_new_with_product', {'id': stock_pharmacie.id}) }}" 
+                                           class="text-success" 
+                                           data-bs-toggle="tooltip" 
+                                           title="Commander"
+                                        >
+                                            <i class="bx bxs-cart-add fs-5"></i>
+                                        </a>
+                                        <form method="post" action="{{ path('app_stock_pharmacie_delete', {'id': stock_pharmacie.id}) }}" class="d-inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce médicament ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ stock_pharmacie.id) }}">
+                                            <button class="btn btn-link text-danger p-0 border-0" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="Supprimer"
+                                            >
+                                                <i class="bx bxs-trash fs-5"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4">Aucun médicament trouvé</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="{{ path('app_commande_index') }}" class="btn btn-success rounded-circle position-fixed" style="bottom: 30px; right: 30px; width: 60px; height: 60px;">
+    <i class="fas fa-shopping-cart fs-4"></i>
+</a>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+        });
+    </script>
+{% endblock %}

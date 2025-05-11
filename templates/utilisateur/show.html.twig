@@ -1,0 +1,115 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>
+        CareConnect - Détails du Médecin
+    </title>
+    <meta name="description" content="" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="{{ asset('https://fonts.googleapis.com') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.gstatic.com') }}" crossorigin />
+    <link href="{{ asset('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <!-- Helpers -->
+    <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+    <!-- Template customizer & Theme config files -->
+    <script src="{{ asset('../assets/js/config.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container-xxl flex-grow-1 container-p-y" style="margin-top: 300px; width:800px;margin-left: 200px;">
+        <!-- Back Button -->
+        
+
+        <!-- Doctor Details Card -->
+        <div class="card">
+            <h5 class="card-header">Détails du {{ utilisateur.utilisateurRole.value }}</h5>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Doctor Image (Placeholder) -->
+                    <div class="col-md-4 text-center">
+                        <img src="{{ asset('../assets/img/avatars/doctor-avatar.png') }}" alt="Doctor Avatar" class="rounded-circle mb-3" width="150" height="150" />
+                        <h4 class="mb-2">{{ utilisateur.Nom }} {{ utilisateur.Prenom }}</h4>
+                        <span class="badge bg-label-primary">{{ utilisateur.medecinSpecilaite.value }}</span>
+                    </div>
+
+                    <!-- Doctor Details -->
+                    <div class="col-md-8">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nom</label>
+                                <p class="form-control-static">{{ utilisateur.Nom }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Prénom</label>
+                                <p class="form-control-static">{{ utilisateur.Prenom }}</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <p class="form-control-static">{{ utilisateur.Email }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Téléphone</label>
+                                <p class="form-control-static">{{ utilisateur.Tel }}</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Adresse</label>
+                                <p class="form-control-static">{{ utilisateur.Adress }}</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Spécialité</label>
+                                <p class="form-control-static">
+                                    <span class="badge bg-label-primary">{{ utilisateur.medecinSpecilaite.value }}</span>
+                                </p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Footer with Actions -->
+            <div class="card-footer text-end">
+                <a href="{{ path('app_utilisateur_edit', {'id': utilisateur.id}) }}" class="btn btn-primary">
+                    <i class="bx bx-edit-alt me-1"></i> Modifier
+                </a>
+            </div>
+            <div class="mb-3" style="margin-left: 550px;">
+            <a href="{{ path('app_utilisateur_index') }}" class="btn btn-secondary">
+                <i class="bx bx-arrow-back me-1"></i> Retour à la liste
+            </a>
+        </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- Core JS -->
+    <script src="{{ asset('../assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/menu.js') }}"></script>
+    <!-- Main JS -->
+    <script src="{{ asset('../assets/js/main.js') }}"></script>
+{% endblock %}

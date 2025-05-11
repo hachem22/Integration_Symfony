@@ -1,0 +1,118 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>
+       CareConnect
+    </title>
+    <meta name="description" content="" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="{{ asset('https://fonts.googleapis.com') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.gstatic.com') }}" crossorigin />
+    <link href="{{ asset('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <!-- Helpers -->
+    <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+    <!-- Template customizer & Theme config files -->
+    <script src="{{ asset('../assets/js/config.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<!-- Formulaire de tri -->
+<div class="card mb-4">
+    <h5 class="card-header">Liste des formations</h5>
+    <div class="d-flex justify-content-between">
+        {% set nextSort = (sortOrder == 'ASC') ? 'DESC' : 'ASC' %}
+        <form method="get" action="{{ path('formation_index') }}">
+            <input type="hidden" name="sort" value="{{ nextSort }}" />
+            <button type="submit" class="btn btn-primary">
+                Trier par nom ({{ nextSort == 'ASC' ? 'A-Z' : 'Z-A' }})
+            </button>
+        </form>
+    </div>
+</div>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Bootstrap Table -->
+        <div class="card" style="margin-left: 150px;">
+            <h5 class="card-header">
+                Liste des Formations
+            </h5>
+            <div class="table-responsive text-nowrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nom de la Formation</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th class="text-center">Actions</th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {% set hasFormations = false %}
+                        {% for formation in formations %}
+                            <tr>
+                                <td>{{ formation.Nom }}</td>
+                                <td>{{ formation.Description }}</td>
+                                <td>{{ formation.Type }}</td>
+                                <td>{{ formation.Date|date('d/m/Y H:i') }}</td>
+                                <td>
+                                    <div>
+                                        <!-- Show Icon -->
+                                        
+                                        
+<a href="{{ path('formation_show', {'id': formation.id}) }}">
+    <i class="bx bx-show-alt me-1"></i>
+</a>
+
+<!-- Edit Icon -->
+<a href="{{ path('formation_edit', {'id': formation.id}) }}">
+    <i class="bx bx-edit-alt me-1"></i>
+</a>
+
+<!-- Delete Icon -->
+<form method="post" action="{{ path('formation_delete', {'id': formation.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cete formation ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ formation.id) }}">
+    <button type="submit" class="btn btn-link p-0">
+        <i class="bx bx-trash-alt me-1"></i>
+    </button>
+</form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% set hasFormations = true %}
+                        {% endfor %}
+                        {% if not hasFormations %}
+                            <tr>
+                                <td colspan="5">
+                                    Aucune formation trouvée
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- Core JS -->
+    <script src="{{ asset('../assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/menu.js') }}"></script>
+    <!-- Main JS -->
+    <script src="{{ asset('../assets/js/main.js') }}"></script>
+{% endblock %}

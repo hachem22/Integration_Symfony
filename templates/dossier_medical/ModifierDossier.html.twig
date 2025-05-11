@@ -1,0 +1,63 @@
+{% extends 'medecin/baseMedecin.html.twig' %}
+
+{% block title %}Modifier Visite - {{ visite.id }}{% endblock %}
+
+{% block content %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="card shadow-lg p-4">
+            <h5 class="card-header">
+                Modifier Visite - {{ visite.id }}
+            </h5>
+
+            <div class="card-body">
+                {# Démarrage du formulaire avec une action spécifique à la modification #}
+                {{ form_start(form, {
+                    'attr': {'class': 'form-horizontal'},
+                    'action': path('visite_modifier', {'id': visite.id, 'dossierId': dossierId}),
+                    'method': 'POST'
+                }) }}
+
+                {# Champ pour la date de la visite #}
+                <div class="mb-3">
+                    {{ form_label(form.dateVisite, 'Date de la Visite', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.dateVisite, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.dateVisite) }}
+                </div>
+
+                {# Champ pour le diagnostic #}
+                <div class="mb-3">
+                    {{ form_label(form.diagnostic, 'Diagnostic', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.diagnostic, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.diagnostic) }}
+                </div>
+
+                {# Champ pour l'ordonnance #}
+                <div class="mb-3">
+                    {{ form_label(form.ordonnance, 'Ordonnance', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.ordonnance, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.ordonnance) }}
+                </div>
+
+                {# Champ pour le certificat #}
+                <div class="mb-3">
+                    {{ form_label(form.certificat, 'Certificat', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.certificat, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.certificat) }}
+                </div>
+
+                {# Boutons d'action : Enregistrer et Retour #}
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bx bx-save"></i> Enregistrer
+                    </button>
+                    <a href="{{ path('visite_index', {'id': dossierId}) }}" class="btn btn-outline-secondary">
+                        <i class="bx bx-arrow-back"></i> Retour
+                    </a>
+                </div>
+
+                {# Fin du formulaire #}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

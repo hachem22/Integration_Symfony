@@ -1,0 +1,71 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block title %}Détails de la Réclamation{% endblock %}
+
+{% block body %}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="col-xl" style="margin-left: 120px; width: 500px; margin-top: 200px;">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle"></i> Détails de la Réclamation
+                        </h5>
+                        <small class="text-body float-end">Informations détaillées</small>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <i class="fas fa-hashtag"></i> <strong>ID :</strong> {{ reclamation.id }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-file-alt"></i> <strong>Description :</strong> {{ reclamation.description }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-bullseye"></i> <strong>Cible :</strong> {{ reclamation.cible }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-tag"></i> <strong>Type :</strong> {{ reclamation.type.value }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-calendar-alt"></i> <strong>Date de Création :</strong> {{ reclamation.datecreation|date('d/m/Y H:i') }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-layer-group"></i> <strong>Catégorie :</strong> {{ reclamation.categorie.nom }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-exclamation-circle"></i> <strong>Statut :</strong>
+                                {% if reclamation.statut.value == 'en attente' %}
+                                    <span class="badge bg-warning text-dark">🕒 {{ reclamation.statut.value }}</span>
+                                {% elseif reclamation.statut.value == 'en cours' %}
+                                    <span class="badge bg-info text-dark">🔄 {{ reclamation.statut.value }}</span>
+                                {% elseif reclamation.statut.value == 'résolue' %}
+                                    <span class="badge bg-success">✅ {{ reclamation.statut.value }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">❌ {{ reclamation.statut.value }}</span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                
+
+                <div class="d-flex justify-content-between align-items-center gap-2">
+                    <a href="{{ path('reclamation_indexx') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour à la liste
+                    </a>
+                    <div class="d-flex gap-2">
+                        
+                        <a href="{{ path('app_traitement_new', {'id': reclamation.id}) }}" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Créer un Traitement
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

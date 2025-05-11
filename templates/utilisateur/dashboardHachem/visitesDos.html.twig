@@ -1,0 +1,192 @@
+{% extends "utilisateur/dashboardHachem/sidenavv.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect</title>
+    <meta name="description" content="" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.googleapis.com') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.gstatic.com') }}" crossorigin />
+    <link href="{{ asset('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+    <script src="{{ asset('../assets/js/config.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="layout-wrapper layout-4"style="margin-top: 80px;width: 1800px;height: 500px;margin-left: 400px;">
+                <class="container-xxl flex-grow-1 container-p-y"style="width: 1000px;">{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="card shadow-lg p-4">
+        <h5 class="card-header">
+            Visits for Medical Record - {{ dossierMedical.id }}
+        </h5>
+
+        <div class="d-flex justify-content-between mb-3">
+            <a href="{{ path('Mon_dossier_medical') }}" class="btn btn-outline-primary">
+                <i class="bx bx-arrow-back"></i> Back to list
+            </a>
+            <a href="{{ path('ajouter_visite', {'id': dossierMedical.id}) }}" class="btn btn-success">
+                <i class="bx bx-plus"></i> Add Visit
+            </a>
+        </div>
+
+        <!-- Table of Visits -->
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Diagnostic</th>
+                        <th>Prescription</th>
+                        <th>Certificate</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    {% for visit in visites %}
+                        <tr>
+                            <td>{{ visit.id }}</td>
+                            <td>{{ visit.dateVisite|date('d/m/Y') }}</td>
+                            <td>
+                                <a href="{{ path('visite_telecharger_diagnostic', {id: visit.id}) }}"class="btn btn-info btn-sm">
+                                    <i class="bx bx-download"></i> Telecharger Diagnostic
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ path('visite_telecharger_ordonnance', {id: visit.id}) }}" class="btn btn-info btn-sm">
+                                    <i class="bx bx-download"></i> Telecharger Ordonnance
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ path('visite_telecharger_certificat', {id: visit.id}) }}" class="btn btn-info btn-sm">
+                                    <i class="bx bx-download"></i> Telecharger Certificat
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ path('visiteConsulter', { dossierId: visit.dossierMedical.id, id: visit.id }) }}" class="btn btn-primary btn-sm me-2">
+                                    <i class="bx bx-show"></i> 
+                                </a>
+                                <a href="{{ path('visite_modifier', { dossierId: visit.dossierMedical.id, id: visit.id }) }}" class="btn btn-sm btn-warning me-2">
+                                    <i class="bx bx-edit"></i> 
+                                </a>
+                                <form method="post" action="{{ path('visite_supprimer', { 'id': visit.id, 'dossierId': visit.dossierMedical.id }) }}" onsubmit="return confirm('Are you sure you want to delete this visit?');" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ visit.id) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bx bx-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="bx bx-calendar-x fa-2x"></i><br>
+                                No visits found.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.1);
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        border-radius: 5px;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .btn-warning:hover {
+        background-color: #e0a800;
+        border-color: #d39e00;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    .chip {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.5;
+        border-radius: 10px;
+    }
+
+    .chip-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .chip-warning {
+        background-color: #ffc107;
+        color: white;
+    }
+
+    .chip-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .chip-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<!-- FontAwesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+{% endblock %}

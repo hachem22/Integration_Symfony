@@ -1,0 +1,269 @@
+{% extends 'patient/baseRendezVous.html.twig' %}
+
+{% block title %}Demande Rendez Vous{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Variables de couleur */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #2e7bf6, #1a56c4);
+        --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        --form-bg: #ffffff;
+        --border-radius: 12px;
+        --input-border: #e2e8f0;
+        --input-focus: #3b82f6;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --error-color: #ef4444;
+        --primary-blue: #0D47A1;     /* Deep Blue */
+            --secondary-blue: #1565C0;   /* Strong Blue */
+            --accent-blue: #2196F3;      /* Bright Blue */
+            --light-blue: #64B5F6;       /* Light Blue */
+            --background-blue: #E3F2FD; 
+    }
+    
+        body {
+            background-color: var(--background-blue);
+            font-family: 'Inter', sans-serif;
+        }
+
+    /* Styles communs */
+    .appointment-card {
+        border-radius: var(--border-radius);
+        border: none;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .appointment-card:hover {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    }
+    
+    .card-header-modern {
+        background: var(--primary-gradient);
+        padding: 1.5rem 1rem;
+        border-bottom: none;
+    }
+    
+    .card-body-modern {
+        padding: 2rem;
+        background-color: var(--form-bg);
+    }
+    
+    .form-label {
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+    }
+    
+    .form-select, .form-control {
+        border-radius: 8px;
+        border: 1.5px solid var(--input-border);
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        width: 100%;
+        color: var(--text-primary);
+    }
+    
+    .form-select:focus, .form-control:focus {
+        border-color: var(--input-focus);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        outline: none;
+    }
+    
+    .btn-modern-primary {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.875rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-modern-primary:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+    
+    .btn-modern-secondary {
+        background-color: #f1f5f9;
+        color: var(--text-secondary);
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.875rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-modern-secondary:hover {
+        background-color: #e2e8f0;
+    }
+    
+    .error-feedback {
+        color: var(--error-color);
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: block;
+    }
+    
+    .page-heading {
+        color: #fff;
+        font-weight: 600;
+        margin: 0;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .page-subheading {
+        color: rgba(255,255,255,0.9);
+        font-weight: 400;
+        margin-top: 0.5rem;
+        font-size: 0.95rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="appointment-card">
+                    <div class="card-header-modern text-center">
+                        <h3 class="page-heading">Prendre Rendez-Vous</h3>
+                        <p class="page-subheading">Sélectionnez un service, un médecin et une date</p>
+                    </div>
+                    <div class="card-body-modern">
+                        {% if form is not null %}
+                            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                            {# Ajout du token CSRF pour toutes les requêtes #}
+                            <meta name="csrf-token" content="{{ csrf_token('medecins_token') }}">
+
+                            {# Champ Service #}
+                            <div class="mb-4">
+                                {{ form_label(form.service, 'Service', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.service, {'attr': {'class': 'form-select select-service'}}) }}
+                                {% if form.service.vars.errors|length > 0 %}
+                                    <span class="error-feedback">
+                                        {{ form_errors(form.service) }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            {# Champ Médecin #}
+                            <div class="mb-4">
+                                {{ form_label(form.medecin, 'Médecin', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.medecin, {'attr': {'class': 'form-select select-medecin'}}) }}
+                                {% if form.medecin.vars.errors|length > 0 %}
+                                    <span class="error-feedback">
+                                        {{ form_errors(form.medecin) }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            {# Champ Date #}
+                            <div class="mb-4">
+                                {{ form_label(form.date, 'Date', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.date, {'attr': {'class': 'form-control select-date', 'type': 'date'}}) }}
+                                {% if form.date.vars.errors|length > 0 %}
+                                    <span class="error-feedback">
+                                        {{ form_errors(form.date) }}
+                                    </span>
+                                {% endif %}
+                                {% for message in app.flashes('warning') %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+                            </div>
+
+                            {# Bouton de soumission #}
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-modern-primary btn-lg" style={{"width:620px;"}}>Continuer</button>
+                            </div>
+
+                            {{ form_end(form) }}
+                        {% else %}
+                            <div class="text-center py-4">
+                                <div class="mb-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="text-danger">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <p class="text-danger fw-bold">Aucun service disponible pour le moment.</p>
+                                <p class="text-secondary">Veuillez réessayer plus tard ou contacter l'assistance.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const serviceSelect = document.querySelector('.select-service');
+            const medecinSelect = document.querySelector('.select-medecin');
+            const dateSelect = document.querySelector('.select-date');
+
+            serviceSelect.addEventListener('change', function () {
+    const serviceId = this.value;
+    if (serviceId) {
+        fetch(`/medecins/par-service/${serviceId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include' // Ceci permet d'envoyer les cookies de session
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Médecins reçus:', data);
+            medecinSelect.innerHTML = '<option value="">Sélectionnez un médecin</option>';
+            data.forEach(medecin => {
+                const option = document.createElement('option');
+                option.value = medecin.id;
+                option.textContent = medecin.nom;
+                medecinSelect.appendChild(option);
+            });
+            medecinSelect.disabled = false;
+        })
+        .catch(error => console.error('Erreur lors du chargement des médecins:', error));
+    } else {
+        medecinSelect.innerHTML = '<option value="">Sélectionnez un service d\'abord</option>';
+        medecinSelect.disabled = true;
+    }
+});
+
+            document.querySelector('form').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const dateSelectionnee = dateSelect.value;
+                const medecinId = medecinSelect.value;
+
+                if (dateSelectionnee && medecinId) {
+                    fetch(`/verifier-disponibilite-date?medecinId=${medecinId}&date=${dateSelectionnee}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.disponible) {
+                                this.submit();
+                            } else {
+                                alert('Cette date n\'est pas disponible.');
+                            }
+                        })
+                        .catch(error => console.error('Erreur lors de la vérification de la disponibilité:', error));
+                } else {
+                    alert('Veuillez sélectionner un service, un médecin et une date.');
+                }
+            });
+        });
+    </script>
+{% endblock %}

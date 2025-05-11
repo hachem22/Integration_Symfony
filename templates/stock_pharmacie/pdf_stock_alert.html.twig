@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Stock en Alerte - Critique</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h1 { color: #dc3545; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .badge { padding: 5px; border-radius: 5px; }
+        .bg-danger { background-color: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Stock en Alerte - Critique</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produit in stock_pharmacies %}
+                {% if produit.quantite < 10 %}
+                    <tr>
+                        <td>{{ produit.nom }}</td>
+                        <td>{{ produit.quantite }}</td>
+                        <td>
+                            <span class="badge bg-danger">Critique</span>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

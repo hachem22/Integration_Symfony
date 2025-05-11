@@ -1,0 +1,133 @@
+{% extends "utilisateur/dashboardHachem/sidenavv.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect</title>
+    <meta name="description" content="" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.googleapis.com') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.gstatic.com') }}" crossorigin />
+    <link href="{{ asset('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+    <script src="{{ asset('../assets/js/config.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+       
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+            <div class="card shadow-lg border-0" style="max-width: 2500px; width: 700px;margin-top:100px;margin-left:100px">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="card-title mb-0">Prendre Rendez Vous</h3>
+                </div>
+                <div class="card-body p-5">
+                    {% if form is not null %}
+                        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+                        {# Champ Service #}
+                        <div class="mb-4">
+                            {{ form_label(form.service, 'Service', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.service, {'attr': {'class': 'form-select select-service'}}) }}
+                            {% if form.service.vars.errors|length > 0 %}
+                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                    {{ form_errors(form.service) }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        {# Champ Médecin #}
+                        <div class="mb-4">
+                            {{ form_label(form.medecin, 'Médecin', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.medecin, {'attr': {'class': 'form-select select-medecin'}}) }}
+                            {% if form.medecin.vars.errors|length > 0 %}
+                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                    {{ form_errors(form.medecin) }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        {# Champ Date Disponible #}
+                        <div class="mb-4">
+                            {{ form_label(form.date, 'Date Disponible', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.date, {'attr': {'class': 'form-select select-date', 'readonly': 'readonly'}}) }}
+                            {% if form.date.vars.errors|length > 0 %}
+                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                    {{ form_errors(form.date) }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        {# Bouton de soumission #}
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Next</button>
+                        </div>
+
+                        {{ form_end(form) }}
+                    {% else %}
+                        <p class="text-center text-danger">Aucun service disponible pour le moment.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const serviceSelect = document.querySelector('.select-service');
+            const medecinSelect = document.querySelector('.select-medecin');
+            const dateSelect = document.querySelector('.select-date');
+
+            serviceSelect.addEventListener('change', function () {
+                const serviceId = this.value;
+                if (serviceId) {
+                    fetch(`/medecins/par-service/${serviceId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            medecinSelect.innerHTML = '<option value="">Sélectionnez un médecin</option>';
+                            data.forEach(medecin => {
+                                const option = document.createElement('option');
+                                option.value = medecin.id;
+                                option.textContent = medecin.nom;
+                                medecinSelect.appendChild(option);
+                            });
+                            medecinSelect.disabled = false;
+                        })
+                        .catch(error => console.error('Erreur lors du chargement des médecins:', error));
+                } else {
+                    medecinSelect.innerHTML = '<option value="">Sélectionnez un service d\'abord</option>';
+                    medecinSelect.disabled = true;
+                    dateSelect.innerHTML = '<option value="">Sélectionnez un médecin d\'abord</option>';
+                    dateSelect.disabled = true;
+                }
+            });
+
+            medecinSelect.addEventListener('change', function () {
+                const medecinId = this.value;
+                if (medecinId) {
+                    fetch(`/dates-disponibles/${medecinId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            dateSelect.innerHTML = '<option value="">Sélectionnez une date disponible</option>';
+                            data.forEach(date => {
+                                const option = document.createElement('option');
+                                option.value = date.date;
+                                option.textContent = date.date;
+                                dateSelect.appendChild(option);
+                            });
+                            dateSelect.disabled = false;
+                        })
+                        .catch(error => console.error('Erreur lors du chargement des dates:', error));
+                } else {
+                    dateSelect.innerHTML = '<option value="">Sélectionnez un médecin d\'abord</option>';
+                    dateSelect.disabled = true;
+                }
+            });
+        });
+    </script>
+{% endblock %}

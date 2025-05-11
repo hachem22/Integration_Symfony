@@ -1,0 +1,42 @@
+{{ form_errors(form) }} 
+{{ form_start(form) }}
+
+<!-- 📌 CHAMP NOM -->
+<div class="mb-3">
+    {{ form_label(form.nom) }}
+    {{ form_widget(form.nom, {
+        'attr': {
+            'class': 'form-control' ~ (form.nom.vars.errors|length > 0 ? ' is-invalid' : ''),
+            'placeholder': 'Entrez le nom de la catégorie...'
+        }
+    }) }}
+    {% for error in form.nom.vars.errors %}
+        <div class="invalid-feedback">{{ error.message }}</div>
+    {% endfor %}
+</div>
+
+<!-- 📌 CHAMP DESCRIPTION -->
+<div class="mb-3">
+    {{ form_label(form.description) }}
+    {{ form_widget(form.description, {
+        'attr': {
+            'class': 'form-control' ~ (form.description.vars.errors|length > 0 ? ' is-invalid' : ''),
+            'placeholder': 'Entrez la description de la catégorie...'
+        }
+    }) }}
+    {% for error in form.description.vars.errors %}
+        <div class="invalid-feedback">{{ error.message }}</div>
+    {% endfor %}
+</div>
+
+<!-- 📌 BOUTONS -->
+<div class="d-flex justify-content-between align-items-center gap-2">
+    <a href="{{ path('categorie_index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Retour à la liste
+    </a>
+    <button type="submit" class="btn btn-success">
+        <i class="fas fa-save"></i> {{ button_label|default('Créer') }}
+    </button>
+</div>
+
+{{ form_end(form) }}

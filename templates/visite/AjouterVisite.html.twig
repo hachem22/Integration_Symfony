@@ -1,0 +1,182 @@
+{% extends 'medecin/baseMedecin.html.twig' %}
+
+{% block title %}Ajouter Visite{% endblock %}
+
+{% block content %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="card shadow-lg p-4">
+            <h5 class="card-header text-primary">
+                <i class="fas fa-notes-medical me-2"></i> Ajouter une Visite Médicale
+            </h5>
+
+            <div class="card-body">
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                {{ form_start(form, {
+                    'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'},
+                    'action': path('ajouter_visita', {'id': dossierMedical.id}),
+                    'method': 'POST'
+                }) }}
+
+                <div class="row">
+                    <!-- Maladies Dropdown -->
+                    <div class="col-md-6 mb-3">
+                        <label for="maladies" class="form-label fw-bold"><i class="fas fa-virus me-2"></i>Maladies</label>
+                        <select id="maladies" class="form-select">
+                            <option value="">Sélectionnez une maladie</option>
+                            <option value="mal de tête">Mal de tête</option>
+                            <option value="fièvre">Fièvre</option>
+                            <option value="douleur thoracique">Douleur thoracique</option>
+                            <option value="vertiges">Vertiges</option>
+                            <option value="toux">Toux</option>
+                            <option value="nausée">Nausée</option>
+                        </select>
+                    </div>
+
+                    <!-- Date de la Visite -->
+                    <div class="col-md-6 mb-3">
+                        {{ form_label(form.dateVisite, 'Date de la Visite', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        {{ form_widget(form.dateVisite, {'attr': {'class': 'form-control'}}) }}
+                        <div class="text-danger">{{ form_errors(form.dateVisite) }}</div>
+                    </div>
+                </div>
+
+                <!-- Boutons d'actions -->
+                <div class="mb-3 text-center">
+                    <button type="button" class="btn btn-outline-primary me-2" onclick="generateDiagnostic()">
+                        <i class="fas fa-stethoscope me-2"></i>Générer Diagnostic
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="generateOrdonnance()">
+                        <i class="fas fa-prescription-bottle-alt me-2"></i>Générer Ordonnance
+                    </button>
+                </div>
+
+                <div class="row">
+                    <!-- Diagnostic -->
+                    <div class="col-md-6 mb-3">
+                        {{ form_label(form.diagnostic, 'Diagnostic', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        {{ form_widget(form.diagnostic, {'attr': {'class': 'form-control', 'id': 'visite_diagnostic'}}) }}
+                        <div class="text-danger">{{ form_errors(form.diagnostic) }}</div>
+                    </div>
+
+                    <!-- Ordonnance -->
+                    <div class="col-md-6 mb-3">
+                        {{ form_label(form.ordonnance, 'Ordonnance', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                        {{ form_widget(form.ordonnance, {'attr': {'class': 'form-control', 'id': 'visite_ordonnance'}}) }}
+                        <div class="text-danger">{{ form_errors(form.ordonnance) }}</div>
+                    </div>
+                </div>
+
+                <!-- Certificat -->
+                <div class="mb-3">
+                    {{ form_label(form.certificat, 'Certificat', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                    {{ form_widget(form.certificat, {'attr': {'class': 'form-control'}}) }}
+                    <div class="text-danger">{{ form_errors(form.certificat) }}</div>
+                </div>
+
+                <!-- Bouton Enregistrer -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="bx bx-save me-2"></i>Enregistrer
+                    </button>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateDiagnostic() {
+    const maladie = document.getElementById('maladies').value;
+    if (!maladie) {
+        alert('Veuillez sélectionner une maladie.');
+        return;
+    }
+    
+    // Afficher un indicateur de chargement
+    document.getElementById('visite_diagnostic').value = "Génération du diagnostic en cours...";
+    
+    // Ajouter un paramètre timestamp pour éviter le cache
+    fetch('/api/diagnostic?t=' + new Date().getTime(), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache'  // Éviter le cache côté browser
+        },
+        body: JSON.stringify({
+            maladie: maladie,
+            // Ajouter un identifiant unique pour s'assurer que chaque requête est différente
+            requestId: Math.random().toString(36).substring(2, 15)
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById('visite_diagnostic').value = "Erreur: " + data.error;
+        } else {
+            document.getElementById('visite_diagnostic').value = data.diagnostic;
+        }
+    })
+    .catch(error => {
+        document.getElementById('visite_diagnostic').value = "Erreur lors de la génération du diagnostic.";
+        console.error('Erreur:', error);
+    });
+}
+
+        function generateOrdonnance() {
+    const maladie = document.getElementById('maladies').value;
+    if (!maladie) {
+        alert('Veuillez sélectionner une maladie.');
+        return;
+    }
+
+    // Afficher un indicateur de chargement
+    document.getElementById('visite_ordonnance').value = "Génération de l'ordonnance en cours...";
+    
+    // Appel à une nouvelle API pour les ordonnances
+    fetch('/api/ordonnance?t=' + new Date().getTime(), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache'
+        },
+        body: JSON.stringify({
+            maladie: maladie,
+            requestId: Math.random().toString(36).substring(2, 15)
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById('visite_ordonnance').value = "Erreur: " + data.error;
+        } else {
+            document.getElementById('visite_ordonnance').value = data.ordonnance;
+        }
+    })
+    .catch(error => {
+        // Fallback au système actuel en cas d'erreur
+        let ordonnance = '';
+        switch (maladie) {
+            case 'mal de tête': ordonnance = 'Paracétamol 1000mg, 1 comprimé toutes les 6 heures.'; break;
+            case 'fièvre': ordonnance = 'Ibuprofène 400mg, 1 comprimé toutes les 8 heures.'; break;
+            case 'douleur thoracique': ordonnance = 'Examen médical recommandé avant prescription.'; break;
+            case 'vertiges': ordonnance = 'Tanganil 500mg, 1 comprimé 3 fois par jour.'; break;
+            case 'toux': ordonnance = 'Sirop antitussif, 1 cuillère à soupe 3 fois par jour.'; break;
+            case 'nausée': ordonnance = 'Motilium 10mg, 1 comprimé avant les repas.'; break;
+            default: ordonnance = 'Prescription à déterminer après examen médical.';
+        }
+        document.getElementById('visite_ordonnance').value = ordonnance;
+    });
+}
+    </script>
+{% endblock %}

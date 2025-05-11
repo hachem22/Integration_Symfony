@@ -1,0 +1,22 @@
+
+{% extends 'utilisateur/sidenav.html.twig' %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white text-center">
+                <h3>Détails de la formation</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Nom :</strong> {{ formation.Nom }}</p>
+                <p><strong>Description :</strong> {{ formation.Description }}</p>
+                <p><strong>Type :</strong> {{ formation.Type }}</p>
+                <p><strong>Date :</strong> {{ formation.Date|date('Y-m-d H:i') }}</p>>
+
+                    <a href="{{ path('formation_index') }}" class="btn btn-secondary">Retour</a>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

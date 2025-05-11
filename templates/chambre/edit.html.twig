@@ -1,0 +1,132 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block content %}
+    <!doctype html>
+    <html lang="fr" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('../assets/') }}" data-template="vertical-menu-template-free" data-style="light">
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+            <title>Créer une Nouvelle Chambre</title>
+            <meta name="description" content="" />
+            <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+            <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+            <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+            <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+            <script src="{{ asset('../assets/js/config.js') }}"></script>
+        </head>
+
+        {% block body %}
+            <div class="layout-wrapper layout-content-navbar">
+                <div class="layout-container">
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="row">
+                            <div class="col-xl" style="margin-left: 250px; margin-top: 200px; width: 500px;">
+                                <div class="card mb-6">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">Modifier chambre {{ chambre.num }} </h5>
+                                        <small class="text-body float-end">Remplissez les détails</small>
+                                    </div>
+                                    <div class="card-body">
+                                        {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}) }}
+                                        
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.num">
+                                                <i class="bx bx-hash"></i> Numero {{ form_widget(form.num, {'attr': {'class': 'form-control' }}) }}
+                                            </label>
+                                            {% if form.num.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.num) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.type">
+                                                <i class="bx bx-bed"></i> Type de chambre
+                                            </label>
+                                            {{ form_widget(form.type, {'attr': {'class': 'form-select' }}) }}
+                                            {% if form.type.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.type) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.localisation">
+                                                <i class="bx bx-map"></i> Localisation
+                                            </label>
+                                            {{ form_widget(form.localisation, {'attr': {'class': 'form-control' }}) }}
+                                            {% if form.localisation.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.localisation) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.position">
+                                                <i class="bx bx-building"></i> Service associé
+                                            </label>
+                                            {{ form_widget(form.position, {'attr': {'class': 'form-select' }}) }}
+                                            {% if form.position.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.position) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.capacite">
+                                                <i class="bx bx-user"></i> Capacité
+                                            </label>
+                                            {{ form_widget(form.capacite, {'attr': {'class': 'form-control' }}) }}
+                                            {% if form.capacite.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.capacite) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.active">
+                                                <i class="bx bx-check"></i> État actif
+                                            </label>
+                                            {{ form_widget(form.active, {'attr': {'class': 'form-select' }}) }}
+                                            {% if form.active.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.active) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <button class="btn btn-primary btn-lg">Modifier</button>
+                                        {{ form_end(form) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    let form = document.getElementById('chambreForm');
+                    form.addEventListener('submit', function(event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    });
+                });
+            </script>
+        {% endblock %}
+    </html>
+{% endblock %}

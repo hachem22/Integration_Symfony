@@ -1,0 +1,119 @@
+{% extends "utilisateur/dashboardHachem/sidenavv.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect</title>
+    <meta name="description" content="" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.googleapis.com') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.gstatic.com') }}" crossorigin />
+    <link href="{{ asset('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+    <script src="{{ asset('../assets/js/config.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="layout-wrapper layout-4"style="margin-top: 80px;width: 1800px;height: 500px;margin-left: 400px;">
+                <class="container-xxl flex-grow-1 container-p-y"style="width: 1000px;">
+                    <div class="card" style="padding: 20px;width: 500px;margin-top: 20px">
+                        <h5 class="card-header">
+                            Modifier le rendez-vous
+                        </h5>
+                        <div class="card-body">
+                            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+                            <!-- Date Field -->
+                            <div class="mb-3">
+                                {{ form_label(form.date, 'Date du rendez-vous', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.date) }}
+                            </div>
+
+                            <!-- Heure Field -->
+                            <div class="mb-3">
+                                {{ form_label(form.heure, 'Heure du rendez-vous', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.heure, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.heure) }}
+                            </div>
+
+                            <!-- Service Field -->
+                            <div class="mb-3">
+                                {{ form_label(form.service, 'Service', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.service, {'attr': {'class': 'form-select select-service'}}) }}
+                                {{ form_errors(form.service) }}
+                            </div>
+
+                            <!-- Medecin Field -->
+                            <div class="mb-3">
+                                {{ form_label(form.medecin, 'Médecin', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.medecin, {'attr': {'class': 'form-select select-medecin'}}) }}
+                                {{ form_errors(form.medecin) }}
+                            </div>
+
+                            <!-- Statut Field -->
+                            <div class="mb-3">
+                                {{ form_label(form.rendezVousStatus, 'Statut du rendez-vous', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.rendezVousStatus, {'attr': {'class': 'form-select'}}) }}
+                                {{ form_errors(form.rendezVousStatus) }}
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">Enregistrer les modifications</button>
+                            </div>
+
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                
+                <!-- / Content -->
+          
+    </div>
+    {% endblock %}
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const serviceSelect = document.querySelector('.select-service');
+            const medecinSelect = document.querySelector('.select-medecin');
+
+            if (serviceSelect && medecinSelect) {
+                serviceSelect.addEventListener('change', function () {
+                    const serviceId = this.value;
+                    if (serviceId) {
+                        fetch(`/medecins/par-service/${serviceId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                medecinSelect.innerHTML = '<option value="">Sélectionnez un médecin</option>';
+                                data.forEach(medecin => {
+                                    const option = document.createElement('option');
+                                    option.value = medecin.id;
+                                    option.textContent = medecin.nom;
+                                    medecinSelect.appendChild(option);
+                                });
+                            })
+                            .catch(error => console.error('Erreur lors du chargement des médecins:', error));
+                    } else {
+                        medecinSelect.innerHTML = '<option value="">Sélectionnez un service d\'abord</option>';
+                    }
+                });
+            } else {
+                console.error('Un des éléments du formulaire n\'a pas été trouvé.');
+            }
+        });
+    </script>
+
+
+
+    <script src="{{ asset('../assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/menu.js') }}"></script>
+    <script src="{{ asset('../assets/js/main.js') }}"></script>
+{% endblock %}

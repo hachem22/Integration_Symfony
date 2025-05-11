@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}CareConnect - Gestion de Stock Pharmaceutique{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{{ asset('assets/images/favicon.ico') }}">
+    <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/templatemo-chain-app-dev.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/animated.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/owl.css') }}">
+    {% block stylesheets %}
+    <style>
+        /* Import de la police Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        /* Style général */
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Style du logo */
+        .header-area .logo img {
+            width: 120px;  /* Augmentation de la taille */
+            height: 120px; /* Augmentation de la taille */
+            transition: all 0.3s ease;
+        }
+
+        /* Animation du logo au survol */
+        .header-area .logo img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Style des titres */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        /* Style du texte principal */
+        p {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Style des boutons */
+        .gradient-button a {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        /* Style de la navigation */
+        .main-nav .nav li a {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        /* Ajustement du header pour le logo plus grand */
+        .header-area {
+            padding: 15px 0;
+            height: auto;
+            min-height: 80px;
+        }
+
+        .header-area .main-nav {
+            height: auto;
+            min-height: 80px;
+        }
+
+        /* Style des sections */
+        .section-heading h4 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .contact-info {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        .info-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item i {
+            font-size: 24px;
+            color: #696cff;
+            margin-right: 15px;
+        }
+
+        .info-item h4 {
+            margin: 10px 0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .info-item p, .info-item a {
+            color: #666;
+            margin: 0;
+            text-decoration: none;
+        }
+
+        .info-item a:hover {
+            color: #696cff;
+        }
+
+        #contact-form input,
+        #contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #contact-form textarea {
+            height: 150px;
+        }
+
+        #contact-form button {
+            background: #696cff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #contact-form button:hover {
+            background: #5f61ff;
+        }
+
+        .feature-box {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .icon-wrapper {
+            height: 80px;
+            width: 80px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(105, 108, 255, 0.1);
+        }
+
+        .feature-box h5 {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .feature-box ul li {
+            color: #666;
+            padding: 8px 0;
+        }
+
+        .conclusion-box {
+            background: linear-gradient(45deg, #696cff, #5f61ff);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .conclusion-box h4 {
+            color: white;
+        }
+
+        /* Améliorations de la section À propos */
+        .about-us {
+            background-color: #f8f9fa;
+            padding: 80px 0;
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .divider {
+            color: #696cff;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .lead {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            height: 100%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #696cff;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            color: #666;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            color: #696cff;
+            position: absolute;
+            left: 0;
+        }
+
+        .conclusion-banner {
+            background: linear-gradient(45deg, #696cff, #5f61ff);
+            padding: 40px;
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(105, 108, 255, 0.2);
+        }
+
+        .conclusion-banner h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .conclusion-banner p {
+            font-size: 1.1rem;
+            margin-bottom: 0;
+            opacity: 0.9;
+        }
+    </style>
+    {% endblock %}
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="js-preloader" class="js-preloader">
+        <div class="preloader-inner">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- Logo -->
+                        <a href="{{ path('app_home') }}" class="logo">
+                            <img src="{{ asset('assets/images/logo2.png') }}" alt="CareConnect" width="80px" height="80px">
+                        </a>
+                        <!-- Menu -->
+                        <ul class="nav">
+                            <li class="scroll-to-section"><a href="#top" class="active">Accueil</a></li>
+                            <li class="scroll-to-section"><a href="#services">Services</a></li>
+                            <li class="scroll-to-section"><a href="#about">À propos</a></li>
+                            <li class="scroll-to-section"><a href="#contact">Contact</a></li>
+                            <li>
+                                <div class="gradient-button">
+                                    <a id="modal_trigger" href="{{ path('app_login') }}">
+                                        <i class="fa fa-sign-in-alt"></i> Connexion
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Banner Principal -->
+    <div class="main-banner" id="top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-6 align-self-center">
+                            <div class="left-content show-up header-text">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h2>Bienvenue chez CareConnect</h2>
+                                        <p>Votre partenaire de confiance pour une gestion optimisée des produits de santé. Nous mettons à votre disposition des solutions intelligentes pour simplifier le suivi des stocks pharmaceutiques.</p>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="white-button first-button scroll-to-section">
+                                            <a href="#contact">Découvrir nos services <i class="fas fa-arrow-right"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="right-image">
+                                <img src="{{ asset('assets/images/slider-dec11.png') }}" alt="Gestion de stock pharmaceutique">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services -->
+    <div id="services" class="services section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="section-heading">
+                        <h4>Nos <em>Services</em></h4>
+                        <img src="{{ asset('assets/images/heading-line-dec.png') }}" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="service-item first-service">
+                        <div class="icon"></div>
+                        <h4>Gestion des stocks pharmaceutiques</h4>
+                        <p>Surveillez en temps réel vos produits et assurez-vous de leur disponibilité.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="service-item second-service">
+                        <div class="icon"></div>
+                        <h4>Commande automatisée</h4>
+                        <p>Anticipez les ruptures de stock et commandez en quelques clics.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="service-item third-service">
+                        <div class="icon"></div>
+                        <h4>Suivi et traçabilité</h4>
+                        <p>Bénéficiez d'une gestion précise et conforme aux réglementations.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="service-item fourth-service">
+                        <div class="icon"></div>
+                        <h4>Analyses intelligentes</h4>
+                        <p>Optimisez votre gestion grâce à des statistiques détaillées.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section À propos -->
+    <div id="about" >
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="section-title">CareConnect</h2>
+                    <div class="divider">──</div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <p class="lead mb-5">CareConnect ne se limite pas à la gestion des stocks pharmaceutiques. Nous offrons une plateforme tout-en-un pour optimiser l'organisation hospitalière, simplifier la communication et améliorer l'expérience des patients.</p>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-lg-4 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h3>🚑 RDV Facile et Gestion des Chambres</h3>
+                        <ul class="feature-list">
+                            <li>Prise de rendez-vous simplifiée</li>
+                            <li>Système intuitif pour planifier les consultations</li>
+                            <li>Suivi en temps réel des disponibilités</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>📢 Réclamation Facile</h3>
+                        <ul class="feature-list">
+                            <li>Interface dédiée aux patients</li>
+                            <li>Suivi des réclamations en temps réel</li>
+                            <li>Notifications et mises à jour</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h3>🎉 Événements Disponibles</h3>
+                        <ul class="feature-list">
+                            <li>Calendrier d'événements médicaux</li>
+                            <li>Formations et conférences</li>
+                            <li>Inscription en ligne</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-12 text-center">
+                    <div class="conclusion-banner">
+                        <h4>🌟 Une Solution Digitale Complète 💙</h4>
+                        <p>Avec CareConnect, bénéficiez d'une solution digitale complète pour une gestion efficace et un environnement hospitalier optimisé.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Contact -->
+    <div id="contact" class="contact-us section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="section-heading">
+                        <h4>Contactez <em>CareConnect</em></h4>
+                        <img src="{{ asset('assets/images/heading-line-dec.png') }}" alt="">
+                        <p>Nous sommes là pour répondre à toutes vos questions</p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <h4>Notre adresse</h4>
+                            <p>Tunis, Tunisie</p>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <h4>Téléphone</h4>
+                            <p><a href="tel:+21670003002">+216 70 003 002</a></p>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <h4>Email</h4>
+                            <p><a href="mailto:CareConnect@gmail.com">CareConnect@gmail.com</a></p>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <h4>Heures d'ouverture</h4>
+                            <p>Lun - Ven: 9h00 - 17h00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <form id="contact-form" action="#" method="post">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <fieldset>
+                                    <input type="name" name="name" placeholder="Votre nom" required>
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-6">
+                                <fieldset>
+                                    <input type="email" name="email" placeholder="Votre email" required>
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-12">
+                                <fieldset>
+                                    <textarea name="message" placeholder="Votre message" required></textarea>
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-12">
+                                <fieldset>
+                                    <button type="submit" class="main-button">Envoyer le message</button>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="newsletter">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="section-heading">
+                        <h4>Restez informé de nos dernières actualités</h4>
+                    </div>
+                </div>
+                <div class="col-lg-6 offset-lg-3">
+                    <form id="search" action="#" method="GET">
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6">
+                                <fieldset>
+                                    <input type="address" name="address" class="email" placeholder="Email Address..." autocomplete="on" required>
+                                </fieldset>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <fieldset>
+                                    <button type="submit" class="main-button">Subscribe Now <i class="fa fa-angle-right"></i></button>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="footer-widget">
+                        <h4>Contact</h4>
+                        <p>Tunis, Tunisie</p>
+                        <p><a href="tel:+21670003002">+216 70 003 002</a></p>
+                        <p><a href="mailto:CareConnect@gmail.com">CareConnect@gmail.com</a></p>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="footer-widget">
+                        <h4>À propos</h4>
+                        <ul>
+                            <li><a href="#top">Accueil</a></li>
+                            <li><a href="#services">Services</a></li>
+                            <li><a href="#about">À propos</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="footer-widget">
+                        <h4>Liens utiles</h4>
+                        <ul>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Support</a></li>
+                            <li><a href="#">Conditions d'utilisation</a></li>
+                            <li><a href="#">Politique de confidentialité</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="footer-widget">
+                        <h4>À propos de CareConnect</h4>
+                        <div class="logo">
+                            <img src="{{ asset('assets/images/white-logo.png') }}" alt="CareConnect">
+                        </div>
+                        <p>Votre partenaire de confiance pour une gestion optimisée des produits de santé.</p>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="copyright-text">
+                        <p>Copyright © {{ "now"|date("Y") }} CareConnect. Tous droits réservés.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ asset('jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/owl-carousel.js') }}"></script>
+    <script src="{{ asset('assets/js/animation.js') }}"></script>
+    <script src="{{ asset('assets/js/imagesloaded.js') }}"></script>
+    <script src="{{ asset('assets/js/popup.js') }}"></script>
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

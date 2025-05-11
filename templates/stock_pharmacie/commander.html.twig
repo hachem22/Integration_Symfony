@@ -1,0 +1,86 @@
+{% extends "stock_pharmacie/navbar.html.twig" %}
+{% block title %}Réapprovisionner {{ medicament.nom }}{% endblock %}
+
+{% block body %}
+<div class="pharmacy-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1>Réapprovisionner le stock</h1>
+                <p class="lead">Remplissez le formulaire pour commander du stock supplémentaire</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="pharmacy-form">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="product-summary card">
+                    <div class="card-body">
+                        <h3>Résumé du produit</h3>
+                        <div class="product-info">
+                            <img src="{{ asset('uploads/images/' ~ medicament.image) }}" alt="{{ medicament.nom }}" class="img-fluid mb-3">
+                            <h4>{{ medicament.nom }}</h4>
+                            <p class="stock">Stock actuel : {{ medicament.quantite }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-card">
+                    {{ form_start(form) }}
+                        <div class="form-section">
+                            <h3 class="section-title">Détails du réapprovisionnement</h3>
+                            
+                            {{ form_row(form.quantite, {
+                                'attr': {
+                                    'class': 'form-control-lg',
+                                    'min': 1
+                                },
+                                'label': 'Quantité à ajouter au stock'
+                            }) }}
+                            
+                            {{ form_row(form.dateLivraison, {
+                                'attr': {'class': 'form-control-lg'},
+                                'label': 'Date de livraison prévue'
+                            }) }}
+                            
+                            <div class="form-actions mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fa fa-plus-circle me-2"></i>Commander le stock
+                                </button>
+                                <a href="{{ path('app_stock_pharmacie_index') }}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fa fa-arrow-left me-2"></i>Retour
+                                </a>
+                            </div>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const quantiteInput = document.getElementById('{{ form.quantite.vars.id }}');
+    const totalPriceElement = document.getElementById('totalPrice');
+    const prixUnitaire = {{ medicament.prix }};
+    
+    function updateTotal() {
+        const quantite = parseInt(quantiteInput.value) || 0;
+        const total = (quantite * prixUnitaire).toFixed(2);
+        totalPriceElement.textContent = total;
+    }
+    
+    quantiteInput.addEventListener('input', updateTotal);
+    updateTotal();
+});
+</script>
+{% endblock %} 

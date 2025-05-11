@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Médical</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; }
+        .chat-container {
+            width: 400px; 
+            max-width: 90%;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            border: 1px solid #ccc; 
+            padding: 20px; 
+            border-radius: 10px; 
+            background-color: #fff; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 1000;
+        }
+        .chat-box { 
+            height: 300px; 
+            overflow-y: scroll; 
+            border: 1px solid #ddd; 
+            padding: 10px; 
+            text-align: left; 
+            margin-bottom: 10px;
+            background-color: #fafafa;
+            border-radius: 5px;
+        }
+        .user-message { color: blue; font-weight: bold; }
+        .bot-message { color: green; }
+        input, button { 
+            margin-top: 10px; 
+            padding: 10px; 
+            width: calc(100% - 24px); 
+            border: 1px solid #ddd; 
+            border-radius: 5px;
+        }
+        button { 
+            background-color: #007bff; 
+            color: white; 
+            cursor: pointer; 
+        }
+        button:hover { background-color: #0056b3; }
+        .chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            padding: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align:center; padding: 20px; color: #333;">Chatbot Médical</h1>
+    <div class="chat-container" id="chat-container">
+        <div class="chat-box" id="chat-box">
+            <p class="bot-message"><strong>Chatbot :</strong> Bonjour ! Décrivez vos symptômes.</p>
+        </div>
+        <input type="text" id="user-input" placeholder="Écrivez votre message...">
+        <button onclick="envoyerMessage()">Envoyer</button>
+    </div>
+
+    <button class="chat-icon" onclick="toggleChat()"><i class="fa fa-comments"></i></button>
+
+    <script>
+        function toggleChat() {
+            const chatContainer = document.getElementById("chat-container");
+            if (chatContainer.style.display === "none" || chatContainer.style.display === "") {
+                chatContainer.style.display = "block";
+            } else {
+                chatContainer.style.display = "none";
+            }
+        }
+
+        async function envoyerMessage() {
+            const userInput = document.getElementById("user-input").value;
+            if (!userInput) return;
+
+            const chatBox = document.getElementById("chat-box");
+
+            // Ajouter le message de l'utilisateur
+            chatBox.innerHTML += `<p class="user-message"><strong>Vous :</strong> ${userInput}</p>`;
+            document.getElementById("user-input").value = "";
+
+            // Envoyer la requête au serveur
+            const response = await fetch("{{ path('chatbot') }}", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userInput })
+            });
+
+            const data = await response.json();
+
+            // Ajouter la réponse du chatbot
+            chatBox.innerHTML += `<p class="bot-message"><strong>Chatbot :</strong> ${data.response}</p>`;
+
+            // Scroll vers le bas
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}CareConnect{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚕️</text></svg>">
+
+    <!-- CSS -->
+    {% block stylesheets %}
+        <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/boxicons.css') }}" />
+        <link rel="stylesheet" href="{{ asset('assets/vendor/css/core.css') }}" />
+        <link rel="stylesheet" href="{{ asset('assets/vendor/css/theme-default.css') }}" />
+        <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
+        <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+        <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
+        <link rel="stylesheet" href="{{ asset('assets/css/chatbot-styles.css') }}">
+    {% endblock %}
+
+    {% block javascripts %}
+        <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
+        <script src="{{ asset('assets/js/config.js') }}"></script>
+    {% endblock %}
+</head>
+<body>
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
+            <!-- Layout container -->
+            <div class="layout-page">
+                <!-- Navbar -->
+                {% include 'patient/nav.html.twig' %}
+                
+                <!-- Content -->
+                <div class="content-wrapper">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Chatbot Toggle Button -->
+    <button id="chatToggleButton" class="chat-toggle-button">💬</button>
+
+    <!-- Chatbot Popup Container -->
+    <div id="chatPopupContainer" class="chatbot-popup-container">
+        <div class="chat-header">
+            <span class="chat-title">AI Medical Assistant</span>
+            <button id="minimizeChatButton" class="minimize-button">-</button>
+        </div>
+        <div id="chatMessages" class="chatbot-scroll-pane">
+            <div class="chatbot-messages-container">
+                <!-- Messages will be appended here by JavaScript -->
+            </div>
+        </div>
+        <div class="chatbot-input-container">
+            <input type="text" id="chatInput" class="text-field" placeholder="Type your message...">
+            <button id="sendChatButton" class="send-button">Send</button>
+        </div>
+    </div>
+
+    {% block scripts %}
+        <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
+        <script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
+        <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
+        <script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+        <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
+        <script src="{{ asset('assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
+        <script src="{{ asset('assets/js/main.js') }}"></script>
+        <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
+        <script async defer src="https://buttons.github.io/buttons.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const chatToggleButton = document.getElementById('chatToggleButton');
+                const chatPopupContainer = document.getElementById('chatPopupContainer');
+                const minimizeChatButton = document.getElementById('minimizeChatButton');
+                const chatMessagesContainer = document.querySelector('#chatMessages .chatbot-messages-container');
+                const chatInput = document.getElementById('chatInput');
+                const sendChatButton = document.getElementById('sendChatButton');
+
+                // Function to toggle chat visibility
+                function toggleChatPopup() {
+                    chatPopupContainer.classList.toggle('active');
+                }
+
+                chatToggleButton.addEventListener('click', toggleChatPopup);
+                minimizeChatButton.addEventListener('click', toggleChatPopup);
+
+                // Function to add a message to the chat window
+                function addMessageToChat(message, sender) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('message-container');
+                    messageDiv.classList.add(sender); // 'user' or 'bot'
+
+                    const bubbleDiv = document.createElement('div');
+                    bubbleDiv.classList.add('chat-bubble');
+                    bubbleDiv.classList.add(sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai');
+                    
+                    const textSpan = document.createElement('span');
+                    textSpan.classList.add('chat-text');
+                    textSpan.textContent = message;
+                    
+                    bubbleDiv.appendChild(textSpan);
+                    messageDiv.appendChild(bubbleDiv);
+                    chatMessagesContainer.appendChild(messageDiv);
+                    
+                    // Scroll to the bottom
+                    const scrollPane = document.getElementById('chatMessages');
+                    scrollPane.scrollTop = scrollPane.scrollHeight;
+                }
+
+                // Function to handle sending a message
+                async function sendMessage() {
+                    const messageText = chatInput.value.trim();
+                    if (!messageText) return;
+
+                    addMessageToChat(messageText, 'user');
+                    chatInput.value = '';
+
+                    try {
+                        const response = await fetch("{{ path('chatbot_send_message') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest' // Good practice for Symfony
+                            },
+                            body: JSON.stringify({
+                                message: messageText,
+                                // You can add specialization and language here if needed
+                                // specialization: "cardiology",
+                                // language: "en"
+                            })
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            addMessageToChat(errorData.error || 'Error sending message.', 'bot');
+                            console.error('API Error:', errorData);
+                            return;
+                        }
+
+                        const data = await response.json();
+                        
+                        if (data.error) {
+                            addMessageToChat(data.error, 'bot');
+                        } else if (data.message) {
+                            addMessageToChat(data.message, 'bot');
+                            // Optionally display recommendations, warnings etc.
+                            if (data.recommendations && data.recommendations.length > 0) {
+                                addMessageToChat("Recommendations: " + data.recommendations.join(', '), 'bot');
+                            }
+                            if (data.warnings && data.warnings.length > 0) {
+                                addMessageToChat("Warnings: " + data.warnings.join(', '), 'bot');
+                            }
+                        } else {
+                            addMessageToChat('Received an empty response from the bot.', 'bot');
+                        }
+
+                    } catch (error) {
+                        addMessageToChat('Could not connect to the chatbot service.', 'bot');
+                        console.error('Chatbot send error:', error);
+                    }
+                }
+
+                sendChatButton.addEventListener('click', sendMessage);
+                chatInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+
+                // Add a welcome message from the bot
+                addMessageToChat('Hello! How can I help you today?', 'bot');
+            });
+        </script>
+    {% endblock %}
+</body>
+</html>

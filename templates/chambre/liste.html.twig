@@ -1,0 +1,49 @@
+{# chambre/_liste.html.twig #}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Numéro</th>
+                <th>Type</th>
+                <th>Capacité</th>
+                <th>Localisation</th>
+                <th>Statut</th>
+                <th>Service</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if chambres is defined %}
+                {% for chambre in chambres %}
+                    <tr>
+                        <td>{{ chambre.num }}</td>
+                        <td>{{ chambre.type }}</td>
+                        <td>{{ chambre.capacite }}</td>
+                        <td>{{ chambre.localisation }}</td>
+                        <td>
+                            <span class="badge bg-{{ chambre.active == 'disponible' ? 'success' : (chambre.active == 'occupee' ? 'danger' : 'warning') }}">
+                                {{ chambre.active }}
+                            </span>
+                        </td>
+                        <td>{{ chambre.position.nom }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ path('chambre.edit', {'id': chambre.id}) }}" class="btn btn-sm btn-outline-primary">Éditer</a>
+                                <a href="{{ path('chambre.supprimer', {'id': chambre.id}) }}" class="btn btn-sm btn-outline-danger" 
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette chambre ?')">Supprimer</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">Aucune chambre trouvée</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-center">Variable "chambres" non définie</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>

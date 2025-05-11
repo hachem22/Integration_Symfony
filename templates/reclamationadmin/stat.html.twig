@@ -1,0 +1,291 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect - Réclamations</title>
+    <meta name="description" content="" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    
+{% endblock %}
+
+{% block body %}
+<div class="container-xxl flex-grow-1 container-p-y" ;>
+    <h1 style="margin-top: 400px;" >Statistiques des Réclamations</h1>
+    <a href="{{ path('reclamation_stat_pdf') }}" class="btn btn-primary" style="margin-top: 10px;>
+        <i class="fas fa-download"></i> Télécharger le PDF
+    </a>
+
+
+    <!-- Graphiques -->
+    <div class="row mb-4" >
+        <!-- Graphique en barres pour les réclamations par statut -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Réclamations par Statut</h5>
+                    <canvas id="statutChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graphique en camembert pour les réclamations par type -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Réclamations par Type</h5>
+                    <canvas id="typeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nouveaux graphiques pour les réclamations par jour et par mois -->
+    <div class="row mb-4">
+        <!-- Graphique en barres pour les réclamations par jour -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Réclamations par Jour</h5>
+                    <canvas id="dayChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graphique en barres pour les réclamations par mois -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Réclamations par Mois</h5>
+                    <canvas id="monthChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Script pour initialiser les graphiques -->
+    <script>
+        // Données pour les graphiques
+        const statutData = {
+            labels: ['En Attente', 'En Cours', 'Résolues'],
+            datasets: [{
+                label: 'Nombre de Réclamations',
+                data: [
+                    {{ reclamationsEnAttente }},
+                    {{ reclamationsEnCours }},
+                    {{ reclamationsResolues }}
+                ],
+                backgroundColor: ['rgba(255, 206, 86, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(75, 192, 192, 0.5)'],
+                borderColor: ['rgba(255, 206, 86, 1)', 'rgba(54, 162, 235, 1)', 'rgba(75, 192, 192, 1)'],
+                borderWidth: 1
+            }]
+        };
+
+        const typeData = {
+            labels: ['Service', 'Système'],
+            datasets: [{
+                label: 'Nombre de Réclamations',
+                data: [
+                    {{ reclamationsService }},
+                    {{ reclamationsSysteme }}
+                ],
+                backgroundColor: ['rgba(243, 12, 62, 0.5)', 'rgba(72, 60, 153, 0.5)'],
+                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(153, 102, 255, 1)'],
+                borderWidth: 1
+            }]
+        };
+
+        // Données pour les graphiques par jour et par mois
+        const dayData = {
+            labels: {{ reclamationsParJour|map(d => d.day)|json_encode|raw }},
+            datasets: [{
+                label: 'Nombre de Réclamations',
+                data: {{ reclamationsParJour|map(d => d.count)|json_encode|raw }},
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        const monthData = {
+            labels: {{ reclamationsParMois|map(d => d.month)|json_encode|raw }},
+            datasets: [{
+                label: 'Nombre de Réclamations',
+                data: {{ reclamationsParMois|map(d => d.count)|json_encode|raw }},
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        // Configuration des graphiques
+        const statutConfig = {
+            type: 'bar',
+            data: statutData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Nombre de Réclamations'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Statut'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        enabled: true,
+                        mode: 'index',
+                        intersect: false
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeInOutQuad'
+                }
+            }
+        };
+
+        const typeConfig = {
+            type: 'pie',
+            data: typeData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.raw !== null) {
+                                    label += context.raw + ' (' + ((context.raw / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeInOutQuad'
+                }
+            }
+        };
+
+        const dayConfig = {
+            type: 'bar',
+            data: dayData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Nombre de Réclamations'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Jour'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        enabled: true,
+                        mode: 'index',
+                        intersect: false
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeInOutQuad'
+                }
+            }
+        };
+
+        const monthConfig = {
+            type: 'bar',
+            data: monthData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Nombre de Réclamations'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Mois'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        enabled: true,
+                        mode: 'index',
+                        intersect: false
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeInOutQuad'
+                }
+            }
+        };
+
+        // Initialisation des graphiques
+        const statutChart = new Chart(
+            document.getElementById('statutChart'),
+            statutConfig
+        );
+
+        const typeChart = new Chart(
+            document.getElementById('typeChart'),
+            typeConfig
+        );
+
+        const dayChart = new Chart(
+            document.getElementById('dayChart'),
+            dayConfig
+        );
+
+        const monthChart = new Chart(
+            document.getElementById('monthChart'),
+            monthConfig
+        );
+    </script>
+</div>
+{% endblock %}

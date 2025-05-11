@@ -1,0 +1,47 @@
+security:
+    enable_authenticator_manager: true
+
+    # Password Hasher (Plain Text)
+    password_hashers:
+        App\Entity\Utilisateur: plaintext
+
+    # User Provider
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\Utilisateur
+                property: Email # Use the 'Email' field to load users
+
+    # Firewalls
+    firewalls:
+        main:
+            pattern: ^/
+            form_login:
+                login_path: app_login # Route to the login page
+                check_path: app_login # Route where the login form is submitted
+
+                enable_csrf: true # Enable CSRF protection
+                default_target_path: app_dashboard # Redirect to this route after successful login
+
+            logout:
+                path: app_logout # Route to log out
+                target: app_login # Redirect to this route after logout
+            lazy: true # Allow anonymous access
+
+
+    # Access Control
+    access_control:
+        - { path: ^/login, roles: PUBLIC_ACCESS } # Allow access to the login page for everyone
+        - { path: ^/forgot-password, roles: PUBLIC_ACCESS } # Allow access to the forgot password page for everyone
+        - { path: ^/reset-password, roles: PUBLIC_ACCESS } # Allow access to the reset password page for everyone
+        - { path: ^/admin, roles: ROLE_ADMINISTRATEUR } # Only administrators can access routes under /admin
+        - { path: ^/profile, roles: ROLE_USER } # Only users can access routes under /profile
+        - { path: ^/medecin, roles: ROLE_MEDECIN } # Only medecins can access routes under /medecin
+        - { path: ^/infirmier, roles: ROLE_INFIRMIER } # Only infirmiers can access routes under /infirmier
+        - { path: ^/pharmacien, roles: ROLE_PHARMACIEN } # Only pharmaciens can access routes under /pharmacien
+        - { path: ^/responsable, roles: ROLE_RESPONSABLE } # Only responsables can access routes under /responsable
+        - { path: ^/femme-de-menage, roles: ROLE_FEMME_DE_MENAGE } # Only femmes de menage can access routes under /femme-de-menage
+        - { path: ^/patient, roles: ROLE_PATIENT } # Only patients can access routes under /patient
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY } # Require authentication for all other routes
+        - { path: ^/medecins/par-service, roles: PUBLIC_ACCESS }
+        - { path: ^/verifier-disponibilite-date, roles: PUBLIC_ACCESS }

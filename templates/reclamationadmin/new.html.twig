@@ -1,0 +1,70 @@
+{% extends 'patient/baseRendezVous.html.twig' %} 
+
+{% block title %}Créer une Réclamation{% endblock %}
+
+{% block content %}
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="row justify-content-center">
+                <div class="col-xl" style="margin-left: 250px; margin-top: 230px; width: 500px;">
+                    <div class="card mb-6">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Nouvelle Réclamation</h5>
+                            <small class="text-body float-end">Remplissez les détails</small>
+                        </div>
+                        <div class="card-body">
+                            {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}) }}
+
+                            <div class="mb-3">
+                                <label class="form-label" for="form.description">
+                                    <i class="bx bx-comment"></i> Description
+                                </label>
+                                {{ form_widget(form.description, {'attr': {'class': 'form-control' }}) }}
+                                {% if form.description.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.description) }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="form.type">
+                                    <i class="bx bx-category"></i> Type de réclamation
+                                </label>
+                                {{ form_widget(form.type, {'attr': {'class': 'form-select' }}) }}
+                                {% if form.type.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.type) }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="form.cible">
+                                    <i class="bx bx-user"></i> Cible
+                                </label>
+                                {{ form_widget(form.cible, {'attr': {'class': 'form-control' }}) }}
+                                {% if form.cible.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.cible) }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="form.categorie">
+                                    <i class="bx bx-list-ul"></i> Catégorie
+                                </label>
+                                {{ form_widget(form.categorie, {'attr': {'class': 'form-select' }}) }}
+                                {% if form.categorie.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.categorie) }}</span>
+                                {% endif %}
+                            </div>
+
+                            <button class="btn btn-primary btn-lg w-100">Créer la réclamation</button>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,307 @@
+{% extends 'medecin/baseMedecin.html.twig' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <!-- Carte du calendrier -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4 mb-md-0">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Calendrier des rendez-vous</h4>
+                    <span class="badge bg-light text-primary">Dr. {{ medecinConnecte.nom }}</span>
+                </div>
+                <div class="card-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Carte du graphique -->
+        <div class="col-md-4">
+            <div class="card shadow-sm sticky-top" style="top: 20px; z-index: 100;">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Statistiques des rendez-vous</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <select id="chartTypeSelect" class="form-select form-select-sm">
+                            <option value="weekly">Vue hebdomadaire</option>
+                            <option value="monthly">Vue mensuelle</option>
+                        </select>
+                    </div>
+                    <div style="height: 300px;">
+                        <canvas id="appointmentsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+<style>
+    /* Styles de base */
+   :root {
+            --primary-blue: #0D47A1;     /* Deep Blue */
+            --secondary-blue: #1565C0;   /* Strong Blue */
+            --accent-blue: #2196F3;      /* Bright Blue */
+            --light-blue: #64B5F6;       /* Light Blue */
+            --background-blue: #E3F2FD;  /* Very Light Blue */
+        }
+        body {
+            background-color: var(--background-blue);
+            font-family: 'Inter', sans-serif;
+        }
+    /* Styles du calendrier */
+    .fc {
+        font-family: 'Roboto', sans-serif;
+        --fc-border-color: #e3e6f0;
+        --fc-button-text-color: #fff;
+        --fc-button-bg-color: var(--primary-blue);
+        --fc-button-border-color: var(--primary-blue);
+        --fc-button-hover-bg-color: var(--dark-blue);
+        --fc-button-hover-border-color: var(--dark-blue);
+        --fc-button-active-bg-color: var(--dark-blue);
+        --fc-today-bg-color: var(--very-light-blue);
+    }
+    
+    .fc .fc-toolbar-title {
+        font-size: 1.5rem;
+        color: var(--dark-blue);
+        font-weight: 600;
+    }
+    
+    .fc .fc-button {
+        border-radius: 0.25rem;
+        font-weight: 500;
+        text-transform: capitalize;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        padding: 0.375rem 0.75rem;
+    }
+    
+    .fc .fc-daygrid-day.fc-day-today {
+        background-color: var(--very-light-blue);
+    }
+    
+    /* Rendez-vous */
+    .fc-event {
+        border-radius: 0.25rem;
+        padding: 2px;
+        font-size: 0.875rem;
+        border: none;
+    }
+    
+    .fc-event-time {
+        font-weight: 600;
+    }
+    
+    /* Jours non disponibles */
+    .fc-daygrid-day-red {
+        background-color: rgba(231, 74, 59, 0.1);
+    }
+    
+    /* Rendez-vous confirmés */
+    .fc-daygrid-event-green {
+        background-color: rgba(28, 200, 138, 0.15);
+        border-left: 4px solid #1cc88a !important;
+        color: #2e6b5e !important;
+    }
+    
+    /* Badge du médecin */
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    /* Styles responsifs */
+    @media (max-width: 992px) {
+        .fc .fc-toolbar {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .fc .fc-toolbar-title {
+            font-size: 1.25rem;
+        }
+        
+        /* Sur mobile, désactiver le sticky pour éviter les problèmes */
+        .sticky-top {
+            position: relative !important;
+            top: 0 !important;
+        }
+    }
+    
+    /* Animation légère au survol des événements */
+    .fc-event:hover {
+        transform: translateY(-2px);
+        transition: transform 0.2s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Style des cartes */
+    .card {
+        border: none;
+        border-radius: 0.5rem;
+    }
+    
+    .card-header {
+        border-top-left-radius: 0.5rem !important;
+        border-top-right-radius: 0.5rem !important;
+        background-color: var(--primary-blue) !important;
+    }
+    
+    /* Style du select */
+    .form-select {
+        border-radius: 0.25rem;
+    }
+    
+    /* Style du graphique */
+    #chartTypeSelect {
+        width: 180px;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialisation du calendrier
+        var calendarEl = document.getElementById('calendar');
+        
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            views: {
+                timeGridWeek: {
+                    slotDuration: '01:00:00'
+                }
+            },
+            businessHours: {
+                daysOfWeek: [1, 2, 3, 4, 5],
+                startTime: '08:00',
+                endTime: '18:00',
+            },
+            events: {{ events|raw }},
+            eventDidMount: function(info) {
+                if (info.event.extendedProps.display === 'background') {
+                    info.el.classList.add('fc-daygrid-day-red');
+                } else if (info.event.extendedProps.color === 'green') {
+                    info.el.classList.add('fc-daygrid-event-green');
+                }
+                
+                // Ajouter des tooltips pour plus d'informations
+                if (info.event.extendedProps.description) {
+                    info.el.setAttribute('title', info.event.extendedProps.description);
+                }
+            },
+            locale: 'fr',
+            firstDay: 1, // Commencer par lundi
+            dayMaxEvents: true, // Permettre "plus" lien quand il y a trop d'événements
+            height: 'auto',
+            contentHeight: 650,
+            themeSystem: 'bootstrap',
+            nowIndicator: true,
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }
+        });
+        
+        calendar.render();
+        
+        // Fonction pour extraire les données des événements du calendrier
+        function extractEventData() {
+            // Cette fonction simule l'extraction de données depuis les événements du calendrier
+            // Dans une application réelle, vous utiliseriez les données réelles des événements
+            
+            return {
+                weekly: {
+                    labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
+                    datasets: [{
+                        label: 'Rendez-vous confirmés',
+                        data: [12, 15, 8, 10, 14, 5, 2],
+                        backgroundColor: 'rgba(33, 150, 243, 0.5)',
+                        borderColor: 'rgba(33, 150, 243, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: 'Rendez-vous en attente',
+                        data: [5, 7, 4, 6, 3, 2, 1],
+                        backgroundColor: 'rgba(13, 71, 161, 0.5)',
+                        borderColor: 'rgba(13, 71, 161, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                monthly: {
+                    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+                    datasets: [{
+                        label: 'Rendez-vous confirmés',
+                        data: [65, 73, 80, 75, 82, 90, 88, 78, 85, 92, 88, 70],
+                        backgroundColor: 'rgba(33, 150, 243, 0.5)',
+                        borderColor: 'rgba(33, 150, 243, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: 'Rendez-vous en attente',
+                        data: [30, 35, 40, 32, 38, 45, 40, 35, 42, 48, 40, 35],
+                        backgroundColor: 'rgba(13, 71, 161, 0.5)',
+                        borderColor: 'rgba(13, 71, 161, 1)',
+                        borderWidth: 2
+                    }]
+                }
+            };
+        }
+        
+        // Initialisation du graphique
+        var chartCanvas = document.getElementById('appointmentsChart');
+        var chartData = extractEventData();
+        var currentChartType = 'weekly';
+        
+        var appointmentsChart = new Chart(chartCanvas, {
+            type: 'bar',
+            data: chartData[currentChartType],
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: false,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Changer le type de graphique
+        document.getElementById('chartTypeSelect').addEventListener('change', function() {
+            currentChartType = this.value;
+            appointmentsChart.data = chartData[currentChartType];
+            appointmentsChart.update();
+        });
+        
+        // Redimensionnement
+        window.addEventListener('resize', function() {
+            calendar.updateSize();
+        });
+    });
+</script>
+{% endblock %}

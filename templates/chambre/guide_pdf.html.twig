@@ -1,0 +1,118 @@
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect - Guide des chambres</title>
+    <meta name="description" content="" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Public Sans', sans-serif;
+        }
+        .container-xxl {
+            margin-top: 30px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .guide-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* 5 colonnes pour simuler un plan d'étage */
+            gap: 10px;
+            padding: 20px;
+        }
+        .chambre-cadre {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        .chambre-cadre:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .chambre-cadre.disponible {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .chambre-cadre.occupee {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .chambre-cadre.maintenance {
+            border-color: #ffc107;
+            background-color: #fff3cd;
+        }
+        .chambre-cadre h5 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #333;
+        }
+        .chambre-cadre .badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+        .btn-custom {
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="card shadow">
+            <h5 class="card-header">Guide des chambres</h5>
+            <div class="guide-container">
+                {% for chambre in chambres %}
+                    <div class="chambre-cadre 
+                        {% if chambre.active == 'disponible' %}disponible
+                        {% elseif chambre.active == 'occupee' %}occupee
+                        {% elseif chambre.active == 'maintenance' %}maintenance
+                        {% endif %}">
+                        <h5>{{ chambre.num }}</h5>
+                        <span class="badge 
+                            {% if chambre.active == 'disponible' %}bg-success
+                            {% elseif chambre.active == 'occupee' %}bg-danger
+                            {% elseif chambre.active == 'maintenance' %}bg-warning
+                            {% else %}bg-secondary
+                            {% endif %}">
+                            {{ chambre.active }}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

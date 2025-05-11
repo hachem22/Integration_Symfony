@@ -1,0 +1,59 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block title %}Modifier la Catégorie{% endblock %}
+
+{% block body %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="col-xl" style="margin-left: 120px; width: 500px; margin-top: 200px;">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-edit"></i> Modifier la Catégorie
+                        </h5>
+                        <small class="text-body float-end">Mettez à jour les informations</small>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+
+                        <!-- 📌 CHAMP NOM -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bx bx-label"></i> Nom
+                            </label>
+                            {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                            {% if form.nom.vars.errors|length > 0 %}
+                                <span class="text-danger">{{ form_errors(form.nom) }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- 📌 CHAMP DESCRIPTION -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bx bx-message-square-detail"></i> Description
+                            </label>
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+                            {% if form.description.vars.errors|length > 0 %}
+                                <span class="text-danger">{{ form_errors(form.description) }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- 📌 BOUTONS -->
+                        <div class="card-footer d-flex justify-content-between align-items-center gap-2">
+                            <a href="{{ path('categorie_index') }}" class="btn btn-secondary d-flex align-items-center gap-2">
+                                <i class="fas fa-arrow-left"></i> Retour
+                            </a>
+                            <button type="submit" class="btn btn-primary d-flex align-items-center gap-2">
+                                <i class="fas fa-save"></i> Mettre à jour
+                            </button>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

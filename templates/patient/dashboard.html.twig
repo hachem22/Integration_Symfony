@@ -1,0 +1,303 @@
+{% extends 'patient/baseRendezVous.html.twig' %}
+
+{% block content %}
+ <div class="container-fluid py-4">
+    <!-- Sélecteur de langue -->
+    <div class="d-flex justify-content-end mb-3">
+        <div id="google_translate_element"></div>
+    </div>
+
+    <!-- En-tête de bienvenue -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body d-flex align-items-center">
+                    <div>
+                        <h2 class="card-title mb-1">Bienvenue dans votre espace Patient! 👋</h2>
+                        <p class="text-muted mb-0">Gérez vos rendez-vous et suivez les événements de l'hôpital.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards principales -->
+    <div class="row mb-4">
+        <!-- Card Rendez-vous -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="avatar avatar-lg bg-primary-subtle rounded-circle mx-auto mb-3">
+                        <i class="bx bx-calendar fs-3 text-primary"></i>
+                    </div>
+                    <h5 class="card-title">Prendre un rendez-vous</h5>
+                    <p class="text-muted">Consultez les disponibilités et réservez votre prochain rendez-vous</p>
+                    <a href="{{ path('demande_rendezvous') }}" class="btn btn-primary">
+                        <i class="bx bx-plus me-1"></i>Nouveau rendez-vous
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Mes Rendez-vous -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="avatar avatar-lg bg-success-subtle rounded-circle mx-auto mb-3">
+                        <i class="bx bx-list-check fs-3 text-success"></i>
+                    </div>
+                    <h5 class="card-title">Mes Rendez-vous</h5>
+                    <p class="text-muted">Consultez et gérez vos rendez-vous programmés</p>
+                    <span class="badge bg-success mb-3">2 rendez-vous à venir</span>
+                    <div>
+                        <a href="{{ path('ListRendezVous') }}" class="btn btn-success">Voir mes rendez-vous</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Réclamations -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="avatar avatar-lg bg-warning-subtle rounded-circle mx-auto mb-3">
+                        <i class="bx bx-message-square-dots fs-3 text-warning"></i>
+                    </div>
+                    <h5 class="card-title">Réclamations</h5>
+                    <p class="text-muted">Signalez un problème ou faites une suggestion</p>
+                    <a href="#" class="btn btn-warning">
+                        <button class="btn btn-warning">
+                            <i class="bx bx-plus me-1"></i>Nouvelle réclamation
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Event Description Section -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Interagir avec l'IA pour les événements</h5>
+        </div>
+        <div class="card-body">
+            <button id="ask-ai-btn" class="btn btn-primary">
+                Demander à l'IA
+            </button>
+
+            <!-- Hidden description input field that will appear after clicking the button -->
+            <div id="description-form" class="mb-3" style="display:none;">
+                <label class="form-label" for="user-description">Décrivez l'événement ou l'atelier</label>
+                <textarea id="user-description" class="form-control" rows="4" placeholder="Entrez une description pour l'événement ou l'atelier"></textarea>
+            </div>
+
+            <!-- Submit button to send the description to AI -->
+            <button id="submit-description-btn" class="btn btn-success" style="display:none;">
+                Soumettre la description
+            </button>
+
+            <!-- Section to display AI results -->
+            <div id="event-results" class="mt-4"></div>
+        </div>
+    </div>
+
+    <!-- Debug temporaire -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Rechercher un événement</h5>
+        </div>
+        <div class="card-body">
+            <div class="input-group">
+                <input type="text" id="search-event" class="form-control" placeholder="Entrez le nom de l'événement...">
+            </div>
+            <div id="search-results" class="mt-3"></div>
+        </div>
+    </div>
+
+    <!-- Events Section -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Événements à venir</h5>
+        </div>
+        <!-- Feuille de style de Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<!-- Script de Leaflet -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+        <div class="card-body">
+            <div class="row">
+                {% if evenements is empty %}
+                    <div class="col-12 text-center">
+                        <p class="text-muted">Aucun événement prévu pour le moment</p>
+                    </div>
+                {% else %}
+                    {% for event in evenements %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 border-0 shadow-sm hover-card">
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="avatar avatar-sm bg-info-subtle rounded-circle me-3">
+                                            <i class="bx bx-calendar-event text-info"></i>
+                                        </div>
+                                        <h6 class="card-title mb-0 text-primary">{{ event.nom }}</h6>
+                                    </div>
+                                    <p class="card-text text-muted"><strong>Description:</strong> {{ event.description }}</p>
+                                    <p class="card-text text-muted"><strong>Capacité:</strong> {{ event.capacite }}</p>
+                                    <p class="card-text text-muted"><strong>Lieu:</strong> {{ event.lieu }}</p>
+
+                                    <p class="card-text text-muted">
+                                        <strong>Formation:</strong> 
+                                        {% if event.formations %}
+                                            {{ event.formations.nom }}
+                                        {% else %}
+                                            Aucune formation associée
+                                        {% endif %}
+                                    </p>
+
+                                    <!-- Carte OpenStreetMap -->
+                                    <div class="card mb-4">
+                                        <div class="card-header">
+                                            <h5 class="mb-0">Ma Localisation</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <button id="geolocalisation" class="btn btn-primary mb-3">Ma Position</button>
+                                            <div id="map" style="height: 400px; width: 100%;"></div>
+                                        </div>
+                                    </div>
+                                    
+
+                                    <!-- Affichage de l'affiche -->
+                                    {% if eventPosters is defined and eventPosters[event.id] is defined %}
+                                        <img src="{{ eventPosters[event.id] }}" 
+                                             alt="Affiche de l'événement {{ event.nom }}" 
+                                             style="width: 150px; height: 150px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); object-fit: cover;">
+                                    {% else %}
+                                        <p class="text-danger">Affiche non disponible</p>
+                                    {% endif %}
+
+                                    <!-- Afficher le QR code -->
+                                    <div class="text-center mt-3 mb-3">
+                                        {% if qrCodes is defined and qrCodes[event.id] is defined %}
+                                            <img src="data:image/png;base64,{{ qrCodes[event.id] }}" 
+                                                 alt="QR Code pour {{ event.nom }}" 
+                                                 style="width: 150px; height: 150px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
+                                        {% else %}
+                                            <p class="text-danger">QR Code non disponible</p>
+                                        {% endif %}
+                                    </div>
+                                    <p class="text-center mt-2 text-muted">Scannez pour plus d'infos</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('search-event').addEventListener('input', function () {
+            let searchTerm = document.getElementById('search-event').value.trim();
+
+            if (searchTerm.length > 2) { // Vérification pour éviter les requêtes inutiles (au moins 3 caractères)
+                fetch("{{ path('evenement_search') }}?search=" + encodeURIComponent(searchTerm), {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let resultsDiv = document.getElementById('search-results');
+                    resultsDiv.innerHTML = ""; // Vider les résultats précédents
+
+                    if (data.length > 0) {
+                        data.forEach(event => {
+                            let eventCard = `
+                                <div class="card mt-2">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-primary">${event.nom}</h6>
+                                        <p><strong>Lieu:</strong> ${event.lieu}</p>
+                                        <p><strong>Description:</strong> ${event.description}</p>
+                                    </div>
+                                </div>
+                            `;
+                            resultsDiv.innerHTML += eventCard;
+                        });
+                    } else {
+                        resultsDiv.innerHTML = `<p class="text-muted">Aucun événement trouvé.</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur AJAX:", error);
+                    document.getElementById('search-results').innerHTML = `<p class="text-danger">Erreur lors de la recherche.</p>`;
+                });
+            } else {
+                document.getElementById('search-results').innerHTML = `<p class="text-muted">Veuillez entrer au moins 3 caractères pour rechercher un événement.</p>`;
+            }
+        });
+
+        document.getElementById('ask-ai-btn').addEventListener('click', function() {
+            document.getElementById('description-form').style.display = 'block';
+            document.getElementById('submit-description-btn').style.display = 'inline-block';
+            document.getElementById('ask-ai-btn').style.display = 'none';
+        });
+
+        document.getElementById('submit-description-btn').addEventListener('click', function() {
+            const userDescription = document.getElementById('user-description').value;
+
+            if (!userDescription) {
+                alert("Veuillez entrer une description.");
+                return;
+            }
+
+            fetch("http://127.0.0.1:8011/match_event", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ description: userDescription })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    displayEventResults(data);
+                } else {
+                    alert("Aucun événement trouvé.");
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de la communication avec l'IA:", error);
+                alert("Une erreur s'est produite.");
+            });
+        });
+
+        function displayEventResults(data) {
+            const eventResults = `
+                <h4>Événement trouvé : ${data.nom}</h4>
+                <p><strong>Description:</strong> ${data.description}</p>
+                <p><strong>Capacité:</strong> ${data.capacite}</p>
+                <p><strong>Lieu:</strong> ${data.lieu}</p>
+                <p><strong>Bénéfices:</strong> ${data.benefits}</p>
+                <p><strong>Recommandations:</strong> ${data.recommendations}</p>
+                <p><strong>Préparations:</strong> ${data.preparations}</p>
+            `;
+            document.getElementById('event-results').innerHTML = eventResults;
+        }
+    </script>
+    
+
+
+    <!-- Script Google Translate -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'fr',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+{% endblock %}

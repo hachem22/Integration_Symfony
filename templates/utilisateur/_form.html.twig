@@ -1,0 +1,209 @@
+{% extends "utilisateur/sidenav.html.twig" %}
+
+{% block content %}
+    <!doctype html>
+
+    <html lang="fr" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('../assets/') }}" data-template="vertical-menu-template-free" data-style="light">
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+            <title>
+                Ajouter un employé
+            </title>
+
+            <meta name="description" content="" />
+
+            <!-- Favicon -->
+            <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+
+            <!-- Fonts -->
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+            <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+
+            <!-- Core CSS -->
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+            <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+
+            <!-- Vendors CSS -->
+            <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+
+            <!-- Helpers -->
+            <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+            <script src="{{ asset('../assets/js/config.js') }}"></script>
+        </head>
+
+        {% block body %}
+            <!-- Layout wrapper -->
+            <div class="layout-wrapper layout-content-navbar">
+                <div class="layout-container">
+                    <!-- Menu -->
+
+                    <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y"> <!-- Basic Layout -->
+                        <div class="row">
+                            <div class="col-xl" style="margin-left: 250px; margin-top: 750px; width: 500px;">
+                                <div class="card mb-6">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">
+                                            Ajouter un employé
+                                        </h5>
+                                        <small class="text-body float-end">
+                                            Remplissez les détails
+                                        </small>
+                                    </div>
+                                    <div class="card-body">
+                                        {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}
+                                        ) }}
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.Nom">
+                                                <i class="bx bx-user"></i>
+                                                Nom
+                                            </label>
+                                            {{ form_row(form.Nom, {'attr': {'class': 'form-control' }}
+                                            ) }}
+                                        </div>
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.Prenom">
+                                                <i class="bx bx-user"></i>
+                                                Prénom
+                                            </label>
+                                            {{ form_row(form.Prenom, {'attr': {'class': 'form-control' }}
+                                            ) }}
+                                        </div>
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.Email">
+                                                <i class="bx bx-envelope"></i>
+                                                Email
+                                            </label>
+                                            {{ form_row(form.Email, {'attr': {'class': 'form-control' }}
+                                            ) }}
+                                        </div>
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.Adress">
+                                                <i class="bx bx-home"></i>
+                                                Adresse
+                                            </label>
+                                            {{ form_row(form.Adress, {'attr': {'class': 'form-control' }}
+                                            ) }}
+                                        </div>
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.Tel">
+                                                <i class="bx bx-phone"></i>
+                                                Téléphone
+                                            </label>
+                                            {{ form_row(form.Tel, {'attr': {'class': 'form-control' }}
+                                            ) }}
+                                        </div>
+
+                                        {# Utilisateur Role Field #}
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.utilisateurRole">
+                                                <i class="bx bx-id-card"></i>
+                                                Rôle
+                                            </label>
+                                            {{ form_row(form.utilisateurRole, {
+                          'attr': {'class': 'form-control js-role-selector'}
+                      }) }}
+                                        </div>
+
+                                        {# Service Field - Initially Hidden #}
+                                        <div id="service-field" class="mb-6">
+                                            <label class="form-label" for="form.service">
+                                                <i class="bx bx-building"></i>
+                                                Service
+                                            </label>
+                                            {{ form_row(form.service, {'attr': {'class': 'form-control' }}
+                                            ) }}
+                                        </div>
+
+                                        {# Medecin Fields - Initially Hidden #}
+                                        <div id="medecin-fields" style="display: none;" class="mb-6">
+                                            <label class="form-label" for="form.Grade">
+                                                <i class="bx bx-award"></i>
+                                                Grade
+                                            </label>
+                                            {{ form_row(form.Grade, {'attr': {'class': 'form-control' }}
+                                            ) }}
+                                            <label class="form-label" for="form.medecinSpecilaite">
+                                                <i class="bx bx-plus-medical"></i>
+                                                Spécialité
+                                            </label>
+                                            {{ form_row(form.medecinSpecilaite, {'attr': {'class': 'form-control' }}
+                                            ) }}
+                                        </div>
+
+                                        <button class="btn btn-primary">
+                                            {{ button_label|default('Sauvegarder') }}
+                                        </button>
+                                        {{ form_end(form) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / Content -->
+
+                    <div class="content-backdrop fade"></div>
+                </div>
+            <!-- Content wrapper -->
+            </div>
+            <!-- / Layout page -->
+
+            <!-- Overlay -->
+            <div class="layout-overlay layout-menu-toggle"></div>
+            <!-- / Layout wrapper -->
+
+            <!-- Core JS -->
+            <script src="{{ asset('../assets/vendor/libs/jquery/jquery.js') }}"></script>
+            <script src="{{ asset('../assets/vendor/libs/popper/popper.js') }}"></script>
+            <script src="{{ asset('../assets/vendor/js/bootstrap.js') }}"></script>
+            <script src="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+            <script src="{{ asset('../assets/vendor/js/menu.js') }}"></script>
+
+            <!-- Main JS -->
+            <script src="{{ asset('../assets/js/main.js') }}"></script>
+
+            <!-- Custom Script -->
+            <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          let roleSelector = document.querySelector('.js-role-selector');
+          let medecinFields = document.getElementById('medecin-fields');
+          let serviceField = document.getElementById('service-field');
+
+          function toggleFields() {
+              let selectedRole = roleSelector.value;
+
+              // Show/hide Medecin-specific fields
+              if (selectedRole === 'Medecin') { 
+                  medecinFields.style.display = 'block';
+              } else {
+                  medecinFields.style.display = 'none';
+                  medecinFields.querySelectorAll('input, select').forEach(field => {
+                      field.value = ''; // Reset values when hidden
+                  });
+              }
+
+              // Show/hide Service field for Medecin, Infirmier, Responsable
+              if (['Medecin', 'Infirmier', 'Responsable'].includes(selectedRole)) {
+                  serviceField.style.display = 'block';
+              } else {
+                  serviceField.style.display = 'none';
+                  serviceField.querySelector('select').value = ''; // Reset when hidden
+              }
+          }
+
+          // Run on page load (for edit forms)
+          toggleFields();
+
+          // Listen for changes
+          roleSelector.addEventListener('change', toggleFields);
+      });
+    </script>
+        {% endblock %}
+    </html>
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends 'medecin/baseMedecin.html.twig' %}
+
+{% block title %}Ajouter Date Non Disponible{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Variables de couleur */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #2e7bf6, #1a56c4);
+        --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        --form-bg: #ffffff;
+        --border-radius: 12px;
+        --input-border: #e2e8f0;
+        --input-focus: #3b82f6;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --error-color: #ef4444;
+        --primary-blue: #0D47A1;     /* Deep Blue */
+            --secondary-blue: #1565C0;   /* Strong Blue */
+            --accent-blue: #2196F3;      /* Bright Blue */
+            --light-blue: #64B5F6;       /* Light Blue */
+            --background-blue: #E3F2FD;
+    }
+
+        body {
+            background-color: var(--background-blue);
+            font-family: 'Inter', sans-serif;
+        }
+    /* Styles communs */
+    .appointment-card {
+        border-radius: var(--border-radius);
+        border: none;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .appointment-card:hover {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    }
+    
+    .card-header-modern {
+        background: var(--primary-gradient);
+        padding: 1.5rem 1rem;
+        border-bottom: none;
+    }
+    
+    .card-body-modern {
+        padding: 2rem;
+        background-color: var(--form-bg);
+    }
+    
+    .form-label {
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+    }
+    
+    .form-select, .form-control {
+        border-radius: 8px;
+        border: 1.5px solid var(--input-border);
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        width: 100%;
+        color: var(--text-primary);
+    }
+    
+    .form-select:focus, .form-control:focus {
+        border-color: var(--input-focus);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        outline: none;
+    }
+    
+    .btn-modern-primary {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.875rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-modern-primary:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+    
+    .error-feedback {
+        color: var(--error-color);
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="appointment-card">
+                    <div class="card-header-modern text-center">
+                        <h3 class="page-heading">Ajouter Date Non Disponible</h3>
+                    </div>
+                    <div class="card-body-modern">
+                        {% if form is not null %}
+                            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+                            {# Champ Médecin #}
+                            <div class="mb-4">
+                                {{ form_label(form.medecin, 'Médecin', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.medecin, {'attr': {'class': 'form-select select-medecin'}}) }}
+                                {% if form.medecin.vars.errors|length > 0 %}
+                                    <span class="error-feedback">
+                                        {{ form_errors(form.medecin) }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            {# Champ Date Non Disponible #}
+                            <div class="mb-4">
+                                {{ form_label(form.dateNonDisponible, 'Date Non Disponible', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.dateNonDisponible, {'attr': {'class': 'form-control select-date', 'type': 'date'}}) }}
+                                {% if form.dateNonDisponible.vars.errors|length > 0 %}
+                                    <span class="error-feedback">
+                                        {{ form_errors(form.dateNonDisponible) }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            {# Bouton de soumission #}
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-modern-primary btn-lg">Ajouter</button>
+                            </div>
+
+                            {{ form_end(form) }}
+                        {% else %}
+                            <p class="text-center text-danger">Aucun médecin disponible pour le moment.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "chambre/baseNav.html.twig" %}
+{% block content %}
+    <div class="container d-flex justify-content-center align-items-center min-vh-100" style="background: linear-gradient(135deg, #74EBD5 0%, #9FACE6 100%);">
+        <div class="card shadow-lg p-4" style="max-width: 600px; border-radius: 15px;">
+            <div class="card-header text-center bg-primary text-white" style="border-radius: 15px 15px 0 0;">
+                <h5>modifier Entretien de Chambre</h5>
+                <small>Remplissez les détails</small>
+            </div>
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}) }}
+                
+                <div class="mb-3">
+                    <label class="form-label" for="form.type"><i class="bx bx-cog"></i> Type d'entretien</label>
+                    {{ form_widget(form.type, {'attr': {'class': 'form-select shadow-sm' }}) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="form.chambre"><i class="bx bx-bed"></i> Chambre associée</label>
+                    {{ form_widget(form.chambre, {'attr': {'class': 'form-select shadow-sm' }}) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="form.datedebut"><i class="bx bx-calendar"></i> Date de début</label>
+                    {{ form_widget(form.datedebut, {'attr': {'class': 'form-control datetime-picker shadow-sm' }}) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="form.datefin"><i class="bx bx-calendar-check"></i> Date de fin</label>
+                    {{ form_widget(form.datefin, {'attr': {'class': 'form-control datetime-picker shadow-sm' }}) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="form.statut"><i class="bx bx-check-circle"></i> Statut</label>
+                    {{ form_widget(form.statut, {'attr': {'class': 'form-select shadow-sm' }}) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="form.details"><i class="bx bx-detail"></i> Détails</label>
+                    {{ form_widget(form.details, {'attr': {'class': 'form-control shadow-sm' }}) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold" for="form.femmedemenage"><i class="fas fa-user"></i> Femme de Ménage</label>
+                    <div class="input-group shadow-sm">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        {{ form_widget(form.femmedemenage, { 'attr': { 'class': 'form-control' } }) }}
+                    </div>
+                </div>
+
+                <button class="btn btn-primary w-100 shadow-sm" style="border-radius: 10px; transition: 0.3s;" 
+                        onmouseover="this.style.backgroundColor='#0056b3'" 
+                        onmouseout="this.style.backgroundColor='#0d6efd'">
+                    <i class="bx bx-check"></i> modifierl'entretien
+                </button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

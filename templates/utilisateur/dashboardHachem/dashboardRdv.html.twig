@@ -1,0 +1,189 @@
+{% extends "utilisateur/dashboardHachem/sidenavv.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>CareConnect</title>
+    <meta name="description" content="" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.googleapis.com') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.gstatic.com') }}" crossorigin />
+    <link href="{{ asset('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+    <script src="{{ asset('../assets/js/config.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="layout-wrapper layout-4" style="margin-top: 80px; width: 100px; height: 500px; margin-left: 100px;">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card" style="padding: 20px;">
+                <h5 class="card-header">
+                    Liste des rendez-vous envoyés
+                </h5>
+                <div class="d-flex justify-content-end mb-3">
+                    <a href="{{ path('demandeRdv') }}" class="btn btn-primary">
+                        <i class="bx bx-plus"></i> Ajouter un rendez-vous
+                    </a>
+                </div>
+                <div class="table-responsive text-nowrap">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>Heure</th>
+                                <th>Médecin</th>
+                                <th>Service</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            {% for rendezVous in rendezVousList %}
+                                <tr>
+                                    <td>{{ rendezVous.id }}</td>
+                                    <td>{{ rendezVous.date ? rendezVous.date|date('d/m/Y') : '' }}</td>
+                                    <td>{{ rendezVous.heure ?: '' }}</td>
+                                    <td>{{ rendezVous.medecin ? rendezVous.medecin.nom : 'Non défini' }}</td>
+                                    <td>{{ rendezVous.service ? rendezVous.service.nom.value : 'Non défini' }}</td>
+                                    <td>
+                                        {% if rendezVous.rendezVousStatus == 'EnAttente' %}
+                                            <div>
+                                                <form action="{{ path('accepterRdv', {'id': rendezVous.id}) }}" method="POST" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-success">
+                                                        <i class="bx bx-check"></i> 
+                                                    </button>
+                                                </form>
+                                                <form action="{{ path('refuserRdv', {'id': rendezVous.id}) }}" method="POST" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="bx bx-x"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        {% elseif rendezVous.rendezVousStatus == 'Confirme' %}
+                                            <span class="chip chip-success">Accepté</span>
+                                        {% elseif rendezVous.rendezVousStatus == 'Annule' %}
+                                            <span class="chip chip-danger">Refusé</span>
+                                        {% else %}
+                                            <span class="chip chip-secondary">{{ rendezVous.rendezVousStatus ?? 'Inconnu' }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('editRdv', {'id': rendezVous.id}) }}" class="btn btn-sm btn-warning">
+                                            <i class="bx bx-edit-alt"></i> Modifier
+                                        </a>
+                                        <form action="{{ path('supprimerRdv', {'id': rendezVous.id}) }}" method="POST" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rendez-vous ?');">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="bx bx-trash"></i> Supprimer
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4">
+                                        <i class="bx bx-calendar-x fa-2x"></i><br>
+                                        Aucun rendez-vous trouvé.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Ajout de styles personnalisés pour une meilleure présentation #}
+    <style>
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.1);
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .chip {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.5;
+        border-radius: 10px;
+    }
+
+    .chip-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .chip-warning {
+        background-color: #ffc107;
+        color: white;
+    }
+
+    .chip-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .chip-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    /* Styles for the buttons */
+    .btn-sm {
+        padding: 0.25rem 0.5rem; /* Reduce padding for smaller buttons */
+        font-size: 0.875rem; /* Match the size with chip */
+        border-radius: 5px; /* Round corners */
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    /* Remove default margin from form to align buttons inline */
+    .d-inline form {
+        margin: 0;
+    }
+
+    /* Ensure buttons are aligned vertically in the middle */
+    .btn i {
+        vertical-align: middle;
+    }
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('../assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ asset('../assets/vendor/js/menu.js') }}"></script>
+    <script src="{{ asset('../assets/js/main.js') }}"></script>
+{% endblock %}

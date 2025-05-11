@@ -1,0 +1,13 @@
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_row(form.Nom) }}
+    {{ form_row(form.Description) }}
+    {{ form_row(form.Capacite) }}
+  
+  
+
+    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+
+<script>
+
+</script>

@@ -1,0 +1,203 @@
+{% extends "stock_pharmacie/navbar.html.twig" %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>
+       CareConnect
+    </title>
+    <meta name="description" content="" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="{{ asset('https://fonts.googleapis.com') }}" />
+    <link rel="preconnect" href="{{ asset('https://fonts.gstatic.com') }}" crossorigin />
+    <link href="{{ asset('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <!-- Helpers -->
+    <script src="{{ asset('../assets/vendor/js/helpers.js') }}"></script>
+    <!-- Template customizer & Theme config files -->
+    <script src="{{ asset('../assets/js/config.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- En-tête -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="fw-bold mb-2">Gestion des Commandes</h4>
+                                <p class="text-muted mb-0">Liste de toutes les commandes de médicaments</p>
+                            </div>
+                            <div class="button-group">
+                                <a href="{{ path('app_commande_livraisons') }}" class="btn btn-success me-2">
+                                    <i class="bx bx-package me-1"></i> Gérer les livraisons
+                                </a>
+                                <a href="{{ path('app_stock_pharmacie_index') }}" class="btn btn-primary">
+                                    <i class="bx bx-plus me-1"></i> Commander un médicament
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtres -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <label class="form-label">Statut</label>
+                                <select class="form-select" id="filterStatus">
+                                    <option value="">Tous les statuts</option>
+                                    <option value="En attente">En attente</option>
+                                    <option value="Livrée">Livrée</option>
+                                    <option value="Annulée">Annulée</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" id="filterDate">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Recherche</label>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Rechercher...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste des commandes -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Produit</th>
+                                    <th>Quantité</th>
+                                    <th>Date Commande</th>
+                                    <th>Date Livraison</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for commande in commandes %}
+                                <tr>
+                                    <td>#{{ commande.id }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if commande.stockPharmacie.image %}
+                                                <img src="{{ asset('uploads/images/' ~ commande.stockPharmacie.image) }}" 
+                                                     alt="{{ commande.stockPharmacie.nom }}"
+                                                     class="rounded me-2"
+                                                     style="width: 40px; height: 40px; object-fit: cover;">
+                                            {% endif %}
+                                            <div>
+                                                <h6 class="mb-0">{{ commande.stockPharmacie.nom }}</h6>
+                                                <small class="text-muted">{{ commande.stockPharmacie.type }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ commande.quantite }}</td>
+                                    <td>{{ commande.dateCommande|date('d/m/Y H:i') }}</td>
+                                    <td>{{ commande.dateLivraison|date('d/m/Y') }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ commande.statut == 'Livrée' ? 'success' : (commande.statut == 'En attente' ? 'warning' : 'danger') }}">
+                                            {{ commande.statut }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-link dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="{{ path('app_commande_show', {'id': commande.id}) }}">
+                                                    <i class="bx bx-show me-1"></i> Détails
+                                                </a>
+                                                {% if commande.statut == 'En attente' %}
+                                                    <a class="dropdown-item" href="{{ path('app_commande_edit', {'id': commande.id}) }}">
+                                                        <i class="bx bx-edit me-1"></i> Modifier
+                                                    </a>
+                                                    <form method="post" action="{{ path('app_commande_delete', {'id': commande.id}) }}" 
+                                                          onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette commande ?');"
+                                                          style="display: inline;">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commande.id) }}">
+                                                        <button class="dropdown-item text-danger">
+                                                            <i class="bx bx-trash me-1"></i> Annuler
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <div class="text-muted">
+                                            <i class="bx bx-package mb-2" style="font-size: 2rem;"></i>
+                                            <p>Aucune commande trouvée</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block javascripts %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterStatus = document.getElementById('filterStatus');
+        const filterDate = document.getElementById('filterDate');
+        const searchInput = document.getElementById('searchInput');
+        const tableRows = document.querySelectorAll('tbody tr');
+
+        function filterTable() {
+            const status = filterStatus.value.toLowerCase();
+            const date = filterDate.value;
+            const search = searchInput.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const statusCell = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
+                const dateCell = row.querySelector('td:nth-child(4)').textContent;
+                const productCell = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+
+                const matchStatus = !status || statusCell.includes(status);
+                const matchDate = !date || dateCell.includes(date);
+                const matchSearch = !search || productCell.includes(search);
+
+                row.style.display = matchStatus && matchDate && matchSearch ? '' : 'none';
+            });
+        }
+
+        filterStatus.addEventListener('change', filterTable);
+        filterDate.addEventListener('input', filterTable);
+        searchInput.addEventListener('input', filterTable);
+    });
+    </script>
+    {% endblock %}
+{% endblock %}

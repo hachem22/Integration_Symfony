@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualisation 3D Chambre {{ chambre.num }}</title>
+  <style>
+    canvas { display: block; width: 100%; height: 100vh; }
+    body { margin: 0; background-color: #f0f0f0; font-family: 'Arial', sans-serif; }
+    .controls { position: absolute; bottom: 20px; left: 20px; background: rgba(255,255,255,0.7); padding: 10px; border-radius: 5px; }
+    h1 { position: absolute; top: 10px; left: 0; right: 0; text-align: center; color: #333; }
+    .info-panel { position: absolute; top: 60px; right: 20px; background: rgba(255,255,255,0.7); padding: 10px; border-radius: 5px; min-width: 200px; }
+  </style>
+</head>
+<body>
+  <h1>Visualisation de la Chambre {{ chambre.num }}</h1>
+  <div id="scene-container"></div>
+  <div class="controls">
+    <button id="toggle-lights">Allumer/Éteindre Lumières</button>
+    <button id="toggle-view">Vue première/troisième personne</button>
+  </div>
+  <div class="info-panel">
+    <h3>Information de la chambre</h3>
+    <div id="bed-info">Cliquez sur un lit pour voir les détails</div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/FontLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/geometries/TextGeometry.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/GLTFLoader.js"></script>
+
+  <script>
+    // Configuration de la scène
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xEBF5FB);
+    
+    // Caméra
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.getElementById('scene-container').appendChild(renderer.domElement);
+
+    // Éclairage
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    scene.add(ambientLight);
+
+    // Lumière principale
+    const mainLight = new THREE.DirectionalLight(0xffffeb, 1);
+    mainLight.position.set(5, 10, 7.5);
+    mainLight.castShadow = true;
+    mainLight.shadow.mapSize.width = 2048;
+    mainLight.shadow.mapSize.height = 2048;
+    mainLight.shadow.camera.near = 0.5;
+    mainLight.shadow.camera.far = 50;
+    mainLight.shadow.camera.left = -10;
+    mainLight.shadow.camera.right = 10;
+    mainLight.shadow.camera.top = 10;
+    mainLight.shadow.camera.bottom = -10;
+    scene.add(mainLight);
+
+    // Lumière de plafond
+    const ceilingLights = [];
+    for (let x = -3; x <= 3; x += 3) {
+      for (let z = -3; z <= 3; z += 3) {
+        const light = new THREE.PointLight(0xfff5e0, 0.7, 8, 2);
+        light.position.set(x, 2.9, z);
+        light.castShadow = true;
+        scene.add(light);
+        ceilingLights.push(light);
+        
+        // Fixture d'éclairage
+        const lightFixture = new THREE.Mesh(
+          new THREE.BoxGeometry(0.5, 0.1, 0.5),
+          new THREE.MeshStandardMaterial({ color: 0xdddddd })
+        );
+        lightFixture.position.set(x, 2.95, z);
+        scene.add(lightFixture);
+      }
+    }
+
+    // Sol
+    const floorTexture = new THREE.TextureLoader().load('https://cdn.jsdelivr.net/gh/mrdoob/three.js/examples/textures/hardwood2_diffuse.jpg');
+    floorTexture.wrapS = THREE.RepeatWrapping;
+    floorTexture.wrapT = THREE.RepeatWrapping;
+    floorTexture.repeat.set(5, 5);
+    
+    const floorGeometry = new THREE.PlaneGeometry(10, 10);
+    const floorMaterial = new THREE.MeshStandardMaterial({ 
+      map: floorTexture,
+      side: THREE.DoubleSide, 
+      metalness: 0, 
+      roughness: 0.8 
+    });
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    // Plafond
+    const ceilingGeometry = new THREE.PlaneGeometry(10, 10);
+    const ceilingMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+    const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+    ceiling.rotation.x = Math.PI / 2;
+    ceiling.position.y = 3;
+    scene.add(ceiling);
+
+    // Murs avec texture
+    const wallTexture = new THREE.TextureLoader().load('https://cdn.jsdelivr.net/gh/mrdoob/three.js/examples/textures/brick_diffuse.jpg');
+    wallTexture.wrapS = THREE.RepeatWrapping;
+    wallTexture.wrapT = THREE.RepeatWrapping;
+    wallTexture.repeat.set(2, 1);
+
+    const wallMaterial = new THREE.MeshStandardMaterial({ 
+      color: 0xf5f5f5, 
+      side: THREE.DoubleSide,
+      roughness: 0.9
+    });
+    const wallGeometry = new THREE.PlaneGeometry(10, 3);
+
+    // Murs
+    const wall1 = new THREE.Mesh(wallGeometry, wallMaterial);
+    wall1.position.set(0, 1.5, -5);
+    wall1.receiveShadow = true;
+    scene.add(wall1);
+
+    const wall2 = new THREE.Mesh(wallGeometry, wallMaterial);
+    wall2.position.set(0, 1.5, 5);
+    wall2.rotation.y = Math.PI;
+    wall2.receiveShadow = true;
+    scene.add(wall2);
+
+    const wall3 = new THREE.Mesh(wallGeometry, wallMaterial);
+    wall3.position.set(-5, 1.5, 0);
+    wall3.rotation.y = Math.PI / 2;
+    wall3.receiveShadow = true;
+    scene.add(wall3);
+
+    // Mur avec porte
+    const doorWidth = 1.2;
+    const wallWidth = 10;
+    const wallSegment1 = new THREE.Mesh(
+      new THREE.PlaneGeometry((wallWidth - doorWidth) / 2, 3),
+      wallMaterial
+    );
+    wallSegment1.position.set(5 - (wallWidth - doorWidth) / 4, 1.5, 0);
+    wallSegment1.rotation.y = -Math.PI / 2;
+    wallSegment1.receiveShadow = true;
+    scene.add(wallSegment1);
+
+    const wallSegment2 = new THREE.Mesh(
+      new THREE.PlaneGeometry((wallWidth - doorWidth) / 2, 3),
+      wallMaterial
+    );
+    wallSegment2.position.set(5 - (wallWidth - doorWidth) / 4 - (wallWidth - doorWidth) / 2 - doorWidth, 1.5, 0);
+    wallSegment2.rotation.y = -Math.PI / 2;
+    wallSegment2.receiveShadow = true;
+    scene.add(wallSegment2);
+
+    // Porte
+    const doorFrame = new THREE.Mesh(
+      new THREE.BoxGeometry(0.1, 3, doorWidth + 0.2),
+      new THREE.MeshStandardMaterial({ color: 0x8B4513 })
+    );
+    doorFrame.position.set(4.95, 1.5, 0);
+    scene.add(doorFrame);
+
+    const door = new THREE.Mesh(
+      new THREE.BoxGeometry(0.05, 2.8, doorWidth),
+      new THREE.MeshStandardMaterial({ color: 0xa67d5d })
+    );
+    door.position.set(4.9, 1.4, 0);
+    scene.add(door);
+
+    // Poignée de porte
+    const doorHandle = new THREE.Mesh(
+      new THREE.SphereGeometry(0.06, 16, 16),
+      new THREE.MeshStandardMaterial({ color: 0xc0c0c0, metalness: 0.8, roughness: 0.2 })
+    );
+    doorHandle.position.set(4.85, 1.4, -0.4);
+    scene.add(doorHandle);
+
+    // Fenêtre sur le mur arrière
+    const windowFrame = new THREE.Mesh(
+      new THREE.BoxGeometry(3, 1.5, 0.1),
+      new THREE.MeshStandardMaterial({ color: 0x8B4513 })
+    );
+    windowFrame.position.set(0, 1.5, -4.95);
+    scene.add(windowFrame);
+
+    const windowGlass = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.8, 1.3),
+      new THREE.MeshPhysicalMaterial({ 
+        color: 0xadd8e6, 
+        transparent: true, 
+        opacity: 0.5,
+        roughness: 0,
+        metalness: 0.2,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.1
+      })
+    );
+    windowGlass.position.set(0, 1.5, -4.9);
+    scene.add(windowGlass);
+
+    // Lits
+    const lits = {{lits|json_encode()|raw}} || [
+      { id: 1, status: 'libre', positionX: -3, positionZ: -3 },
+      { id: 2, status: 'occupé', positionX: -3, positionZ: 3 },
+      { id: 3, status: 'libre', positionX: 3, positionZ: -3 },
+      { id: 4, status: 'occupé', positionX: 3, positionZ: 3 }
+    ];
+    console.log(lits);
+
+    // Matelas, couverture, oreiller
+    function createBed(lit) {
+      const group = new THREE.Group();
+      
+      // Cadre du lit
+      const frameGeometry = new THREE.BoxGeometry(1.2, 0.4, 2.2);
+      const frameMaterial = new THREE.MeshStandardMaterial({ color: 0x8b8b8b, metalness: 0.5, roughness: 0.7 });
+      const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+      frame.position.y = 0.2;
+      frame.castShadow = true;
+      frame.receiveShadow = true;
+      group.add(frame);
+      
+      // Pieds du lit
+      for (let x = -0.5; x <= 0.5; x += 1) {
+        for (let z = -1; z <= 1; z += 2) {
+          const legGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.4, 8);
+          const legMaterial = new THREE.MeshStandardMaterial({ color: 0x777777, metalness: 0.7, roughness: 0.3 });
+          const leg = new THREE.Mesh(legGeometry, legMaterial);
+          leg.position.set(x, -0.2, z);
+          leg.castShadow = true;
+          leg.receiveShadow = true;
+          group.add(leg);
+        }
+      }
+      
+      // Matelas
+      const mattressGeometry = new THREE.BoxGeometry(1.1, 0.2, 2.1);
+      const mattressColor = 0xffffff;
+      const mattressMaterial = new THREE.MeshStandardMaterial({ color: mattressColor, metalness: 0, roughness: 0.5 });
+      const mattress = new THREE.Mesh(mattressGeometry, mattressMaterial);
+      mattress.position.y = 0.5;
+      mattress.castShadow = true;
+      mattress.receiveShadow = true;
+      group.add(mattress);
+      
+      // Couverture
+      const coverColor = lit.status === 'libre' ? 0x44aa44 : 0xaa4444;
+      const coverGeometry = new THREE.BoxGeometry(1.1, 0.05, 1.5);
+      const coverMaterial = new THREE.MeshStandardMaterial({ color: coverColor, metalness: 0, roughness: 0.8 });
+      const cover = new THREE.Mesh(coverGeometry, coverMaterial);
+      cover.position.y = 0.625;
+      cover.position.z = -0.2;
+      cover.castShadow = true;
+      group.add(cover);
+      
+      // Oreiller
+      const pillowGeometry = new THREE.BoxGeometry(0.6, 0.1, 0.4);
+      const pillowMaterial = new THREE.MeshStandardMaterial({ color: 0xeeeeee, metalness: 0, roughness: 0.6 });
+      const pillow = new THREE.Mesh(pillowGeometry, pillowMaterial);
+      pillow.position.y = 0.65;
+      pillow.position.z = 0.8;
+      pillow.castShadow = true;
+      group.add(pillow);
+
+      // Barre de tête de lit
+      const headboardGeometry = new THREE.BoxGeometry(1.2, 0.8, 0.05);
+      const headboardMaterial = new THREE.MeshStandardMaterial({ color: 0x8b8b8b, metalness: 0.5, roughness: 0.7 });
+      const headboard = new THREE.Mesh(headboardGeometry, headboardMaterial);
+      headboard.position.set(0, 0.6, 1.1);
+      headboard.castShadow = true;
+      group.add(headboard);
+
+      // Table de chevet
+      const nightstandGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+      const nightstandMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513, metalness: 0, roughness: 0.8 });
+      const nightstand = new THREE.Mesh(nightstandGeometry, nightstandMaterial);
+      nightstand.position.set(-0.85, 0.25, 0.5);
+      nightstand.castShadow = true;
+      nightstand.receiveShadow = true;
+      group.add(nightstand);
+
+      // Définir les données utilisateur
+      frame.userData.isBed = true;
+      frame.userData.bedId = lit.id;
+      frame.userData.status = lit.status;
+      
+      // Positionner le groupe
+      group.position.set(lit.positionX, 0, lit.positionZ);
+      
+      return group;
+    }
+
+    // Ajouter des lits
+    const bedGroups = [];
+    lits.forEach(lit => {
+      const bedGroup = createBed(lit);
+      scene.add(bedGroup);
+      bedGroups.push(bedGroup);
+    });
+
+    // Ajouter quelques meubles et décorations
+    // Armoire
+    const cabinetGeometry = new THREE.BoxGeometry(1, 2, 0.6);
+    const cabinetMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.8 });
+    const cabinet = new THREE.Mesh(cabinetGeometry, cabinetMaterial);
+    cabinet.position.set(-4.5, 1, 3.5);
+    cabinet.castShadow = true;
+    cabinet.receiveShadow = true;
+    scene.add(cabinet);
+
+    // Chaise
+    const chairSeat = new THREE.Mesh(
+      new THREE.BoxGeometry(0.5, 0.05, 0.5),
+      new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.8 })
+    );
+    chairSeat.position.set(-2, 0.5, 0);
+    chairSeat.castShadow = true;
+    chairSeat.receiveShadow = true;
+    scene.add(chairSeat);
+
+    const chairBack = new THREE.Mesh(
+      new THREE.BoxGeometry(0.5, 0.6, 0.05),
+      new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.8 })
+    );
+    chairBack.position.set(-2, 0.8, 0.225);
+    chairBack.castShadow = true;
+    chairBack.receiveShadow = true;
+    scene.add(chairBack);
+
+    // Pieds de chaise
+    for (let x = -0.2; x <= 0.2; x += 0.4) {
+      for (let z = -0.2; z <= 0.2; z += 0.4) {
+        const legGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.5, 8);
+        const legMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+        const leg = new THREE.Mesh(legGeometry, legMaterial);
+        leg.position.set(-2 + x, 0.25, z);
+        leg.castShadow = true;
+        scene.add(leg);
+      }
+    }
+
+    // Positionner la caméra
+    camera.position.set(5, 5, 5);
+    camera.lookAt(0, 0, 0);
+
+    // Contrôles
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.screenSpacePanning = false;
+    controls.maxPolarAngle = Math.PI / 2;
+    
+    // Variables pour le mode de vue
+    let firstPersonMode = false;
+    const moveSpeed = 0.05;
+    const keysPressed = {};
+
+    // Écouteurs d'événements
+    window.addEventListener('keydown', (e) => { keysPressed[e.key.toLowerCase()] = true; });
+    window.addEventListener('keyup', (e) => { keysPressed[e.key.toLowerCase()] = false; });
+
+    // Raycaster pour la détection des clics
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    // Écouter les clics sur la scène
+    window.addEventListener('click', (event) => {
+        // Convertir les coordonnées de la souris en coordonnées normalisées (-1 à +1)
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        // Lancer un rayon pour détecter les intersections
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(scene.children, true);
+
+        // Vérifier si un lit a été cliqué
+        if (intersects.length > 0) {
+            const clickedObject = intersects[0].object;
+
+            // Vérifier si l'objet cliqué est un lit
+            if (clickedObject.userData.isBed) {
+                const bedId = clickedObject.userData.bedId;
+                const status = clickedObject.userData.status;
+                document.getElementById('bed-info').innerHTML = `
+                    <p>Lit N°: ${bedId}</p>
+                    <p>Statut: ${status}</p>
+                    
+                    <button onclick="assignPatientToBed(${bedId})">Affecter un patient</button>
+                `;
+            }
+        }
+    });
+
+    // Boutons de contrôle
+    document.getElementById('toggle-lights').addEventListener('click', () => {
+        ceilingLights.forEach(light => {
+            light.visible = !light.visible;
+        });
+    });
+
+    document.getElementById('toggle-view').addEventListener('click', () => {
+        firstPersonMode = !firstPersonMode;
+        if (firstPersonMode) {
+            controls.enabled = false;
+            camera.position.set(0, 1.7, 0);
+        } else {
+            controls.enabled = true;
+            camera.position.set(5, 5, 5);
+            camera.lookAt(0, 0, 0);
+        }
+    });
+
+    function moveInFirstPerson() {
+        if (!firstPersonMode) return;
+        
+        const direction = new THREE.Vector3();
+        const cameraDirection = new THREE.Vector3();
+        camera.getWorldDirection(cameraDirection);
+        
+        if (keysPressed['w'] || keysPressed['z']) {
+            direction.add(cameraDirection);
+        }
+        if (keysPressed['s']) {
+            direction.sub(cameraDirection);
+        }
+        
+        const sideDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x).normalize();
+        
+        if (keysPressed['a'] || keysPressed['q']) {
+            direction.sub(sideDirection);
+        }
+        if (keysPressed['d']) {
+            direction.add(sideDirection);
+        }
+        
+        if (direction.length() > 0) {
+            direction.normalize();
+            camera.position.add(direction.multiplyScalar(moveSpeed));
+            
+            // Vérifier les limites de la chambre (bordures)
+            camera.position.x = Math.max(-4.8, Math.min(4.8, camera.position.x));
+            camera.position.z = Math.max(-4.8, Math.min(4.8, camera.position.z));
+        }
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        moveInFirstPerson();
+        controls.update();
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Fonction pour affecter un patient à un lit (à implémenter avec AJAX)
+    function assignPatientToBed(bedId) {
+        console.log(`Lit cliqué : ${bedId}`);
+        // À intégrer avec votre backend Symfony
+        alert(`Demande d'affectation pour le lit ${bedId}`);
+
+    }
+  </script>
+</body>
+</html>

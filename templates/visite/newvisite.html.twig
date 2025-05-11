@@ -1,0 +1,58 @@
+{% extends 'visite/BaseVisite.html.twig' %}
+
+{% block title %}Add a New Visit{% endblock %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="card" style="padding: 20px;">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-lg border-0" ">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="card-title mb-0">Add New Visit</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+                        {# Date of Visit Field #}
+                        <div class="mb-4">
+                            {{ form_label(form.date_visite, 'Date of Visit', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.date_visite, {'attr': {'class': 'form-select'}}) }}
+                            {{ form_errors(form.date_visite) }}
+                        </div>
+
+                        {# Diagnosis Field #}
+                        <div class="mb-4">
+                            {{ form_label(form.diagnostic, 'Diagnosis', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.diagnostic, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.diagnostic) }}
+                        </div>
+
+                        {# Prescription Field #}
+                        <div class="mb-4">
+                            {{ form_label(form.ordonnance, 'Prescription', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.ordonnance, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.ordonnance) }}
+                        </div>
+
+                        {# Certificate Field #}
+                        <div class="mb-4">
+                            {{ form_label(form.certificat, 'Certificate', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.certificat, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.certificat) }}
+                        </div>
+
+                        {# Submit and Back Buttons #}
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ path('visite_index') }}" class="btn btn-secondary">Back</a>
+                            <button type="submit" class="btn btn-success">Save Visit</button>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

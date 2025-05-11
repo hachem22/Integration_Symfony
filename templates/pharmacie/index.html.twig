@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CareConnect - Pharmacie{% endblock %}
+
+{% block body %}
+<!-- Header de la section pharmacie -->
+<div class="pharmacy-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="mb-3">Pharmacie CareConnect</h1>
+                <p class="lead">Gérez votre stock de médicaments efficacement</p>
+            </div>
+            <div class="col-lg-4 text-end">
+                <a href="{{ path('app_stock_pharmacie_new') }}" class="btn btn-primary">
+                    <i class="fa fa-plus-circle me-2"></i>Ajouter un médicament
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section des médicaments -->
+<section class="medications-section">
+    <div class="container">
+        <!-- Barre de recherche et filtres -->
+        <div class="search-filters mb-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="search-box">
+                        <input type="text" class="form-control" id="searchMedication" placeholder="Rechercher un médicament...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="categoryFilter">
+                        <option value="">Toutes les catégories</option>
+                        <option value="antibiotique">Antibiotiques</option>
+                        <option value="antidouleur">Antidouleurs</option>
+                        <option value="vitamines">Vitamines</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="stockFilter">
+                        <option value="">Stock</option>
+                        <option value="low">Stock faible</option>
+                        <option value="available">Disponible</option>
+                        <option value="out">Rupture</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste des médicaments -->
+        <div class="row g-4">
+            {% for medicament in medicaments %}
+            <div class="col-lg-4 col-md-6">
+                <div class="medication-card">
+                    <div class="card-header">
+                        <div class="stock-badge {% if medicament.quantite < 10 %}badge-danger{% else %}badge-success{% endif %}">
+                            {{ medicament.quantite }} en stock
+                        </div>
+                        <h3>{{ medicament.nom }}</h3>
+                        <p class="category">{{ medicament.categorie }}</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-row">
+                            <span class="label">Prix :</span>
+                            <span class="value">{{ medicament.prix }}€</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Date d'expiration :</span>
+                            <span class="value">{{ medicament.dateExpiration|date('d/m/Y') }}</span>
+                        </div>
+                        <div class="stock-progress">
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: {{ (medicament.quantite / medicament.quantiteMax) * 100 }}%"
+                                     aria-valuenow="{{ medicament.quantite }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="{{ medicament.quantiteMax }}">
+                                </div>
+                            </div>
+                            <small>{{ medicament.quantite }}/{{ medicament.quantiteMax }} unités</small>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ path('app_stock_pharmacie_edit', {'id': medicament.id}) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fa fa-edit me-1"></i>Modifier
+                        </a>
+                        <a href="{{ path('app_stock_pharmacie_show', {'id': medicament.id}) }}" class="btn btn-sm btn-light">
+                            <i class="fa fa-eye me-1"></i>Détails
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %} 
