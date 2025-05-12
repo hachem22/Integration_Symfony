@@ -24,11 +24,8 @@ class Planning
     private ?\DateTimeInterface $dateDisponible = null;
 
     #[ORM\Column(type: 'json')]
-    #[Assert\NotNull(message: "Les dates  ne peuvent pas être vides.")]
-    #[Assert\GreaterThan(
-        "tomorrow",
-        message: "La date non disponible doit être supérieure à la date actuelle plus un jour."
-    )]
+    // Assertions for NotNull and GreaterThan removed as they are not suitable for an array of dates.
+    // This array stores dates (as strings 'Y-m-d') when the doctor is generally unavailable.
     private array $datesNonDisponibles = [];
 
     #[ORM\Column(type: 'json', nullable: true)]

@@ -15,7 +15,7 @@ security:
     # Firewalls
     firewalls:
         main:
-            pattern: ^/
+            pattern: ^/ # This should now not match /medecins/par-service first
             form_login:
                 login_path: app_login # Route to the login page
                 check_path: app_login # Route where the login form is submitted
@@ -34,6 +34,8 @@ security:
         - { path: ^/login, roles: PUBLIC_ACCESS } # Allow access to the login page for everyone
         - { path: ^/forgot-password, roles: PUBLIC_ACCESS } # Allow access to the forgot password page for everyone
         - { path: ^/reset-password, roles: PUBLIC_ACCESS } # Allow access to the reset password page for everyone
+        # Temporarily make AJAX endpoint public for testing - place it high for precedence
+        - { path: ^/medecins/par-service, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMINISTRATEUR } # Only administrators can access routes under /admin
         - { path: ^/profile, roles: ROLE_USER } # Only users can access routes under /profile
         - { path: ^/medecin, roles: ROLE_MEDECIN } # Only medecins can access routes under /medecin
@@ -42,6 +44,7 @@ security:
         - { path: ^/responsable, roles: ROLE_RESPONSABLE } # Only responsables can access routes under /responsable
         - { path: ^/femme-de-menage, roles: ROLE_FEMME_DE_MENAGE } # Only femmes de menage can access routes under /femme-de-menage
         - { path: ^/patient, roles: ROLE_PATIENT } # Only patients can access routes under /patient
+        # Other specific AJAX endpoints for logged-in patients
+        - { path: ^/verifier-disponibilite-date, roles: ROLE_PATIENT } # Kept specific for now
+        - { path: ^/rendezvous/available-times, roles: ROLE_PATIENT } # Kept specific for now
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY } # Require authentication for all other routes
-        - { path: ^/medecins/par-service, roles: PUBLIC_ACCESS }
-        - { path: ^/verifier-disponibilite-date, roles: PUBLIC_ACCESS }

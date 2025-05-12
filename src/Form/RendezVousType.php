@@ -40,8 +40,9 @@ class RendezVousType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'Date',
                 'required' => true,
-                'attr' => ['class' => 'select-date'],
-            ]);
+                'attr' => ['class' => 'form-control select-date'], // Changed class for consistency
+            ])
+           ;
             
     }
 

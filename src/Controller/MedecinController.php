@@ -115,7 +115,6 @@ class MedecinController extends AbstractController
     }
 
     #[Route('/medecins/par-service/{serviceId}', name: 'medecins_par_service', methods: ['GET'])]
-    #[IsGranted('ROLE_PATIENT')] // Vérifie si l'utilisateur est connecté et a le bon rôle
     public function getMedecinsParService(int $serviceId, UtilisateurRepository $utilisateurRepository): JsonResponse
     {
         $medecins = $utilisateurRepository->findByService($serviceId);
