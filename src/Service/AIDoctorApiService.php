@@ -10,7 +10,7 @@ class AIDoctorApiService
     private HttpClientInterface $client;
     private string $apiUrl = 'https://ai-doctor-api-ai-medical-chatbot-healthcare-ai-assistant.p.rapidapi.com/chat';
     private string $apiHost = 'ai-doctor-api-ai-medical-chatbot-healthcare-ai-assistant.p.rapidapi.com';
-    private string $apiKey = '3b1edcce4bmshd0d83666453db24p13da81jsn93056739bb2b'; // Replace with your key
+    private string $apiKey = '63155ea07cmshdc823bd2aadfd07p14afd9jsn6ebbd855e7cf'; // Replace with your key
 
     public function __construct(HttpClientInterface $client)
     {

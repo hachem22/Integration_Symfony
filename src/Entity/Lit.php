@@ -32,9 +32,13 @@ class Lit
     private ?string $num = null;
 
     #[ORM\Column(type: 'string')]
-    #[Assert\NotBlank(message: "Le statut du lit ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "Le type du lit ne peut pas être vide.")]
    
     private string $type  ;
+     #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank(message: "Le statut du lit ne peut pas être vide.")]
+   
+    private string $status  ;
 
     #[ORM\ManyToOne(inversedBy: 'lits')]
     private ?Chambre $chambre = null;
@@ -68,14 +72,25 @@ class Lit
     public function setType(string $type): self
     {
         $this->type = $type;
-        if ($this->chambre) {
-            $this->chambre->updateStatus();
-        }
-    
-        
+       
+   
+       
         return $this;
     }
-
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+       
+    if ($this->chambre) {
+            $this->chambre->updateStatus();
+        }
+       
+        return $this;
+    }
     public function getChambre(): ?Chambre
     {
         return $this->chambre;
@@ -96,16 +111,16 @@ class Lit
     public function setPatient(?Utilisateur $patient): static
     {
         $this->patient = $patient;
-    
+   
         // Mettre à jour le statut du lit
-        $this->type = $patient ? 'occupe' : 'libre';
-    
+        $this->type = $patient ? 'occupée' : 'libre';
+   
         // Mettre à jour la chambre si elle existe
         if ($this->chambre) {
             $this->chambre->updateStatus();
         }
-    
+   
         return $this;
     }
-    
+   
 }

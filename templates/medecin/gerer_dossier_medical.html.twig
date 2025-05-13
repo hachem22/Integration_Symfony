@@ -102,7 +102,6 @@
                         <table class="table table-hover align-middle mb-0">
                             <thead>
                                 <tr>
-                                    <th class="bg-light"><i class="fas fa-hashtag me-1"></i>ID</th>
                                     <th class="bg-light"><i class="fas fa-droplet me-1"></i>Groupe Sanguin</th>
                                     <th class="bg-light"><i class="fas fa-allergy me-1"></i>Allergies</th>
                                     <th class="bg-light"><i class="fas fa-syringe me-1"></i>Vaccinations</th>
@@ -113,7 +112,6 @@
                             <tbody>
                                 {% for dossier in dossier_medicals %}
                                     <tr>
-                                        <td>{{ dossier.id }}</td>
                                         <td>
                                             <span class="badge bg-primary-subtle text-primary">
                                                 {{ dossier.GroupeSanguin }}

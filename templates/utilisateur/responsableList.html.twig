@@ -48,7 +48,7 @@
                     <tbody class="table-border-bottom-0">
                         {% set hasResponsables = false %}
                         {% for utilisateur in responsables %}
-                            {% if utilisateur.utilisateurRole.value == 'Responsable' %}
+                            {% if utilisateur.utilisateurRole.value == 'RESPONSABLE' %}
                                 {% set hasResponsables = true %}
                                 <tr>
                                     <td>{{ utilisateur.Nom }}</td>

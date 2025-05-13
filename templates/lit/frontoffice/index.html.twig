@@ -127,7 +127,7 @@
                             <h5 class="card-title">Lit N° {{ lit.num }}</h5>
                             <p class="card-text">Chambre : {{ lit.chambre.num }}</p>
                             <p class="card-text">
-                                {% if lit.type == 'libre' %}
+                                {% if lit.status == 'libre' %}
                                     <span class="badge bg-success">Disponible</span>
                                 {% else %}
                                     <span class="badge bg-danger">
@@ -143,13 +143,13 @@
         </a>
                                 {% endif %}
                             </p>
-                            {% if lit.type == 'libre' %}
+                            {% if lit.status == 'libre' %}
                                 <a href="{{ path('lit.affecter', { id: lit.id }) }}" class="btn btn-success btn-sm btn-custom">
                                     <i class="fas fa-user-plus"></i> Affecter
                                 </a>
                             {% endif %}
                             <div class="d-flex justify-content-center mt-3 gap-2">
-                                <a href="{{ path('lit.editfront', { id: lit.id }) }}" class="btn btn-warning btn-sm btn-custom">
+                                <a href="{{ path('lit.edit', { id: lit.id }) }}" class="btn btn-warning btn-sm btn-custom">
                                     <i class="fas fa-edit"></i> Modifier
                                 </a>
                                 <a href="javascript:void(0);" onclick="confirmSuppression('{{ path('lit.deletefront', { id: lit.id }) }}')" class="btn btn-danger btn-sm btn-custom">
@@ -204,3 +204,4 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {% endblock %}
+

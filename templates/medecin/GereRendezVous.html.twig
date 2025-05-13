@@ -85,7 +85,6 @@
                         <table class="table table-hover align-middle mb-0">
                             <thead>
                                 <tr>
-                                    <th class="bg-light">#</th>
                                     <th class="bg-light"><i class="far fa-calendar-alt me-1"></i>Date</th>
                                     <th class="bg-light"><i class="far fa-clock me-1"></i>Heure</th>
                                     <th class="bg-light"><i class="fas fa-user me-1"></i>Patient</th>
@@ -97,7 +96,6 @@
                             <tbody>
                                 {% for rendezVous in rendezVousList %}
                                     <tr>
-                                        <td>{{ rendezVous.id }}</td>
                                         <td>
                                             <span class="badge bg-light text-dark border">
                                                 {{ rendezVous.date ? rendezVous.date|date('d/m/Y') : '' }}

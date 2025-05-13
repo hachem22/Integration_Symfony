@@ -104,8 +104,8 @@ class ChatbotHospitalierService
                 'type' => method_exists($entretien->getType(), 'value') ? $entretien->getType()->value : $entretien->getType(),
                 'statut' => method_exists($entretien->getStatut(), 'value') ? $entretien->getStatut()->value : $entretien->getStatut(),
                 'description' => method_exists($entretien, 'getDescription') ? $entretien->getDescription() : 'Aucune description',
-                'technicien' => method_exists($entretien, 'getTechnicien') && $entretien->getTechnicien() 
-                    ? $entretien->getTechnicien()->getNom() 
+                'technicien' => method_exists($entretien, 'getTechnicien') && $entretien->getTechnicien()
+                    ? $entretien->getTechnicien()->getNom()
                     : 'Non assigné'
             ];
         }, $entretiensChambres);
@@ -157,8 +157,8 @@ class ChatbotHospitalierService
                 'type' => method_exists($entretien->getType(), 'value') ? $entretien->getType()->value : $entretien->getType(),
                 'statut' => method_exists($entretien->getStatut(), 'value') ? $entretien->getStatut()->value : $entretien->getStatut(),
                 'description' => method_exists($entretien, 'getDescription') ? $entretien->getDescription() : 'Aucune description',
-                'technicien' => method_exists($entretien, 'getTechnicien') && $entretien->getTechnicien() 
-                    ? $entretien->getTechnicien()->getNom() 
+                'technicien' => method_exists($entretien, 'getTechnicien') && $entretien->getTechnicien()
+                    ? $entretien->getTechnicien()->getNom()
                     : 'Non assigné'
             ];
         }, $entretiensChambres);
@@ -206,7 +206,7 @@ class ChatbotHospitalierService
 
     private function verifierDisponibiliteChambre(string $requete): array
     {
-        $chambresDisponibles = $this->chambreRepository->findBy(['active' => 'disponible']);
+        $chambresDisponibles = $this->chambreRepository->findBy(['active' => 'Disponible']);
 
         if (empty($chambresDisponibles)) {
             return [
@@ -248,8 +248,8 @@ class ChatbotHospitalierService
                 'numero' => $lit->getNum(),
                 'statut' => $lit->getType(), // 'libre' ou 'occupé'
                 'chambre' => $lit->getChambre() ? $lit->getChambre()->getNum() : 'Sans chambre',
-                'service' => $lit->getChambre() && $lit->getChambre()->getPosition() 
-                    ? $lit->getChambre()->getPosition()->getNom() 
+                'service' => $lit->getChambre() && $lit->getChambre()->getPosition()
+                    ? $lit->getChambre()->getPosition()->getNom()
                     : 'Non affecté'
             ];
         }, $tousLesLits);
@@ -260,7 +260,7 @@ class ChatbotHospitalierService
         });
 
         $litsOccupes = array_filter($detailsLits, function($lit) {
-            return $lit['statut'] === 'occupé';
+            return $lit['statut'] === 'Occupé';
         });
 
         return [
@@ -287,14 +287,14 @@ class ChatbotHospitalierService
                 'chambre' => $enregistrement->getChambre()->getNum(),
                 'dateDebut' => $enregistrement->getDatedebut()->format('Y-m-d'),
                 'dateFin' => $enregistrement->getDatefin()->format('Y-m-d'),
-                'type' => method_exists($enregistrement->getType(), 'value') 
-                    ? $enregistrement->getType()->value 
+                'type' => method_exists($enregistrement->getType(), 'value')
+                    ? $enregistrement->getType()->value
                     : $enregistrement->getType(),
-                'statut' => method_exists($enregistrement->getStatut(), 'value') 
-                    ? $enregistrement->getStatut()->value 
+                'statut' => method_exists($enregistrement->getStatut(), 'value')
+                    ? $enregistrement->getStatut()->value
                     : $enregistrement->getStatut(),
-                'description' => method_exists($enregistrement, 'getDescription') 
-                    ? $enregistrement->getDescription() 
+                'description' => method_exists($enregistrement, 'getDescription')
+                    ? $enregistrement->getDescription()
                     : 'Aucune description'
             ];
         }, $enregistrementsMaintenance);

@@ -33,7 +33,7 @@ class EntretientChambreType extends AbstractType
             ])
             ->add('datedebut', DateTimeType::class, [
                 'widget' => 'single_text',
-                
+               
                 'label' => 'Date de début',
             ])
             ->add('datefin', DateTimeType::class, [
@@ -56,29 +56,20 @@ class EntretientChambreType extends AbstractType
             ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
                 $form = $event->getForm();
                 $data = $event->getData();
-    
+   
                 if ($data && $data->getType() && empty($data->getDetails())) {
                     $data->setDetails($data->autoCompleteDescription());
                 }
             })
             ->add('chambre', EntityType::class, [
                 'class' => Chambre::class,
-                'choice_label' => 'num', 
+                'choice_label' => 'num',
                 'label' => 'Chambre associée',
                 'placeholder' => 'Sélectionnez une chambre',
-            ])
-            ->add('femmedemenage', EntityType::class, [
-                'class' => Utilisateur::class,
-                'choice_label' => 'nom',
-                'placeholder' => 'Sélectionner femme de ménage',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('u')
-                        ->where('u.utilisateurRole = :role')
-                        ->setParameter('role', UtilisateurRole::FemmeDeMenage);
-                        
-                },
             ]);
-            
+           
+           
+           
     }
 
     public function configureOptions(OptionsResolver $resolver): void
