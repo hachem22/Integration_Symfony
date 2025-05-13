@@ -1,4 +1,3 @@
-
 {% extends "chambre/baseNav.html.twig" %}
 {% block content %}
     <!doctype html>
@@ -34,7 +33,7 @@
                                     </div>
                                     <div class="card-body">
                                         {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}) }}
-                                        
+                                       
                                         <div class="mb-6">
                                             <label class="form-label" for="form.num">
                                                 <i class="bx bx-hash"></i> Numéro du lit
@@ -58,6 +57,15 @@
                                                 </span>
                                             {% endif %}
                                         </div>
+                                         <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bx bx-bed"></i> Status de lit
+                    </label>
+                    {{ form_widget(form.status, {'attr': {'class': 'form-select' }}) }}
+                    {% if form.status.vars.errors|length > 0 %}
+                        <span class="text-danger small">{{ form_errors(form.status) }}</span>
+                    {% endif %}
+                </div>
 
                                         <div class="mb-6">
                                             <label class="form-label" for="form.chambre">

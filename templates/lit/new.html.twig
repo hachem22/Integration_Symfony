@@ -1,5 +1,3 @@
-
-
 {% block content %}
     <!doctype html>
     <html lang="fr" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('../assets/') }}" data-template="vertical-menu-template-free" data-style="light">
@@ -34,7 +32,7 @@
                                     </div>
                                     <div class="card-body">
                                         {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}) }}
-                                        
+                                       
                                         <div class="mb-6">
                                             <label class="form-label" for="form.num">
                                                 <i class="bx bx-hash"></i> Numéro du lit
@@ -55,6 +53,17 @@
                                             {% if form.type.vars.errors|length > 0 %}
                                                 <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
                                                     {{ form_errors(form.type) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="mb-6">
+                                            <label class="form-label" for="form.status">
+                                                <i class="bx bx-bed"></i> Status de lit
+                                            </label>
+                                            {{ form_widget(form.status, {'attr': {'class': 'form-select' }}) }}
+                                            {% if form.status.vars.errors|length > 0 %}
+                                                <span style="color: red; font-size: 0.9em; margin-top: 0.5rem;">
+                                                    {{ form_errors(form.status) }}
                                                 </span>
                                             {% endif %}
                                         </div>

@@ -35,9 +35,11 @@ security:
         - { path: ^/forgot-password, roles: PUBLIC_ACCESS } # Allow access to the forgot password page for everyone
         - { path: ^/reset-password, roles: PUBLIC_ACCESS } # Allow access to the reset password page for everyone
         # Temporarily make AJAX endpoint public for testing - place it high for precedence
-        - { path: ^/medecins/par-service, roles: PUBLIC_ACCESS }
-        - { path: ^/admin, roles: ROLE_ADMINISTRATEUR } # Only administrators can access routes under /admin
+        - { path: ^/medecins/par-service, roles: ROLE_PATIENT } # Reverted back to ROLE_PATIENT
+        - { path: ^/admin, roles: ROLE_ADMIN } # Only administrators can access routes under /admin
         - { path: ^/profile, roles: ROLE_USER } # Only users can access routes under /profile
+        # Add explicit rule for the AJAX endpoint with numeric ID parameter
+        - { path: ^/medecins/par-service/\d+, roles: ROLE_PATIENT }
         - { path: ^/medecin, roles: ROLE_MEDECIN } # Only medecins can access routes under /medecin
         - { path: ^/infirmier, roles: ROLE_INFIRMIER } # Only infirmiers can access routes under /infirmier
         - { path: ^/pharmacien, roles: ROLE_PHARMACIEN } # Only pharmaciens can access routes under /pharmacien

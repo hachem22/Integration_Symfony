@@ -17,10 +17,19 @@ class LitType extends AbstractType
     {
         $builder
             ->add('num')
-            ->add('type', ChoiceType::class, [
+             ->add('type', ChoiceType::class, [
+                'label' => 'État de la chambre',
                 'choices' => [
-                    'Libre' => 'libre',
-                    'Occupé' => 'occupe',
+                    'Simple' => 'Simple',
+                    'Électrique' => 'Électrique',
+                    'Réglable' => 'Réglable',
+                ],
+                'placeholder' => 'Sélectionnez un type',
+            ])
+            ->add('status', ChoiceType::class, [
+                'choices' => [
+                    'libre' => 'libre',
+                    'Occupé' => 'Occupé',
                 ],
             ])
             ->add('chambre', EntityType::class, [
@@ -37,3 +46,5 @@ class LitType extends AbstractType
         ]);
     }
 }
+
+

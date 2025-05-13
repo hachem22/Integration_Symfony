@@ -66,20 +66,20 @@ final class UtilisateurController extends AbstractController
         ]);
     }
    
-    #[Route('/HomeResponsable', name: 'Home_Responsable')]
+      #[Route('/HomeResponsable', name: 'Home_Responsable')]
 public function stat(ChambreRepository $chambreRepository, LitRepository $litRepository): Response
 {
     $this->denyAccessUnlessGranted('ROLE_RESPONSABLE');
     $user = $this->getUser();
     // Statistiques des chambres
     $totalChambres = $chambreRepository->count([]);
-    $chambresDisponibles = $chambreRepository->count(['active' => 'disponible']);
-    $chambresOccupees = $chambreRepository->count(['active' => 'occupee']);
-    $chambresMaintenance = $chambreRepository->count(['active' => 'maintenance']);
+    $chambresDisponibles = $chambreRepository->count(['active' => 'Disponible']);
+    $chambresOccupees = $chambreRepository->count(['active' => 'Occupée']);
+    $chambresMaintenance = $chambreRepository->count(['active' => 'Maintenance']);
 
     // Statistiques des lits
     $totalLits = $litRepository->count([]);
-    $litsDisponibles = $litRepository->count(['type' => 'libre']);
+    $litsDisponibles = $litRepository->count(['status' => 'libre']);
     $litsOccupes = $totalLits - $litsDisponibles;
 
     if (!$user instanceof Utilisateur) {
@@ -336,7 +336,7 @@ public function stat(ChambreRepository $chambreRepository, LitRepository $litRep
     #[Route(name: 'app_utilisateur_index', methods: ['GET'])]
     public function index(UtilisateurRepository $utilisateurRepository): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMINISTRATEUR');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         return $this->render('utilisateur/index.html.twig', [
             'utilisateurs' => $utilisateurRepository->findAll(),

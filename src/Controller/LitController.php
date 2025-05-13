@@ -197,9 +197,9 @@ public function affecterLit(Lit $lit, Request $request, EntityManagerInterface $
 
         // Vérifier et mettre à jour le statut du lit
         if ($patient) {
-            $lit->setType('occupe');  // 'occupe' comme chaîne de caractères
+            $lit->setStatus('Occupé');  // 'occupe' comme chaîne de caractères
         } else {
-            $lit->setType('libre');   // 'libre' comme chaîne de caractères
+            $lit->setStatus('libre');   // 'libre' comme chaîne de caractères
         }
 
         $manager->flush();
@@ -219,21 +219,21 @@ public function affecterLit(Lit $lit, Request $request, EntityManagerInterface $
     return $this->render('lit/index.html.twig', [
         'lits' => $repository->findAll(),
         'typeLitLibre' => 'libre',   // Passer la chaîne 'libre'
-        'typeLitOccupe' => 'occupe', // Passer la chaîne 'occupe'
+        'typeLitOccupe' => 'Occupé', // Passer la chaîne 'occupe'
     ]);
 }
 #[Route('/front/lit', name: 'app_litfront')]
 public function indexshow(LitRepository $repository): Response
 {
-    
+   
     return $this->render('lit/frontoffice/index.html.twig', [
         'lits' => $repository->findAll()
     ]);
 }
 #[Route('/lit/desaffectation/{id}', name: 'lit.desaffecter', methods: ['GET', 'POST'])]
     public function desaffecterPatient(
-        Lit $lit, 
-        Request $request, 
+        Lit $lit,
+        Request $request,
         EntityManagerInterface $manager,
         EntretienService $entretienService
     ): Response
@@ -264,22 +264,22 @@ public function indexshow(LitRepository $repository): Response
             // Désaffecter le patient du lit
            
             $lit->setPatient(null);
-            $lit->setType('libre');
+            $lit->setStatus('libre');
 
             // Mettre à jour la base de données
             $manager->persist($patient);
             $manager->persist($lit);
-            
+           
             // Créer automatiquement un entretien pour la chambre
             $entretienService->creerEntretienApresDepartPatient($lit);
-            
+           
             // Mettre à jour le statut de la chambre
             $chambre = $lit->getChambre();
             if ($chambre) {
                 $chambre->updateStatus();
                 $manager->persist($chambre);
             }
-            
+           
             $manager->flush();
 
             $this->addFlash('success', 'Le patient a été désaffecté et un entretien de chambre a été planifié automatiquement.');
@@ -294,3 +294,4 @@ public function indexshow(LitRepository $repository): Response
 
 
 }
+

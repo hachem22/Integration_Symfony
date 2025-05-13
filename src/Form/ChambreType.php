@@ -23,7 +23,7 @@ class ChambreType extends AbstractType
             ->add('num', TextType::class, [
                 'label' => 'Numéro de la chambre',
             ])
-            
+           
             ->add('type', TextType::class, [
                 'label' => 'Type de chambre',
             ])
@@ -36,9 +36,9 @@ class ChambreType extends AbstractType
             ->add('active', ChoiceType::class, [
                 'label' => 'État de la chambre',
                 'choices' => [
-                    'Disponible' => 'disponible',
-                    'Occupée' => 'occupee',
-                    'Maintenance' => 'maintenance',
+                    'Disponible' => 'Disponible',
+                    'Occupée' => 'Occupée',
+                    'Maintenance' => 'Maintenance',
                 ],
                 'placeholder' => 'Sélectionnez un état',
             ])
@@ -49,7 +49,7 @@ class ChambreType extends AbstractType
                 'placeholder' => 'Sélectionnez un service',
                 'attr' => ['class' => 'form-select'],
             ]);
-            
+           
     }
 
     public function configureOptions(OptionsResolver $resolver): void

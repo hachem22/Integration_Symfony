@@ -97,12 +97,12 @@ th a::after {
                     <tr>
                         <th>
                             <a href="{{ path('chambre.tri', {
-                                'sortBy': 'num', 
+                                'sortBy': 'num',
                                 'sortDirection': (sortBy|default('') == 'num' and sortDirection|default('ASC')) == 'ASC' ? 'DESC' : 'ASC',
                                  'search': searchTerm|default(''),
                                  'order': order|default('ASC')
                             }) }}">
-                                Numéro 
+                                Numéro
                                 {% if sortBy|default('') == 'num' %}
                                     <i class="fas fa-sort-{{ sortDirection|default('ASC') == 'ASC' ? 'up' : 'down' }}"></i>
                                 {% endif %}
@@ -110,7 +110,7 @@ th a::after {
                         </th>
                         <th>
             <a href="{{ path('chambre.tri', {
-                'sortBy': 'type', 
+                'sortBy': 'type',
                 'sortDirection': (sortBy|default('') == 'type' and sortDirection|default('ASC')) == 'ASC' ? 'DESC' : 'ASC',
                 'search': searchTerm|default(''),
                 'order': order|default('ASC')
@@ -123,7 +123,7 @@ th a::after {
         </th>
         <th>
             <a href="{{ path('chambre.tri', {
-                'sortBy': 'localisation', 
+                'sortBy': 'localisation',
                 'sortDirection': (sortBy|default('') == 'localisation' and sortDirection|default('ASC')) == 'ASC' ? 'DESC' : 'ASC',
                 'search': searchTerm|default(''),
                 'order': order|default('ASC')
@@ -136,7 +136,7 @@ th a::after {
         </th>
         <th>
             <a href="{{ path('chambre.tri', {
-                'sortBy': 'position', 
+                'sortBy': 'position',
                 'sortDirection': (sortBy|default('') == 'position' and sortDirection|default('ASC')) == 'ASC' ? 'DESC' : 'ASC',
                 'search': searchTerm|default(''),
                 'order': order|default('ASC')
@@ -149,7 +149,7 @@ th a::after {
         </th>
         <th>
             <a href="{{ path('chambre.tri', {
-                'sortBy': 'capacite', 
+                'sortBy': 'capacite',
                 'sortDirection': (sortBy|default('') == 'capacite' and sortDirection|default('ASC')) == 'ASC' ? 'DESC' : 'ASC',
                 'search': searchTerm|default(''),
                 'order': order|default('ASC')
@@ -162,7 +162,7 @@ th a::after {
         </th>
         <th>
             <a href="{{ path('chambre.tri', {
-                'sortBy': 'etat', 
+                'sortBy': 'etat',
                 'sortDirection': (sortBy|default('') == 'etat' and sortDirection|default('ASC')) == 'ASC' ? 'DESC' : 'ASC',
                 'search': searchTerm|default(''),
                 'order': order|default('ASC')
@@ -196,11 +196,11 @@ th a::after {
                                 </td>
                                 <td>{{ chambre.capacite }}</td>
                                 <td>
-                                    {% if chambre.active == 'disponible' %}
+                                    {% if chambre.active == 'Disponible' %}
                                         <span class="badge bg-success">Disponible</span>
-                                    {% elseif chambre.active == 'occupee' %}
+                                    {% elseif chambre.active == 'Occupée' %}
                                         <span class="badge bg-danger">Occupée</span>
-                                    {% elseif chambre.active == 'maintenance' %}
+                                    {% elseif chambre.active == 'Maintenance' %}
                                         <span class="badge bg-warning">Maintenance</span>
                                     {% else %}
                                         <span class="badge bg-secondary">Inconnu</span>
@@ -217,7 +217,7 @@ th a::after {
                                         <a href="{{ path('chambre.litsfront', {id: chambre.id}) }}" class="btn btn-success btn-sm btn-custom me-2">
                                             <i class="bx bx-bed"></i>
                                         </a>
-                                      
+                                     
                                     </div>
                                 </td>
                             </tr>
@@ -232,7 +232,7 @@ th a::after {
             </div>
         </div>
 
-        
+       
     </div>
 
     <script>

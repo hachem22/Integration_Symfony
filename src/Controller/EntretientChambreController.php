@@ -25,7 +25,7 @@ class EntretientChambreController extends AbstractController
     #[Route('/entretient_chambrefront', name: 'app_entretient_chambrefront')]
     public function indexfront(EntretientChambreRepository $repository,EntityManagerInterface $manager): Response
     {
-        
+       
         $this->updateExpiredEntretients($repository, $manager);
         return $this->render('entretient_chambre/front/index.html.twig', [
             'entretients' => $repository->findAll(),
@@ -38,23 +38,23 @@ class EntretientChambreController extends AbstractController
         $entretient = new EntretientChambre();
         $form = $this->createForm(EntretientChambreType::class, $entretient);
         $form->handleRequest($request);
-    
+   
         if ($form->isSubmitted() && $form->isValid()) {
             $chambre = $entretient->getChambre();
-            
+           
             if ($chambre) {
                 // Mise à jour du statut de la chambre à "occupee"
-                $chambre->setActive('maintenance');
+                $chambre->setActive('Maintenance');
                 $manager->persist($chambre);
             }
-    
+   
             $manager->persist($entretient);
             $manager->flush();
-    
+   
             $this->addFlash('success', 'Entretien ajouté et chambre mise en "occupée".');
             return $this->redirectToRoute('app_entretient_chambre');
         }
-    
+   
         return $this->render('entretient_chambre/new.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -65,30 +65,30 @@ class EntretientChambreController extends AbstractController
         $entretient = new EntretientChambre();
         $form = $this->createForm(EntretientChambreType::class, $entretient);
         $form->handleRequest($request);
-    
+   
         if ($form->isSubmitted() && $form->isValid()) {
             $chambre = $entretient->getChambre();
             if (empty($entretient->getDetails())) {
                 $entretient->setDetails($entretient->autoCompleteDescription());}
-            
+           
             if ($chambre) {
                 // Mise à jour du statut de la chambre à "occupee"
-                $chambre->setActive('maintenance');
+                $chambre->setActive('Maintenance');
                 $manager->persist($chambre);
             }
-    
+   
             $manager->persist($entretient);
             $manager->flush();
-    
+   
             $this->addFlash('success', 'Entretien ajouté et chambre mise en "occupée".');
             return $this->redirectToRoute('app_entretient_chambrefront');
         }
-    
+   
         return $this->render('entretient_chambre/front/new.html.twig', [
             'form' => $form->createView(),
         ]);
     }
-    
+   
 
     #[Route('/entretient_chambre/edition/{id}', name: 'entretient_chambre.edit', methods: ['GET', 'POST'])]
     public function edit(EntretientChambre $entretient, Request $request, EntityManagerInterface $manager): Response
@@ -158,24 +158,24 @@ class EntretientChambreController extends AbstractController
        // Création d'un DateTime avec la date ET l'heure actuelles
     $now = new \DateTime('now');
     $expiredEntretients = $repository->findExpiredEntretients($now);
-    
+   
     $updated = 0;
     foreach ($expiredEntretients as $entretient) {
         // Vérifier si le statut est différent de TERMINE
         if ($entretient->getStatut() !== StatutEntretientChambre::termine) {
             $entretient->setStatut(StatutEntretientChambre::termine);
-            
+           
             // Si une chambre est associée, la remettre en état "disponible"
             $chambre = $entretient->getChambre();
-            if ($chambre && $chambre->getActive() === 'maintenance') {
-                $chambre->setActive('disponible');
+            if ($chambre && $chambre->getActive() === 'Maintenance') {
+                $chambre->setActive('Disponible');
             }
-            
+           
             $manager->persist($entretient);
             $updated++;
         }
     }
-    
+   
     if ($updated > 0) {
         $manager->flush();
         $this->addFlash('info', "$updated entretien(s) automatiquement marqué(s) comme terminé(s).");

@@ -1,6 +1,6 @@
 {# _medecins_list.html.twig #}
 {% for utilisateur in medecins %}
-    {% if utilisateur.utilisateurRole.value == 'Medecin' %}
+    {% if utilisateur.utilisateurRole.value == 'MEDECIN' %}
         <tr>
             <td>{{ utilisateur.Nom }}</td> <!-- Column 0: Nom -->
             <td>{{ utilisateur.Prenom }}</td> <!-- Column 1: Prénom -->

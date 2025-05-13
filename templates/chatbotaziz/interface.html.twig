@@ -36,14 +36,14 @@
                         <option value="DISPONIBILITE_LIT">Disponibilité Lit</option>
                         <option value="HISTORIQUE_MAINTENANCE">Historique Maintenance</option>
                     </select>
-                    <input 
-                        type="text" 
-                        id="input-message" 
-                        placeholder="Posez votre question..." 
+                    <input
+                        type="text"
+                        id="input-message"
+                        placeholder="Posez votre question..."
                         class="flex-grow border rounded p-2"
                     >
-                    <button 
-                        onclick="envoyerMessage()" 
+                    <button
+                        onclick="envoyerMessage()"
                         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                     >
                         <i class="fas fa-paper-plane"></i>
@@ -71,13 +71,13 @@
 
             const messagesContainer = document.getElementById('messages');
             const messageDiv = document.createElement('div');
-            
+           
             // Simplified class addition with explicit checks
             const baseClasses = ['message', type, 'flex'];
             if (type === 'user') {
                 baseClasses.push('justify-end');
             }
-            
+           
             baseClasses.forEach(cls => {
                 try {
                     if (cls) messageDiv.classList.add(cls);
@@ -85,9 +85,9 @@
                     console.error('Error adding class:', cls, e);
                 }
             });
-            
+           
             const messageContent = document.createElement('div');
-            
+           
             // Base classes for message content
             const contentClasses = ['p-3', 'rounded-lg', 'max-w-full'];
             contentClasses.forEach(cls => {
@@ -99,11 +99,11 @@
             });
 
             // Conditional styling classes
-            const stylingClasses = 
+            const stylingClasses =
                 type === 'user' ? ['bg-green-100', 'text-green-800'] :
                 type === 'error' ? ['bg-red-100', 'text-red-800'] :
                 type === 'bot' ? ['bg-blue-100', 'text-blue-800'] : [];
-            
+           
             stylingClasses.forEach(cls => {
                 try {
                     if (cls) messageContent.classList.add(cls);
@@ -113,7 +113,7 @@
             });
 
             messageContent.textContent = message;
-            
+           
             messageDiv.appendChild(messageContent);
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;

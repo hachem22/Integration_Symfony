@@ -95,7 +95,7 @@ final class ChambreController extends AbstractController
 
         $this->addFlash('success', 'Chambre supprimée avec succès.');
         return $this->redirectToRoute('app_chambre');
-    
+   
 
 
     }
@@ -132,13 +132,13 @@ public function addEntretient(
     if ($form->isSubmitted() && $form->isValid()) {
         $entretient->setChambre($chambre);
 
-        
-        $chambre->setActive('occupee');
+       
+        $chambre->setActive('Occupée');
         $manager->persist($entretient);
         $manager->persist($chambre);
         $manager->flush();
 
-        
+       
         $dateFin = $entretient->getDateFin();
         if ($dateFin) {
             $this->planifierStatutDisponible($chambre, $dateFin, $manager);
@@ -159,9 +159,9 @@ private function planifierStatutDisponible(Chambre $chambre, \DateTime $dateFin,
     $delay = $dateFin->getTimestamp() - time();
 
     if ($delay > 0) {
-        
+       
         sleep($delay);  
-        $chambre->setActive('disponible');
+        $chambre->setActive('Disponible');
         $manager->flush();
     }
 }
@@ -205,7 +205,7 @@ public function showLitsfront(Chambre $chambre): Response
         $service = $chambre->getPosition();
 
         return $this->render('chambre/index.html.twig', [
-            
+           
             'chambre' => $chambre,
             'service' => $service,
         ]);
@@ -213,7 +213,7 @@ public function showLitsfront(Chambre $chambre): Response
     #[Route('/frontoffice/chambre', name: 'app_chambrefront')]
     public function Showoff(ChambreRepository $repository,ServiceRepository $serviceRepository): Response
     {
-        
+       
         return $this->render('chambre/frontoffice/index.html.twig', [
             'chambres' => $repository->findAll(),
             'services' => $serviceRepository->findAll(),
@@ -278,13 +278,13 @@ public function stat(ChambreRepository $chambreRepository, LitRepository $litRep
 {
     // Statistiques des chambres
     $totalChambres = $chambreRepository->count([]);
-    $chambresDisponibles = $chambreRepository->count(['active' => 'disponible']);
-    $chambresOccupees = $chambreRepository->count(['active' => 'occupee']);
-    $chambresMaintenance = $chambreRepository->count(['active' => 'maintenance']);
+    $chambresDisponibles = $chambreRepository->count(['active' => 'Disponible']);
+    $chambresOccupees = $chambreRepository->count(['active' => 'Occupée']);
+    $chambresMaintenance = $chambreRepository->count(['active' => 'Maintenance']);
 
     // Statistiques des lits
     $totalLits = $litRepository->count([]);
-    $litsDisponibles = $litRepository->count(['type' => 'libre']);
+    $litsDisponibles = $litRepository->count(['status' => 'libre']);
     $litsOccupes = $totalLits - $litsDisponibles;
 
     return $this->render('responsable/dashboard.html.twig', [
@@ -311,15 +311,15 @@ public function filtre(Request $request, ChambreRepository $repository, ServiceR
         'service' => $request->query->getInt('service'),
         'search' => $request->query->get('search')
     ];
-    
+   
     // Filtrer les valeurs vides
     $filters = array_filter($filters, function($value) {
         return $value !== null && $value !== '';
     });
-    
+   
     // Récupérer les chambres filtrées
     $chambres = $repository->findByFilters($filters);
-    
+   
     // Si c'est une requête AJAX, renvoyer le HTML partiel
     if ($request->headers->get('X-Requested-With') === 'XMLHttpRequest') {
         return $this->render('chambre/_liste.html.twig', [
@@ -327,7 +327,7 @@ public function filtre(Request $request, ChambreRepository $repository, ServiceR
             'filters' => $filters  // Ajouter filters ici
         ]);
     }
-    
+   
     // Pour les requêtes normales, rendre la page complète
     return $this->render('chambre/index.html.twig', [
         'chambres' => $chambres,
@@ -337,7 +337,7 @@ public function filtre(Request $request, ChambreRepository $repository, ServiceR
 }
 #[Route('/chambre/tri/{sortBy}/{order}', name: 'chambre.tri', methods: ['GET'])]
 public function listChambres(
-    ChambreRepository $chambreRepository, 
+    ChambreRepository $chambreRepository,
     Request $request
 ): Response {
     // Récupérer les paramètres de tri
@@ -347,8 +347,8 @@ public function listChambres(
 
     // Récupérer les chambres triées
     $chambres = $chambreRepository->findBySearchCriteriaSorted(
-        $searchTerm, 
-        $sortBy, 
+        $searchTerm,
+        $sortBy,
         $sortDirection
     );
 
@@ -361,8 +361,8 @@ public function listChambres(
 }
 
 
-    
+   
 
-    
+   
 
 }
