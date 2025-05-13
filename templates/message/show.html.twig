@@ -1,0 +1,62 @@
+
+{% block title %}Message{% endblock %}
+
+{% block body %}
+    <h1>Message</h1>
+
+{% block title %}Messages by {{ author.username }}{% endblock %}
+
+{% block body %}
+    <h1>Messages by {{ author.username }}</h1>
+
+    {% if messages is empty %}
+    <p>No messages found for this author.</p>
+    {% else %}
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ message.id }}</td>
+            </tr>
+            <tr>
+                <th>Contenu</th>
+                <td>{{ message.content }}</td>
+            </tr>
+            <tr>
+                <th>ExpediteurId</th>
+                <td>{{ message.expediteurId }}</td>
+            </tr>
+            <tr>
+                <th>DestinataireId</th>
+                <td>{{ message.destinataireId }}</td>
+            </tr>
+            <tr>
+                <th>Date_envoi</th>
+                <td>{{ message.dateEnvoi ? message.dateEnvoi|date('Y-m-d H:i:s') : 'Not set' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>
+                    {% if message.status == "en_attente" %}
+                        ⏳ En attente
+                    {% elseif message.status == "en_ligne" %}
+                        ✅ En ligne
+                    {% elseif message.status == "hors_ligne" %}
+                        ❌ Hors ligne
+                    {% else %}
+                        ❓ Inconnu
+                    {% endif %}
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_message_index') }}">back to list</a>
+
+    <a href="{{ path('app_message_edit', {'id': message.id}) }}" class="btn btn-warning">Edit</a>
+
+
+    {{ include('message/_delete_form.html.twig') }}
+{% endblock %}

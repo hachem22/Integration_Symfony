@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\Blog;
+use App\Form\BlogType;
+use App\Repository\BlogRepository;
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
 use App\Form\UtilisateurEditType;
@@ -159,6 +161,7 @@ public function stat(ChambreRepository $chambreRepository, LitRepository $litRep
             'rendezVousStatusStats' => $rendezVousStatusStats,  // Ajout des statistiques de statut
             'medicaments' => $stockPharmacieRepository->findAll(),
             'notifications' => $notifications,
+
             
         ]);
     }

@@ -1,0 +1,18 @@
+{% extends '../../base.html.twig' %}
+
+{% block title %}Edit Message{% endblock %}
+
+{% block body %}
+    <h1>Edit Your Message</h1>
+
+    {{ form_start(form) }}
+    <div class="mb-3">
+        {{ form_label(form.content) }}
+        {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_message_index') }}" class="btn btn-secondary">Back to List</a>
+{% endblock %}

@@ -1,0 +1,167 @@
+{% block body %}
+    <style>
+        body {
+            background: #f0f6fb;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 60px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 123, 255, 0.1);
+            background-color: #ffffff;
+        }
+
+        .card-header {
+            background: linear-gradient(to right, #007bff, #00c6ff);
+            padding: 2rem;
+            border-radius: 20px 20px 0 0;
+            color: white;
+            text-align: center;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #004085;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 12px;
+            border: 1px solid #ced4da;
+            padding: 10px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: bold;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
+        }
+
+        .btn-outline-secondary {
+            border: 2px solid #6c757d;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: bold;
+            color: #6c757d;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .d-grid {
+            gap: 1rem;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 1rem;
+            }
+        }
+    </style>
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0 rounded-lg">
+                    <div class="card-header bg-gradient-primary text-white">
+                        <h2 class="text-center my-3">
+                            <i class="fas fa-pen-fancy me-2"></i>Create a New Blog Post
+                        </h2>
+                    </div>
+
+                    <div class="card-body p-4">
+                        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+                        <div class="form-group mb-4">
+                            {{ form_label(form.title, 'Post Title', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.title, {'attr': {'class': 'form-control form-control-lg', 'placeholder': 'Enter an engaging title...'}}) }}
+                            <div class="form-text text-muted">Make it catchy and descriptive (70-100 characters recommended)</div>
+                            {{ form_errors(form.title, {'attr': {'class': 'text-danger'}}) }}
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(form.author, 'Author', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.author, {'attr': {'class': 'form-control', 'placeholder': 'Your name'}}) }}
+                                    {{ form_errors(form.author, {'attr': {'class': 'text-danger'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(form.category, 'Category', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                                    {{ form_widget(form.category, {'attr': {'class': 'form-select'}}) }}
+                                    {{ form_errors(form.category, {'attr': {'class': 'text-danger'}}) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            {{ form_label(form.content, 'Content', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': '12', 'placeholder': 'Write your blog post content here...'}}) }}
+                            {{ form_errors(form.content, {'attr': {'class': 'text-danger'}}) }}
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-outline-secondary me-md-2">
+                                <i class="fas fa-save me-1"></i>Save Draft
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-1"></i>Publish Post
+                            </button>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

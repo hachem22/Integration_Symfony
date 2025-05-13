@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Deleted Blogs{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="mb-0">
+                        <i class="fas fa-trash-alt text-danger me-2"></i>
+                        Deleted Blog Posts
+                    </h1>
+                    <a href="{{ path('app_blog_index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Blog List
+                    </a>
+                </div>
+
+                {% if blogs is empty %}
+                    <div class="text-center py-5 my-4 bg-light rounded">
+                        <i class="fas fa-inbox fa-4x text-secondary mb-3"></i>
+                        <h3 class="text-muted">No deleted blogs found</h3>
+                        <p class="text-secondary">When blogs are deleted, they will appear here</p>
+                    </div>
+                {% else %}
+                    <div class="row">
+                        {% for blog in blogs %}
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100 shadow-sm border-0 hover-shadow">
+                                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                        <h5 class="card-title mb-0 text-truncate" title="{{ blog.title }}">{{ blog.title }}</h5>
+                                        <span class="badge bg-danger rounded-pill">Deleted</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text text-muted mb-3">{{ blog.content|slice(0, 120)|striptags ~ '...' }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">
+                                                <i class="far fa-calendar-alt me-1"></i>
+                                                {{ blog.deletedAt|date('F d, Y') }}
+                                            </small>
+                                            <small class="text-muted">
+                                                <i class="far fa-clock me-1"></i>
+                                                {{ blog.deletedAt|date('H:i') }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-white border-0">
+                                        <div class="d-flex gap-2">
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <a href="#" class="btn btn-sm btn-outline-success flex-grow-1">Restore</a>
+                                                <a href="#" class="btn btn-sm btn-outline-danger flex-grow-1">Permanently Delete</a>
+                                            {% else %}
+                                                <button class="btn btn-sm btn-outline-secondary w-100" disabled>Deleted on {{ blog.deletedAt|date('M d') }}</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination (if needed) -->
+                    <nav class="d-flex justify-content-center mt-4">
+                        <ul class="pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
