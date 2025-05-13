@@ -56,9 +56,9 @@ class EntretientChambre
     #[ORM\JoinColumn(nullable: true)]
     private ?Utilisateur $femmedemenage = null;
 
-    
+   
 
-    
+   
 
     public function getId(): ?int
     {
@@ -143,7 +143,7 @@ class EntretientChambre
     #[Assert\Callback]
     public function validateChambreDisponibilite(ExecutionContextInterface $context): void
     {
-        if ($this->chambre && $this->chambre->getActive() !== 'disponible') {
+        if ($this->chambre && $this->chambre->getActive() !== 'Disponible') {
             $context->buildViolation("L'entretien ne peut être créé que pour une chambre d'etat  disponible.")
                 ->atPath("chambre")
                 ->addViolation();
@@ -184,21 +184,22 @@ class EntretientChambre
     }
 
     switch ($this->type) {
-        case TypeEntretient::netoyage:
+        case TypeEntretient::NETTOYAGE:
             return "Nettoyage complet de la chambre";
-        
-        case TypeEntretient::repartition:
+       
+        case TypeEntretient::REPARATION:
             return "Vérification et réparation des équipements";
-        
-        case TypeEntretient::autre:
+       
+        case TypeEntretient::AUTRE:
             return "Travaux de rénovation et mise à jour";
-        
-        
-        
+       
+       
+       
         default:
             return null;
     }
 }
 
-    
+   
 }
+

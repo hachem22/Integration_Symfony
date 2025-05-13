@@ -1,4 +1,4 @@
-{% extends 'chambre/baseNav.html.twig' %} 
+{% extends 'chambre/baseNav.html.twig' %}
 {% block head %}
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
@@ -232,7 +232,7 @@
                                     <h5 class="card-title">Lit N° {{ lit.num }}</h5>
                                     <p class="card-text">Chambre : {{ lit.chambre.num }}</p>
                                     <p class="card-text">
-                                        {% if lit.type == 'libre' %}
+                                        {% if lit.status == 'libre' %}
                                             <span class="badge bg-success">Disponible</span>
                                         {% else %}
                                             <span class="badge bg-danger">
@@ -245,7 +245,7 @@
                                             </span>
                                         {% endif %}
                                     </p>
-                                    {% if lit.type == 'libre' %}
+                                    {% if lit.status == 'libre' %}
                                         <a href="{{ path('lit.affecter', { id: lit.id }) }}" class="btn btn-success btn-sm btn-custom">
                                             <i class="fas fa-user-plus"></i> Affecter
                                         </a>
@@ -318,7 +318,7 @@
        document.addEventListener('DOMContentLoaded', function () {
     // Créer un seul canvas pour les deux graphiques
     const statChartCtx = document.getElementById('statChart').getContext('2d');
-    
+   
     // Utiliser Chart.js avec la configuration pour des graphiques multiples
     new Chart(statChartCtx, {
         type: 'bar',
@@ -361,15 +361,15 @@
             responsive: true,
             plugins: {
                 legend: { position: 'bottom' },
-                title: { 
-                    display: true, 
+                title: {
+                    display: true,
                     text: 'Statut des Chambres et des Lits',
                     font: { size: 16 }
                 }
             },
             scales: {
                 x: { stacked: false },
-                y: { 
+                y: {
                     beginAtZero: true,
                     title: {
                         display: true,

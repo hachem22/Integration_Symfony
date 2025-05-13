@@ -1,4 +1,3 @@
-
 {% extends "utilisateur/sidenav.html.twig" %}
 {% block content %}
     <!doctype html>
@@ -106,16 +105,9 @@
                                                 </span>
                                             {% endif %}
                                         </div>
-                                        <div class="mb-6">
-                    {{ form_label(form.femmedemenage, 'FemmeDeMenage', { 'label_attr': { 'class': 'form-label fw-bold' } }) }}
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-user"></i></span>
-                        {{ form_widget(form.femmedemenage, { 'attr': { 'class': 'form-control' } }) }}
-                       
-
-                    </div>
+                                       
                 </div>
-                
+               
 
                                         <button class="btn btn-primary btn-lg">Créer l'entretien</button>
                                         {{ form_end(form) }}

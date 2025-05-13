@@ -68,11 +68,11 @@ class RendezVousController extends AbstractController
         }
 
         // Créer une nouvelle instance de RendezVous
+        // Créer une nouvelle instance de RendezVous
         $rendezVous = new RendezVous();
         $rendezVous->setRendezVousStatus('EN_ATTENTE');
-        $rendezVous->setPatient($user); // Associer l'utilisateur connecté en tant que patient
+        $rendezVous->setPatient($user);
 
-        // Créer le formulaire
         $form = $this->createForm(RendezVousType::class, $rendezVous, [
             'services' => $services,
         ]);
@@ -80,7 +80,6 @@ class RendezVousController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Récupérer la date sélectionnée
             $dateSelectionnee = $form->get('date')->getData();
             $medecinSelectionne = $form->get('medecin')->getData();
 
@@ -97,7 +96,6 @@ class RendezVousController extends AbstractController
                 ]);
             }
 
-            // Vérifier si la date est disponible
             $planning = $planningRepository->findOneBy(['medecin' => $medecinSelectionne]);
             $datesNonDisponibles = $planning ? $planning->getDatesNonDisponibles() : [];
 
@@ -108,20 +106,16 @@ class RendezVousController extends AbstractController
                 ]);
             }
 
-            // Associer le planning et les autres informations au rendez-vous
             $rendezVous->setPlanning($planning);
             $rendezVous->setMedecin($medecinSelectionne);
             $rendezVous->setService($form->get('service')->getData());
 
-            // Enregistrer en base de données
             $entityManager->persist($rendezVous);
             $entityManager->flush();
 
-            // Rediriger vers la page de sélection de l'heure
             return $this->redirectToRoute('selectionner_heure', ['id' => $rendezVous->getId()]);
         }
 
-        // Afficher le formulaire
         return $this->render('patient/demande.html.twig', [
             'form' => $form->createView(),
         ]);

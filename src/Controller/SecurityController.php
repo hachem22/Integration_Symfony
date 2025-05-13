@@ -131,7 +131,7 @@ class SecurityController extends AbstractController
         dump($user->getUtilisateurRole());
 
         // Redirect based on role
-        if (in_array('ROLE_ADMINISTRATEUR', $user->getRoles())) {
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
             return $this->redirectToRoute('app_utilisateur_index');
         } elseif (in_array('ROLE_PHARMACIEN', $user->getRoles())) {
             return $this->redirectToRoute('app_test_dashboard');

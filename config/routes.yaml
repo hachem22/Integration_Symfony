@@ -14,3 +14,7 @@ generate_diagnostic:
 generate_ordonnance:
     path: /api/generate-ordonnance
     controller: App\Controller\AIController::generateOrdonnance
+chatbot_send_message:
+    path: /chatbot/send
+    controller: App\Controller\ChatbotController::sendMessage
+    methods: POST

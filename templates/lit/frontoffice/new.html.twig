@@ -8,7 +8,7 @@
             </div>
             <div class="card-body">
                 {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}) }}
-                
+               
                 <div class="mb-3">
                     <label class="form-label">
                         <i class="bx bx-hash"></i> Numéro du lit
@@ -18,7 +18,7 @@
                         <span class="text-danger small">{{ form_errors(form.num) }}</span>
                     {% endif %}
                 </div>
-                
+               
                 <div class="mb-3">
                     <label class="form-label">
                         <i class="bx bx-bed"></i> Type de lit
@@ -28,7 +28,16 @@
                         <span class="text-danger small">{{ form_errors(form.type) }}</span>
                     {% endif %}
                 </div>
-                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bx bx-bed"></i> Status de lit
+                    </label>
+                    {{ form_widget(form.status, {'attr': {'class': 'form-select' }}) }}
+                    {% if form.status.vars.errors|length > 0 %}
+                        <span class="text-danger small">{{ form_errors(form.status) }}</span>
+                    {% endif %}
+                </div>
+               
                 <div class="mb-3">
                     <label class="form-label">
                         <i class="bx bx-building"></i> Chambre associée
@@ -38,7 +47,7 @@
                         <span class="text-danger small">{{ form_errors(form.chambre) }}</span>
                     {% endif %}
                 </div>
-                
+               
                 <div class="text-center">
                     <button class="btn btn-success w-100" style="border-radius: 10px; font-size: 18px;">
                         <i class="bx bx-plus-circle"></i> Ajouter

@@ -17,7 +17,6 @@
         "khanamiryan/qrcode-detector-decoder": "^2.0",
         "knplabs/knp-paginator-bundle": "^6.6",
         "knplabs/knp-snappy-bundle": "*",
-        "liip/imagine-bundle": "^2.13",
         "nelmio/cors-bundle": "^2.5",
         "phpdocumentor/reflection-docblock": "^5.6",
         "phpstan/phpdoc-parser": "^2.0",

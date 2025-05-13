@@ -44,6 +44,15 @@ services:
     App\Service\GeminiService:
         arguments:
             $apiKey: 'AIzaSyCndF1vvpjJVZsvT5eCUe1jL8aAJgtwbe8'
-        
-        
-     
+
+    App\Controller\ApiController:
+        arguments:
+            $medicalDiagnosisService: '@App\Service\MedicalDiagnosisService' # Keep this if still used, or remove if fully replaced
+            $logger: '@Psr\Log\LoggerInterface'
+            $httpClient: '@Symfony\Contracts\HttpClient\HttpClientInterface'
+            $rapidApiDiagnosisKey: '%env(RAPIDAPI_DIAGNOSIS_KEY)%'
+            $rapidApiDiagnosisHost: '%env(RAPIDAPI_DIAGNOSIS_HOST)%'
+            $rapidApiDiagnosisUrl: '%env(RAPIDAPI_DIAGNOSIS_URL)%'
+            $rapidApiMedicationKey: '%env(RAPIDAPI_MEDICATION_KEY)%'
+            $rapidApiMedicationHost: '%env(RAPIDAPI_MEDICATION_HOST)%'
+            $rapidApiMedicationUrl: '%env(RAPIDAPI_MEDICATION_URL)%'

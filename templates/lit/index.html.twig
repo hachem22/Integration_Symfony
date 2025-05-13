@@ -1,5 +1,4 @@
-
-
+{% extends "chambre/baseNav.html.twig" %}
 {% block head %}
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
@@ -70,6 +69,7 @@
                     <thead>
                         <tr>
                             <th><i class="fas fa-hashtag"></i> Numéro</th>
+                             <th><i class="fas fa-door-open"></i> Type</th>
                             <th><i class="fas fa-door-open"></i> Chambre</th>
                             <th><i class="fas fa-user-plus"></i> Patient</th>
                             <th><i class="fas fa-edit"></i> Modifier</th>
@@ -82,9 +82,10 @@
                             {% set hasLits = true %}
                             <tr>
                                 <td>{{ lit.num }}</td>
+                                 <td>{{ lit.type }}</td>
                                 <td>{{ lit.chambre.num }}</td>
                                 <td>
-    {% if lit.type == 'libre' %}
+    {% if lit.status == 'libre' %}
         <a href="{{ path('lit.affecter', { id: lit.id }) }}" class="btn btn-success btn-sm btn-custom">
             <i class="fas fa-user-plus"></i> Affecter
         </a>

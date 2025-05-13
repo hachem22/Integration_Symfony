@@ -33,7 +33,7 @@ class Chambre
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le type de chambre est obligatoire.")]
-    #[Assert\Choice(choices: ['simple', 'double', 'suite'], message: "Le type de chambre doit être 'simple', 'double' ou 'suite'.")]
+    #[Assert\Choice(choices: ['Simple', 'Double', 'Personalisée'], message: "Le type de chambre doit être 'Simple', 'Double' ou 'Personalisée'.")]
     private ?string $type = null;
 
     #[ORM\Column(length: 255)]
@@ -55,7 +55,7 @@ class Chambre
 
     #[ORM\Column(type: 'string', length: 50)]
     #[Assert\NotBlank(message: "Le statut de la chambre est obligatoire.")]
-    #[Assert\Choice(choices: ['disponible', 'occupee', 'maintenance'], message: "La valeur doit être 'disponible', 'occupee' ou 'maintenance'.")]
+    #[Assert\Choice(choices: ['Disponible', 'Occupée', 'Maintenance'], message: "La valeur doit être 'disponible', 'occupee' ou 'maintenance'.")]
     private ?string $active = null;
 
     #[ORM\OneToMany(targetEntity: EntretientChambre::class, mappedBy: 'chambre', cascade: ['remove'])]
@@ -219,13 +219,13 @@ class Chambre
         $tousOccupes = true;
 
         foreach ($this->lits as $lit) {
-            if ($lit->getType() !== 'occupe') {
+            if ($lit->getStatus() !== 'Occupé') {
                 $tousOccupes = false;
                 break;
             }
         }
 
-        $this->active = $tousOccupes ? 'occupee' : 'disponible';
+        $this->active = $tousOccupes ? 'Occupée' : 'Disponible';
     }
 
     /**
