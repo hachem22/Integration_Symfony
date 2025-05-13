@@ -4,7 +4,7 @@ namespace App\Enum;
 
 enum MedecinSpecialite: string
 {
-    case Cardiologue = 'Cardiologue';
+    case Cardiologue = 'CARDIOLOGIE';
     case Dermatologue = 'Dermatologue';
     case Généraliste = 'Généraliste'; 
 }

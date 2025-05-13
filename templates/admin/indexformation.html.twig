@@ -1,4 +1,4 @@
-{% extends "utilisateur/sidenav.html.twig" %}
+{% extends 'medecin/baseMedecin.html.twig' %}
 
 {% block head %}
     <meta charset="utf-8" />
@@ -26,20 +26,9 @@
     <script src="{{ asset('../assets/js/config.js') }}"></script>
 {% endblock %}
 
-{% block body %}
+{% block content %}
 <!-- Formulaire de tri -->
-<div class="card mb-4">
-    <h5 class="card-header">Liste des formations</h5>
-    <div class="d-flex justify-content-between">
-        {% set nextSort = (sortOrder == 'ASC') ? 'DESC' : 'ASC' %}
-        <form method="get" action="{{ path('formation_index') }}">
-            <input type="hidden" name="sort" value="{{ nextSort }}" />
-            <button type="submit" class="btn btn-primary">
-                Trier par nom ({{ nextSort == 'ASC' ? 'A-Z' : 'Z-A' }})
-            </button>
-        </form>
-    </div>
-</div>
+
     <div class="container-xxl flex-grow-1 container-p-y">
         <!-- Basic Bootstrap Table -->
         <div class="card" style="margin-left: 150px;">

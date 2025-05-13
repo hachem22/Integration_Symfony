@@ -39,8 +39,9 @@
                             <p class="card-text">
                                 <strong>Description:</strong> 
                                 <span id="description">{{ stock_pharmacie.description }}</span>
-                                <i class="fas fa-language translate-icon" style="cursor: pointer; margin-left: 10px;" onclick="translateDescription()"></i>
-                            </p>
+<a href="{{ path('app_stock_pharmacie_show', {'id': stock_pharmacie.id}) }}">
+  <i class="fas fa-language translate-icon" style="cursor: pointer; margin-left: 10px;"></i>
+</a>                            </p>
                             
                             <div class="mt-4">
                                 <a href="{{ path('app_stock_pharmacie_index') }}" class="btn btn-secondary">
@@ -56,35 +57,4 @@
         </div>
     </div>
 
-    <script>
-        function translateDescription() {
-    const descriptionElement = document.getElementById('description');
-    const text = descriptionElement.innerText;
-
-    fetch('{{ path("app_translate") }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify({ text: text })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.error) {
-            console.error('Translation error:', data.error);
-        } else {
-            descriptionElement.innerText = data.translatedText;
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-    </script>
 {% endblock %}
