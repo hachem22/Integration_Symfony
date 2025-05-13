@@ -1,7 +1,7 @@
 # CareConnect - Système de Gestion Hospitalière
 
 <p align="center">
-  <img src="/api/placeholder/250/100" alt="CareConnect Logo" />
+  <img src="https://asset.cloudinary.com/ddaouadrk/1e442a2178c9c8466b156f8fa0fc2135" alt="CareConnect Logo" />
   <br>
   <em>Une solution complète pour la gestion des opérations hospitalières</em>
 </p>
