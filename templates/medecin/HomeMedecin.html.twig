@@ -231,15 +231,17 @@
     </div> <!-- This closes the row started at line 190 (original) -->
 
     <!-- New Row for Medicaments Catalogue -->
-    <div class="row mt-4">
+    <div class="row mt-4" style="margin-left:100px;margin-right:100px";>
         <div class="col-12">
             <div class="card card-medical">
                 <div class="card-header">
                     <h5 class="mb-0">
                         <i class="fas fa-pills text-primary me-2"></i>Catalogue des Médicaments
+                                            <Button style="margin-left:1000px;background-color:white;border-radius:10px"> <a href="{{path('app_catalogue_index')}}" style="padding:10px">Voir plus</a></Button>
+
                     </h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body" >
                     <div class="row" id="productGrid">
                         {% for medicament in medicaments %}
                         <div class="col-md-4 col-lg-3 mb-4 product-card"
