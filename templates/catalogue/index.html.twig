@@ -1,4 +1,18 @@
 
+{% extends 'medecin/baseMedecin.html.twig' %}
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>Catalogue des Médicaments</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('../assets/img/favicon/favicon.ico') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/fonts/boxicons.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/css/theme-default.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+{% endblock %}
+
+{% block content %}
 
 <div class="container-xxl flex-grow-1 container-p-y">
     <!-- En-tête -->
@@ -115,6 +129,7 @@
         {% endfor %}
     </div>
 </div>
+{% endblock %}
 
 {% block javascripts %}
 <script>
@@ -171,4 +186,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endblock %}
-{% endblock %} 

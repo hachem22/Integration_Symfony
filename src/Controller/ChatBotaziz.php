@@ -44,6 +44,6 @@ public function interagirChatbot(Request $request): JsonResponse
     #[Route('/chatbot/interface', name: 'chatbot_interface')]
     public function interfaceChatbot(): Response
     {
-        return $this->render('chatbot/interface.html.twig');
+        return $this->render('chatbotaziz/interface.html.twig');
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\StockPharmacie;
-use App\Entity\Panier; // Ensure this is correct
+use App\Entity\Panier;
 use Knp\Snappy\Pdf;
 use App\Form\StockPharmacieType;
 use App\Repository\StockPharmacieRepository;
