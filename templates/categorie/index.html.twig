@@ -30,7 +30,7 @@
             <table class="table w-100 custom-table"> <!-- Ajout de custom-table -->
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        
                         <th>Nom</th>
                         <th>Description</th>
                         <th>Actions</th>
@@ -39,7 +39,7 @@
                 <tbody class="table-border-bottom-0">
                     {% for categorie in categories %}
                         <tr>
-                            <td>{{ categorie.id }}</td>
+                           
                             <td>{{ categorie.nom }}</td>
                             <td>{{ categorie.description|slice(0, 50) ~ '...' }}</td>
                             <td>

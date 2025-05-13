@@ -38,9 +38,9 @@
                             </li>
                             <li class="list-group-item">
                                 <i class="fas fa-exclamation-circle"></i> <strong>Statut :</strong>
-                                {% if reclamation.statut.value == 'en attente' %}
+                                {% if reclamation.statut.value == 'en_attente' %}
                                     <span class="badge bg-warning text-dark">🕒 {{ reclamation.statut.value }}</span>
-                                {% elseif reclamation.statut.value == 'en cours' %}
+                                {% elseif reclamation.statut.value == 'en_cours' %}
                                     <span class="badge bg-info text-dark">🔄 {{ reclamation.statut.value }}</span>
                                 {% elseif reclamation.statut.value == 'résolue' %}
                                     <span class="badge bg-success">✅ {{ reclamation.statut.value }}</span>
@@ -73,7 +73,7 @@
                             <i class="fas fa-calendar-check"></i> <strong>Date de traitement :</strong> {{ traitement.dateTraitement|date('d/m/Y H:i') }}
                             <br>
                             <i class="fas fa-flag"></i> <strong>Statut :</strong>
-                            {% if traitement.etat.value == 'en cours' %}
+                            {% if traitement.etat.value == 'en_cours' %}
                                 <span class="badge bg-info text-dark">🔄 {{ traitement.etat.value }}</span>
                             {% elseif traitement.etat.value == 'résolue' %}
                                 <span class="badge bg-success">✅ {{ traitement.etat.value }}</span>

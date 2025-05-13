@@ -278,6 +278,119 @@
             margin-bottom: 0;
             opacity: 0.9;
         }
+
+
+
+    /* Styles améliorés pour la section Contact */
+    #contact {
+        padding: 80px 0;
+        background: #f8f9fa;
+    }
+
+    .contact-info {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .icon-wrapper {
+        transition: transform 0.3s ease;
+    }
+
+    .info-item:hover .icon-wrapper {
+        transform: rotate(360deg);
+    }
+
+    .contact-form .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px 20px;
+        transition: all 0.3s ease;
+    }
+
+    .contact-form .form-control:focus {
+        border-color: #696cff;
+        box-shadow: 0 0 0 3px rgba(105, 108, 255, 0.25);
+    }
+
+    .contact-form label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 8px;
+    }
+
+    .btn-primary {
+        background: #696cff;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: #5f61ff;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        #contact {
+            padding: 50px 0;
+        }
+        
+        .contact-form, .contact-info {
+            margin-bottom: 30px;
+        }
+    }
+
+
+
+
+
+
+
+    .contact-info-card, .contact-form-card {
+        min-height: 500px;
+        border: 1px solid #e9ecef;
+    }
+
+    .icon-container {
+        flex-shrink: 0;
+        transition: transform 0.2s;
+    }
+
+    .icon-container:hover {
+        transform: scale(1.1);
+    }
+
+    .input-group-text {
+        width: 40px;
+        justify-content: center;
+    }
+
+    .form-control {
+        border-radius: 0.25rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .input-group-prepend {
+        margin-right: -1px;
+    }
+
+    label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 992px) {
+        .contact-info-card, .contact-form-card {
+            min-height: auto;
+        }
+    }
+
+
+
+
+
+
+
     </style>
     {% endblock %}
 </head>
@@ -474,70 +587,112 @@
         </div>
     </div>
 
-    <!-- Section Contact -->
-    <div id="contact" class="contact-us section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 offset-lg-2">
-                    <div class="section-heading">
-                        <h4>Contactez <em>CareConnect</em></h4>
-                        <img src="{{ asset('assets/images/heading-line-dec.png') }}" alt="">
-                        <p>Nous sommes là pour répondre à toutes vos questions</p>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="contact-info">
-                        <div class="info-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <h4>Notre adresse</h4>
-                            <p>Tunis, Tunisie</p>
+  <!-- Section Contact améliorée -->
+<div id="contact" class="contact-us section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <!-- Carte des informations -->
+            <div class="col-lg-5 mb-4">
+                <div class="contact-info-card bg-white p-4 h-100 rounded shadow-sm">
+                    <h3 class="mb-4 text-primary">Coordonnées</h3>
+                    
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="icon-container bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-map-marker-alt fa-sm"></i>
                         </div>
-                        <div class="info-item">
-                            <i class="fas fa-phone"></i>
-                            <h4>Téléphone</h4>
-                            <p><a href="tel:+21670003002">+216 70 003 002</a></p>
-                        </div>
-                        <div class="info-item">
-                            <i class="fas fa-envelope"></i>
-                            <h4>Email</h4>
-                            <p><a href="mailto:CareConnect@gmail.com">CareConnect@gmail.com</a></p>
-                        </div>
-                        <div class="info-item">
-                            <i class="fas fa-clock"></i>
-                            <h4>Heures d'ouverture</h4>
-                            <p>Lun - Ven: 9h00 - 17h00</p>
+                        <div>
+                            <h5 class="mb-1" style="margin-left:10px">Adress </h5>
+                            <p class="text-muted mb-0" style="margin-left:10px">Tunis, Tunisie</p>
                         </div>
                     </div>
+
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="icon-container bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-phone fa-sm"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1" style="margin-left:10px">Téléphone</h5>
+                            <p class="text-muted mb-0" style="margin-left:10px">+216 70 003 002</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="icon-container bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-envelope fa-sm"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1" style="margin-left:10px">Email</h5>
+                            <p class="text-muted mb-0" style="margin-left:10px">CareConnect@gmail.com</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start">
+                        <div class="icon-container bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-clock fa-sm"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1" style="margin-left:10px">Horaires</h5>
+                            <p class="text-muted mb-0" style="margin-left:10px">Lun - Ven: 9h00 - 17h00</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-6">
-                    <form id="contact-form" action="#" method="post">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <fieldset>
-                                    <input type="name" name="name" placeholder="Votre nom" required>
-                                </fieldset>
+            </div>
+
+            <!-- Carte du formulaire -->
+            <div class="col-lg-7 mb-4">
+                <div class="contact-form-card bg-white p-4 h-100 rounded shadow-sm">
+                    <h3 class="mb-4 text-primary">Envoyer un message</h3>
+                    
+                    <form>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name">Nom complet</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-primary text-white">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control" id="name" placeholder="Votre nom">
+                                </div>
                             </div>
-                            <div class="col-lg-6">
-                                <fieldset>
-                                    <input type="email" name="email" placeholder="Votre email" required>
-                                </fieldset>
-                            </div>
-                            <div class="col-lg-12">
-                                <fieldset>
-                                    <textarea name="message" placeholder="Votre message" required></textarea>
-                                </fieldset>
-                            </div>
-                            <div class="col-lg-12">
-                                <fieldset>
-                                    <button type="submit" class="main-button">Envoyer le message</button>
-                                </fieldset>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="email">Adresse email</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-primary text-white">
+                                            <i class="fas fa-at"></i>
+                                        </span>
+                                    </div>
+                                    <input type="email" class="form-control" id="email" placeholder="exemple@email.com">
+                                </div>
                             </div>
                         </div>
+
+                        <div class="form-group mb-4">
+                            <label for="message">Message</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-primary text-white align-items-start">
+                                        <i class="fas fa-comment mt-1"></i>
+                                    </span>
+                                </div>
+                                <textarea class="form-control" id="message" rows="4" placeholder="Écrivez votre message..."></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block py-2">
+                            <i class="fas fa-paper-plane mr-2"></i>Envoyer le message
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+
 
     <!-- Footer -->
     <footer id="newsletter">

@@ -1,0 +1,167 @@
+{% extends "stock_pharmacie/navbar.html.twig" %}
+
+{% block title %}Créer une Réclamation{% endblock %}
+
+{% block content %}
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="row justify-content-center">
+                <div class="col-xl" style="margin-left: 80px; margin-top: 130px; width: 500px;">
+                    <div class="card mb-6">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Nouvelle Réclamation</h5>
+                            <small class="text-body float-end">Remplissez les détails</small>
+                        </div>
+                        <div class="card-body">
+                            {{ form_start(form, {'attr': {'novalidate': 'novalidate' }}) }}
+
+                            <div class="mb-3">
+                                <label class="form-label" for="form.description">
+                                    <i class="bx bx-comment"></i> Description
+                                </label>
+                                {{ form_widget(form.description, {'attr': {'class': 'form-control' }}) }}
+                                {% if form.description.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.description) }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="form.type">
+                                    <i class="bx bx-category"></i> Type de réclamation
+                                </label>
+                                {{ form_widget(form.type, {'attr': {'class': 'form-select' }}) }}
+                                {% if form.type.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.type) }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="form.cible">
+                                    <i class="bx bx-user"></i> Cible
+                                </label>
+                                {{ form_widget(form.cible, {'attr': {'class': 'form-control' }}) }}
+                                {% if form.cible.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.cible) }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="form.categorie">
+                                    <i class="bx bx-list-ul"></i> Catégorie
+                                </label>
+                                {{ form_widget(form.categorie, {'attr': {'class': 'form-select' }}) }}
+                                {% if form.categorie.vars.errors|length > 0 %}
+                                    <span class="text-danger">{{ form_errors(form.categorie) }}</span>
+                                {% endif %}
+                            </div>
+
+                            <button class="btn btn-primary btn-lg w-100">Créer la réclamation</button>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Pop-up Styling --><style>
+        .popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ff4444; /* Red background */
+            color: white; /* White text */
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000; /* Ensure it appears above other elements */
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            text-align: center;
+            animation: fadeIn 0.3s ease-in-out; /* Fade-in animation */
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* Fade-out animation */
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+        }
+    </style>
+
+    <!-- JavaScript for Dynamic Pop-up -->
+    <script>
+     document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+    
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent default form submission
+    
+            const formData = new FormData(form);
+    
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest', // Indicate this is an AJAX request
+                    },
+                });
+    
+                const result = await response.json();
+    
+                if (result.success) {
+                    // Redirect on success
+                    window.location.href = result.redirect;
+                } else {
+                    // Show pop-up for toxic content
+                    showPopup(result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showPopup('Une erreur s\'est produite. Veuillez réessayer.');
+            }
+        });
+    
+        function showPopup(message) {
+            // Create pop-up element
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+            popup.innerText = message;
+    
+            // Append pop-up to the body
+            document.body.appendChild(popup);
+    
+            // Remove pop-up after 3 seconds with fade-out animation
+            setTimeout(() => {
+                popup.style.animation = 'fadeOut 1s ease-in-out';
+                popup.addEventListener('animationend', () => {
+                    document.body.removeChild(popup);
+                });
+            }, 3000);
+        }
+    });
+</script>
+
+
+{% endblock %}

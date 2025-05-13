@@ -1,0 +1,274 @@
+{% extends 'stock_pharmacie/navbar.html.twig' %}
+
+{% block title %}Détails de la Réclamation{% endblock %}
+
+{% block body %}
+    <!-- Navbar -->
+                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+                    <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                        <!-- Logo -->
+                        <div class="navbar-nav align-items-center">
+                            <div class="nav-item d-flex align-items-center">
+                                <a href="{{ path('app_home') }}" class="app-brand-link">
+                                    <img src="{{ asset('img/1.png') }}" alt="Logo" style="height: 40px;">
+                                    <span class="app-brand-text demo menu-text fw-bolder ms-2">CareConnect</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Menu principal -->
+                        <ul class="navbar-nav me-auto">
+                            <!-- Rendez-vous -->
+                            
+                            <!-- Stock Pharmacie -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_test_dashboard') }}">
+                                    <i class="bx bx-capsule me-1"></i>
+                                    <span>Accueil</span>
+                                </a>
+                            </li>
+
+                            <!-- Disponibilité des lits -->
+                           
+
+                            <!-- Événements -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="bx bx-calendar-event me-1"></i>
+                                    <span>Événements</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="bx bx-list-ul me-2"></i>
+                                            Liste des événements
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="bx bx-plus-circle me-2"></i>
+                                            Ajouter un événement
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="bx bx-calendar me-2"></i>
+                                            Calendrier
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                             <!-- Réclamations -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="bx bx-message-square-dots me-1"></i>
+                                    <span>Réclamations</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ path('reclamation_index1') }}">
+                                            <i class="bx bx-list-ul me-2"></i>
+                                            Liste des réclamations
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ path('reclamation_new1') }}">
+                                            <i class="bx bx-plus-circle me-2"></i>
+                                            Nouvelle réclamation
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+
+                            <!-- Dashboard Patient -->
+                           
+
+                            
+                            <li class="nav-item">
+                             <a class="nav-link dropdown-toggle" href="{{ path('app_panier') }}">
+                       <i class="bx bx-cart me-1"></i> Panier
+                            </a>
+                            </li>
+                            
+                        </ul>
+
+                        <ul class="navbar-nav flex-row align-items-center ms-auto">
+                            <!-- Search -->
+                            <li class="nav-item navbar-search-wrapper me-2 me-xl-0">
+                                <div class="nav-item nav-search d-none d-md-block">
+                                    <i class="bx bx-search fs-4 lh-0"></i>
+                                    <input type="text" class="form-control border-0 shadow-none" placeholder="Search..." aria-label="Search..." />
+                                </div>
+                            </li>
+
+                            <!-- User -->
+                            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                                    <div class="avatar avatar-online">
+                                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="avatar avatar-online">
+                                                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <span class="fw-semibold d-block">John Doe</span>
+                                                    <small class="text-muted">Admin</small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li><div class="dropdown-divider"></div></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bx bx-user me-2"></i>Mon Profil</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bx bx-cog me-2"></i>Paramètres</a></li>
+                                    <li><div class="dropdown-divider"></div></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bx bx-power-off me-2"></i>Déconnexion</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <!-- / Navbar -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="col-xl" style="margin-left: 120px; width: 500px; margin-top: 200px;">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle"></i> Détails de la Réclamation
+                        </h5>
+                        <small class="text-body float-end">Informations détaillées</small>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <i class="fas fa-hashtag"></i> <strong>ID :</strong> {{ reclamation.id }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-file-alt"></i> <strong>Description :</strong> {{ reclamation.description }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-bullseye"></i> <strong>Cible :</strong> {{ reclamation.cible }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-tag"></i> <strong>Type :</strong> {{ reclamation.type.value }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-calendar-alt"></i> <strong>Date de Création :</strong> {{ reclamation.datecreation|date('d/m/Y H:i') }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-layer-group"></i> <strong>Catégorie :</strong> {{ reclamation.categorie.nom }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-exclamation-circle"></i> <strong>Statut :</strong>
+                                {% if reclamation.statut.value == 'en_attente' %}
+                                    <span class="badge bg-warning text-dark">🕒 {{ reclamation.statut.value }}</span>
+                                {% elseif reclamation.statut.value == 'en_cours' %}
+                                    <span class="badge bg-info text-dark">🔄 {{ reclamation.statut.value }}</span>
+                                {% elseif reclamation.statut.value == 'résolue' %}
+                                    <span class="badge bg-success">✅ {{ reclamation.statut.value }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">❌ {{ reclamation.statut.value }}</span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+    
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-tasks"></i> Détails des Traitements
+            </h5>
+            <small class="text-body float-end">Liste des traitements</small>
+        </div>
+        <div class="card-body">
+            {% if reclamation.traitementReclamations is empty %}
+                <p class="text-muted">Aucun traitement pour cette réclamation.</p>
+            {% else %}
+                <ul class="list-group">
+                    {% for traitement in reclamation.traitementReclamations %}
+                        <li class="list-group-item">
+                            <i class="fas fa-comment-dots"></i> <strong>Commentaire :</strong> {{ traitement.commentaire }}
+                            <br>
+                            <i class="fas fa-calendar-check"></i> <strong>Date de traitement :</strong> {{ traitement.dateTraitement|date('d/m/Y H:i') }}
+                            <br>
+                            <i class="fas fa-flag"></i> <strong>Statut :</strong>
+                            {% if traitement.etat.value == 'en_cours' %}
+                                <span class="badge bg-info text-dark">🔄 {{ traitement.etat.value }}</span>
+                            {% elseif traitement.etat.value == 'résolue' %}
+                                <span class="badge bg-success">✅ {{ traitement.etat.value }}</span>
+                            {% elseif traitement.etat.value == 'rejeté' %}
+                                <span class="badge bg-danger">❌ {{ traitement.etat.value }}</span>
+                            {% endif %}
+                            <br>
+                            <i class="fas fa-star"></i> <strong>Note :</strong>
+                            {% if traitement.rating %}
+                                {{ traitement.rating }}/5
+                            {% else %}
+                                <form action="{{ path('traitement_rate1', {'id': traitement.id}) }}" method="POST" class="d-inline">
+                                    <div class="rating">
+                                        <input type="radio" id="star5_{{ traitement.id }}" name="rating" value="5" />
+                                        <label for="star5_{{ traitement.id }}" title="5 stars">★</label>
+                                        <input type="radio" id="star4_{{ traitement.id }}" name="rating" value="4" />
+                                        <label for="star4_{{ traitement.id }}" title="4 stars">★</label>
+                                        <input type="radio" id="star3_{{ traitement.id }}" name="rating" value="3" />
+                                        <label for="star3_{{ traitement.id }}" title="3 stars">★</label>
+                                        <input type="radio" id="star2_{{ traitement.id }}" name="rating" value="2" />
+                                        <label for="star2_{{ traitement.id }}" title="2 stars">★</label>
+                                        <input type="radio" id="star1_{{ traitement.id }}" name="rating" value="1" />
+                                        <label for="star1_{{ traitement.id }}" title="1 star">★</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-primary">Noter</button>
+                                </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="d-flex justify-content-between align-items-center gap-2">
+            <a href="{{ path('reclamation_index1') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ path('reclamation_edit1', {'id': reclamation.id}) }}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .rating {
+        display: inline-block;
+        unicode-bidi: bidi-override;
+        direction: rtl;
+    }
+    .rating > input {
+        display: none;
+    }
+    .rating > label {
+        display: inline-block;
+        font-size: 24px;
+        color: #ddd;
+        cursor: pointer;
+    }
+    .rating > input:checked ~ label,
+    .rating > input:hover ~ label {
+        color: #ffcc00;
+    }
+    </style>
+{% endblock %}
