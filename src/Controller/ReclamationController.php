@@ -52,6 +52,31 @@ class ReclamationController extends AbstractController
             'selectedCategorie' => $categorieId
         ]);
     }
+     #[Route('/pharmacien', name: 'reclamation_index1', methods: ['GET'])]
+    public function index1(Request $request, ReclamationRepository $reclamationRepository, CategorieRepository $categorieRepository): Response
+    {
+        $utilisateur = $this->getUser(); // Récupérer l'utilisateur connecté
+    
+        if (!$utilisateur) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour voir vos réclamations.');
+        }
+    
+        $statut = $request->query->get('statut');
+        $type = $request->query->get('type');
+        $categorieId = $request->query->get('categorie');
+    
+        // Récupérer seulement les réclamations de l'utilisateur connecté
+        $reclamations = $reclamationRepository->searchReclamations($statut, $type, $categorieId, $utilisateur);
+        $categories = $categorieRepository->findAll(); // Liste des catégories
+    
+        return $this->render('reclamationpharmacien/index.html.twig', [
+            'reclamations' => $reclamations,
+            'categories' => $categories,
+            'selectedStatut' => $statut,
+            'selectedType' => $type,
+            'selectedCategorie' => $categorieId
+        ]);
+    }
     
     #[Route('/admin', name: 'reclamation_indexx', methods: ['GET'])]
 public function indexx(
@@ -92,8 +117,8 @@ public function stat(Request $request, ReclamationRepository $reclamationReposit
 {
     // Récupérer les statistiques pour les graphiques
     $totalReclamations = $reclamationRepository->countTotalReclamations();
-    $reclamationsEnAttente = $reclamationRepository->countReclamationsByStatut('en attente');
-    $reclamationsEnCours = $reclamationRepository->countReclamationsByStatut('en cours');
+    $reclamationsEnAttente = $reclamationRepository->countReclamationsByStatut('en_attente');
+    $reclamationsEnCours = $reclamationRepository->countReclamationsByStatut('en_cours');
     $reclamationsResolues = $reclamationRepository->countReclamationsByStatut('résolue');
     $reclamationsService = $reclamationRepository->countReclamationsByType('Service');
     $reclamationsSysteme = $reclamationRepository->countReclamationsByType('Système');
@@ -165,6 +190,59 @@ public function new(Request $request, EntityManagerInterface $entityManager, Rec
         'form' => $form->createView(),
     ]);
 }
+#[Route('pharmacien/new', name: 'reclamation_new1', methods: ['GET', 'POST'])]
+public function new1(Request $request, EntityManagerInterface $entityManager, ReclamationRepository $reclamationRepository): Response
+{
+    $utilisateur = $this->getUser();
+
+    // Vérifier que l'utilisateur est connecté
+    if (!$utilisateur) {
+        throw $this->createAccessDeniedException('Vous devez être connecté pour faire une réclamation.');
+    }
+
+    // Vérifier le nombre de réclamations déjà faites aujourd'hui
+    $nbReclamations = $reclamationRepository->countReclamationsToday($utilisateur);
+    if ($nbReclamations >= 3) {
+        $this->addFlash('error', 'Vous avez atteint la limite de 3 réclamations pour aujourd\'hui.');
+        return $this->redirectToRoute('reclamation_index1');
+    }
+
+    // Création de la réclamation
+    $reclamation = new Reclamation();
+    $reclamation->setStatut(ReclamationStatut::EN_ATTENTE);
+    $reclamation->setDatecreation(new \DateTime());
+    $reclamation->setUtilisateur($utilisateur);
+
+    $form = $this->createForm(ReclamationType::class, $reclamation);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Check for swear words in the description
+        $description = $reclamation->getDescription();
+        if ($this->swearWordFilter->containsSwearWords($description)) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Uh-oh! It looks like your post contains some inappropriate language. Let’s keep the conversation kind and constructive!',
+            ]);
+        }
+
+        // Save the reclamation
+        $entityManager->persist($reclamation);
+        $entityManager->flush();
+
+        // Return success response
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Réclamation créée avec succès.',
+            'redirect' => $this->generateUrl('reclamation_index1'), // URL de redirection
+        ]);
+    }
+
+    return $this->render('reclamationpharmacien/new.html.twig', [
+        'reclamation' => $reclamation,
+        'form' => $form->createView(),
+    ]);
+}
     
     #[Route('/{id}', name: 'reclamation_show', methods: ['GET'])]
     public function show(Reclamation $reclamation): Response
@@ -173,6 +251,17 @@ public function new(Request $request, EntityManagerInterface $entityManager, Rec
         $traitements = $reclamation->getTraitementReclamations();
     
         return $this->render('reclamation/show.html.twig', [
+            'reclamation' => $reclamation,
+            'traitements' => $traitements, // Passer les traitements au template
+        ]);
+    }
+    #[Route('pharmacien/{id}', name: 'reclamation_show1', methods: ['GET'])]
+    public function show1(Reclamation $reclamation): Response
+    {
+        // Récupérer les traitements associés à la réclamation
+        $traitements = $reclamation->getTraitementReclamations();
+    
+        return $this->render('reclamationpharmacien/show.html.twig', [
             'reclamation' => $reclamation,
             'traitements' => $traitements, // Passer les traitements au template
         ]);
@@ -207,6 +296,24 @@ public function new(Request $request, EntityManagerInterface $entityManager, Rec
             'button_label' => 'Mettre à jour',
         ]);
     }
+    #[Route('pharmacien/{id}/edit', name: 'reclamation_edit1', methods: ['GET', 'POST'])]
+    public function edit1(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(ReclamationType::class, $reclamation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('reclamation_index1');
+        }
+
+        return $this->render('reclamationpharmacien/edit.html.twig', [
+            'reclamation' => $reclamation,
+            'form' => $form->createView(),
+            'button_label' => 'Mettre à jour',
+        ]);
+    }
 
     #[Route('/{id}', name: 'reclamation_delete', methods: ['POST'])]
     public function delete(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
@@ -217,6 +324,16 @@ public function new(Request $request, EntityManagerInterface $entityManager, Rec
         }
 
         return $this->redirectToRoute('reclamation_index');
+    }
+     #[Route('pharmacien/{id}', name: 'reclamation_delete1', methods: ['POST'])]
+    public function delete1(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $reclamation->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($reclamation);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('reclamation_index1');
     }
     #[Route('/admin/search', name: 'reclamation_search', methods: ['GET'])]
 public function search(Request $request, ReclamationRepository $reclamationRepository): JsonResponse
@@ -275,12 +392,23 @@ public function search(Request $request, ReclamationRepository $reclamationRepos
     
         return $this->redirectToRoute('reclamation_show', ['id' => $traitement->getReclamation()->getId()]);
     }
+     #[Route('/traitement/{id}/rate', name: 'traitement_rate1', methods: ['POST'])]
+    public function rateTraitement1(TraitementReclamation $traitement, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $rating = $request->request->get('rating');
+        if ($rating !== null && is_numeric($rating)) {
+            $traitement->addRating((float)$rating); // Utilisez la méthode addRating pour mettre à jour la note
+            $entityManager->flush();
+        }
+    
+        return $this->redirectToRoute('reclamation_show1', ['id' => $traitement->getReclamation()->getId()]);
+    }
     #[Route('/stat/pdf', name: 'reclamation_stat_pdf', methods: ['GET'])]
     public function statPdf(Request $request, ReclamationRepository $reclamationRepository): Response
     {
         // Récupérer les statistiques
-        $reclamationsEnAttente = $reclamationRepository->countReclamationsByStatut('en attente');
-        $reclamationsEnCours = $reclamationRepository->countReclamationsByStatut('en cours');
+        $reclamationsEnAttente = $reclamationRepository->countReclamationsByStatut('en_attente');
+        $reclamationsEnCours = $reclamationRepository->countReclamationsByStatut('en_cours');
         $reclamationsResolues = $reclamationRepository->countReclamationsByStatut('résolue');
         $reclamationsService = $reclamationRepository->countReclamationsByType('Service');
         $reclamationsSysteme = $reclamationRepository->countReclamationsByType('Système');

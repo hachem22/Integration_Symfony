@@ -3,8 +3,8 @@
 namespace App\Enum;
 
 enum ReclamationType: string {
-    case SERVICE = 'Service';
-    case SYSTEME = 'Système';
+    case SERVICE = 'SERVICE';
+    case SYSTEME = 'SYSTEME';
 
     public function getLabel(): string
     {

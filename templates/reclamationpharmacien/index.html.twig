@@ -1,4 +1,4 @@
-{% extends 'patient/baseRendezVous.html.twig' %}
+{% extends 'stock_pharmacie/navbar.html.twig' %}
 {% block head %}
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
@@ -10,9 +10,141 @@
     <link rel="stylesheet" href="{{ asset('../assets/css/demo.css') }}" />
 {% endblock %}
 
-{% block content %}
-<!-- Navbar -->
+{% block body %}
+ <!-- Navbar -->
+                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+                    <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                        <!-- Logo -->
+                        <div class="navbar-nav align-items-center">
+                            <div class="nav-item d-flex align-items-center">
+                                <a href="{{ path('app_home') }}" class="app-brand-link">
+                                    <img src="{{ asset('img/1.png') }}" alt="Logo" style="height: 40px;">
+                                    <span class="app-brand-text demo menu-text fw-bolder ms-2">CareConnect</span>
+                                </a>
+                            </div>
+                        </div>
 
+                        <!-- Menu principal -->
+                        <ul class="navbar-nav me-auto">
+                            <!-- Rendez-vous -->
+                            
+                           <!-- Stock Pharmacie -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_test_dashboard') }}">
+                                    <i class="bx bx-capsule me-1"></i>
+                                    <span>Accueil</span>
+                                </a>
+                            </li>
+
+                            <!-- Disponibilité des lits -->
+                           
+
+                            <!-- Événements -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="bx bx-calendar-event me-1"></i>
+                                    <span>Événements</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="bx bx-list-ul me-2"></i>
+                                            Liste des événements
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="bx bx-plus-circle me-2"></i>
+                                            Ajouter un événement
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="bx bx-calendar me-2"></i>
+                                            Calendrier
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                             <!-- Réclamations -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    <i class="bx bx-message-square-dots me-1"></i>
+                                    <span>Réclamations</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ path('reclamation_index1') }}">
+                                            <i class="bx bx-list-ul me-2"></i>
+                                            Liste des réclamations
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ path('reclamation_new1') }}">
+                                            <i class="bx bx-plus-circle me-2"></i>
+                                            Nouvelle réclamation
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+
+                            <!-- Dashboard Patient -->
+                           
+
+                            
+                            <li class="nav-item">
+                             <a class="nav-link dropdown-toggle" href="{{ path('app_panier') }}">
+                       <i class="bx bx-cart me-1"></i> Panier
+                            </a>
+                            </li>
+                            
+                        </ul>
+
+                        <ul class="navbar-nav flex-row align-items-center ms-auto">
+                            <!-- Search -->
+                            <li class="nav-item navbar-search-wrapper me-2 me-xl-0">
+                                <div class="nav-item nav-search d-none d-md-block">
+                                    <i class="bx bx-search fs-4 lh-0"></i>
+                                    <input type="text" class="form-control border-0 shadow-none" placeholder="Search..." aria-label="Search..." />
+                                </div>
+                            </li>
+
+                            <!-- User -->
+                            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                                    <div class="avatar avatar-online">
+                                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="avatar avatar-online">
+                                                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <span class="fw-semibold d-block">John Doe</span>
+                                                    <small class="text-muted">Admin</small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li><div class="dropdown-divider"></div></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bx bx-user me-2"></i>Mon Profil</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bx bx-cog me-2"></i>Paramètres</a></li>
+                                    <li><div class="dropdown-divider"></div></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bx bx-power-off me-2"></i>Déconnexion</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <!-- / Navbar -->
 <div class="container-xxl flex-grow-1 container-p-y width: 2050px;margin-left: 120px; margin-top: 1000px;">
     <!-- Affichage des messages flash -->
     {% for message in app.flashes('error') %}
@@ -28,14 +160,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
-    <form method="GET" action="{{ path('reclamation_index') }}" class="mb-3">
+    <form method="GET" action="{{ path('reclamation_index1') }}" class="mb-3">
         <!-- Filtres -->
     <div class="card filter-card mb-4">
         <div class="card-header">
             <h5 class="mb-0">Filtrer les réclamations</h5>
         </div>
         <div class="card-body">
-            <form method="GET" action="{{ path('reclamation_index') }}">
+            <form method="GET" action="{{ path('reclamation_index1') }}">
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label for="statut" class="form-label">Statut</label>
@@ -74,11 +206,11 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="bx bx-search me-1"></i> Appliquer les filtres
                         </button>
-                        <a href="{{ path('reclamation_index') }}" class="btn btn-outline-secondary">
+                        <a href="{{ path('reclamation_index1') }}" class="btn btn-outline-secondary">
                             Réinitialiser
                         </a>
                     </div>
-                    <a href="{{ path('reclamation_new') }}" class="btn btn-primary">
+                    <a href="{{ path('reclamation_new1') }}" class="btn btn-primary">
                         <i class="bx bx-plus me-1"></i> Nouvelle réclamation
                     </a>
                 </div>
@@ -140,19 +272,19 @@
                                     <i class="bx bx-user me-1"></i> {{ reclamation.utilisateur.email }}
                                 </small>
                                 <div class="action-buttons">
-                                    <a href="{{ path('reclamation_show', {'id': reclamation.id}) }}" 
+                                    <a href="{{ path('reclamation_show1', {'id': reclamation.id}) }}" 
                                        class="btn btn-icon btn-primary"
                                        data-bs-toggle="tooltip"
                                        title="Voir détails">
                                         <i class="bx bx-show-alt"></i>
                                     </a>
-                                    <a href="{{ path('reclamation_edit', {'id': reclamation.id}) }}" 
+                                    <a href="{{ path('reclamation_edit1', {'id': reclamation.id}) }}" 
                                        class="btn btn-icon btn-warning"
                                        data-bs-toggle="tooltip"
                                        title="Modifier">
                                         <i class="bx bx-edit-alt"></i>
                                     </a>
-                                    <form method="post" action="{{ path('reclamation_delete', {'id': reclamation.id}) }}" class="d-inline">
+                                    <form method="post" action="{{ path('reclamation_delete1', {'id': reclamation.id}) }}" class="d-inline">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
                                         <button type="submit" 
                                                 class="btn btn-icon btn-danger"
@@ -177,7 +309,7 @@
                 </div>
                 <h4>Aucune réclamation trouvée</h4>
                 <p class="text-muted">Vous n'avez aucune réclamation correspondant à vos critères de recherche.</p>
-                <a href="{{ path('reclamation_new') }}" class="btn btn-primary mt-3">
+                <a href="{{ path('reclamation_new1') }}" class="btn btn-primary mt-3">
                     <i class="bx bx-plus me-1"></i> Créer une réclamation
                 </a>
             </div>

@@ -2,17 +2,17 @@
 namespace App\Enum;
 
 enum ReclamationStatut: string {
-    case EN_ATTENTE = 'en attente';
-    case EN_COURS = 'en cours';
+    case EN_ATTENTE = 'en_attente';
+    case EN_COURS = 'en_cours';
     case RESOLUE = 'résolue';
-    case REJETE = 'rejeté';
+    case REJETE = 'Rejeté';
     public static function fromString(string $value): self
     {
         return match (strtolower($value)) {
-            'en attente' => self::EN_ATTENTE,
-            'en cours' => self::EN_COURS,
+            'en_attente' => self::EN_ATTENTE,
+            'en_cours' => self::EN_COURS,
             'résolue' => self::RESOLUE,
-            'rejeté' => self::REJETE,
+            'Rejeté' => self::REJETE,
             default => throw new \InvalidArgumentException("Statut invalide : $value"),
         };
     }

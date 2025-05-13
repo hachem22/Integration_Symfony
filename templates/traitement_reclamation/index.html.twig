@@ -48,7 +48,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            
                             <th>Commentaire</th>
                             <th>État</th>
                             <th>Date</th>
@@ -58,7 +58,7 @@
                     <tbody class="table-border-bottom-0">
                         {% for traitement in traitements %}
                             <tr>
-                                <td>{{ traitement.id }}</td>
+                                
                                 <td title="{{ traitement.commentaire}}">
                                     {{ traitement.commentaire|slice(0, 50) ~ (traitement.commentaire|length > 50 ? '...' : '') }}
                                 </td>

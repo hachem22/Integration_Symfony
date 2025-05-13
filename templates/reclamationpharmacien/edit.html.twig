@@ -1,45 +1,9 @@
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/boxicons.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/css/core.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/css/theme-default.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .layout-page {
-            background-image: url('{{ asset('img/medical-background.jpg') }}');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 100vh;
-        }
+{% extends 'stock_pharmacie/navbar.html.twig' %}
 
-        .layout-navbar {
-            background: rgba(255, 255, 255, 0.9) !important;
-            backdrop-filter: blur(10px);
-        }
-
-        .content-wrapper {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            margin: 20px;
-            padding: 20px;
-        }
-    </style>
-{% endblock %}
-
-{% block javascripts %}
-    <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
-    <script src="{{ asset('assets/js/config.js') }}"></script>
-{% endblock %}
+{% block title %}Modifier une Réclamation{% endblock %}
 
 {% block body %}
-    <div class="layout-wrapper layout-content-navbar">
-        <div class="layout-container">
-            <!-- Layout container -->
-            <div class="layout-page">
-                <!-- Navbar -->
+   <!-- Navbar -->
                 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <!-- Logo -->
@@ -56,7 +20,7 @@
                         <ul class="navbar-nav me-auto">
                             <!-- Rendez-vous -->
                             
-                            <!-- Stock Pharmacie -->
+                           <!-- Stock Pharmacie -->
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('app_test_dashboard') }}">
                                     <i class="bx bx-capsule me-1"></i>
@@ -173,22 +137,79 @@
                     </div>
                 </nav>
                 <!-- / Navbar -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="col-xl" style="margin-left: 120px; width: 500px; margin-top: 200px;">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-edit"></i> Modifier la Réclamation
+                        </h5>
+                        <small class="text-body float-end">Mettez à jour les informations</small>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
 
-                <!-- Content wrapper -->
-                <div class="content-wrapper">
-                    {% block content %}{% endblock %}
+                        <!-- 📌 CHAMP DESCRIPTION -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bx bx-message-square-detail"></i> Description
+                            </label>
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                            {% if form.description.vars.errors|length > 0 %}
+                                <span class="text-danger">{{ form_errors(form.description) }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- 📌 CHAMP TYPE -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bx bx-category"></i> Type de Réclamation
+                            </label>
+                            {{ form_widget(form.type, {'attr': {'class': 'form-select'}}) }}
+                            {% if form.type.vars.errors|length > 0 %}
+                                <span class="text-danger">{{ form_errors(form.type) }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- 📌 CHAMP CIBLE -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bx bx-user"></i> Cible
+                            </label>
+                            {{ form_widget(form.cible, {'attr': {'class': 'form-control'}}) }}
+                            {% if form.cible.vars.errors|length > 0 %}
+                                <span class="text-danger">{{ form_errors(form.cible) }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- 📌 CHAMP CATÉGORIE -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bx bx-list-check"></i> Catégorie
+                            </label>
+                            {{ form_widget(form.categorie, {'attr': {'class': 'form-select'}}) }}
+                            {% if form.categorie.vars.errors|length > 0 %}
+                                <span class="text-danger">{{ form_errors(form.categorie) }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- 📌 BOUTONS -->
+                        <div class="card-footer d-flex justify-content-between align-items-center gap-2">
+                            <a href="{{ path('reclamation_index1') }}" class="btn btn-secondary d-flex align-items-center gap-2">
+                                <i class="fas fa-arrow-left"></i> Retour
+                            </a>
+                            <button type="submit" class="btn btn-primary d-flex align-items-center gap-2">
+                                <i class="fas fa-save"></i> Mettre à jour
+                            </button>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
                 </div>
-                <!-- Content wrapper -->
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block scripts %}
-    <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
-    <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
-    <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
-    <script src="{{ asset('assets/js/main.js') }}"></script>
+</div>
 {% endblock %}

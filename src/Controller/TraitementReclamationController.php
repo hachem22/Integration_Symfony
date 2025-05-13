@@ -16,11 +16,14 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\GeminiService;
+use libphonenumber\PhoneNumberUtil;
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\NumberParseException;
 
 
 use Twilio\Rest\Client;
-use libphonenumber\PhoneNumberUtil;
-use libphonenumber\PhoneNumberFormat;
+
+
 #[Route('/traitement')]
 class TraitementReclamationController extends AbstractController
 {
@@ -52,7 +55,7 @@ class TraitementReclamationController extends AbstractController
         $traitement = new TraitementReclamation();
         $traitement->setReclamation($reclamation);
         $traitement->setDateTraitement(new \DateTime());
-        $traitement->setEtat(ReclamationStatut::fromString('En cours'));
+        $traitement->setEtat(ReclamationStatut::fromString('EN_COURS'));
 
         $form = $this->createForm(TraitementReclamationType::class, $traitement);
         $form->handleRequest($request);
@@ -100,33 +103,31 @@ class TraitementReclamationController extends AbstractController
             $mailer->send($email);
 
             // Envoyer un SMS à l'utilisateur
-            $phoneUtil = PhoneNumberUtil::getInstance();
-            try {
-                $numberProto = $phoneUtil->parse($reclamation->getUtilisateur()->getTel(), "TN"); // "TN" pour la Tunisie
-                $userPhoneNumber = $phoneUtil->format($numberProto, PhoneNumberFormat::E164);
+           $phoneUtil = PhoneNumberUtil::getInstance();
 
-                $smsContent = sprintf(
-                    "Bonjour %s,\n\n" .
-                    "Votre réclamation a été traitée. Statut : %s.\n\n" .
-                    "Cordialement,\n" .
-                    "L'équipe de support",
-                    $userName,
-                    $traitement->getEtat()->value
-                );
+try {
+    $numberProto = $phoneUtil->parse($reclamation->getUtilisateur()->getTel(), "TN"); // "TN" = Tunisie
+    $userPhoneNumber = $phoneUtil->format($numberProto, PhoneNumberFormat::E164);
 
-                $twilio->messages->create(
-                    $userPhoneNumber, // Numéro de téléphone de l'utilisateur (format E.164)
-                    [
-                        'from' => $_ENV['TWILIO_PHONE_NUMBER'], // Votre numéro Twilio (format E.164)
-                        'body' => $smsContent
-                    ]
-                );
-                $this->addFlash('success', 'SMS envoyé avec succès.');
-            } catch (NumberParseException $e) {
-                $this->addFlash('danger', 'Numéro de téléphone invalide.');
-            } catch (\Twilio\Exceptions\RestException $e) {
-                $this->addFlash('danger', 'Erreur lors de l\'envoi du SMS : ' . $e->getMessage());
-            }
+    $smsContent = sprintf(
+        "Bonjour %s,\n\nVotre réclamation a été traitée. Statut : %s.\n\nCordialement,\nL'équipe de support",
+        $userName,
+        $traitement->getEtat()->value
+    );
+
+    $twilio->messages->create(
+        $userPhoneNumber,
+        [
+            'from' => $_ENV['TWILIO_PHONE_NUMBER'],
+            'body' => $smsContent
+        ]
+    );
+    $this->addFlash('success', 'SMS envoyé avec succès.');
+} catch (NumberParseException $e) {
+    $this->addFlash('danger', 'Numéro de téléphone invalide.');
+} catch (\Twilio\Exceptions\RestException $e) {
+    $this->addFlash('danger', 'Erreur lors de l\'envoi du SMS : ' . $e->getMessage());
+}
 
             $this->addFlash('success', 'Traitement ajouté avec succès.');
             return $this->redirectToRoute('app_traitement_index');

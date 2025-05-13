@@ -1,45 +1,9 @@
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/boxicons.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/css/core.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/css/theme-default.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .layout-page {
-            background-image: url('{{ asset('img/medical-background.jpg') }}');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 100vh;
-        }
+{% extends 'stock_pharmacie/navbar.html.twig' %}
 
-        .layout-navbar {
-            background: rgba(255, 255, 255, 0.9) !important;
-            backdrop-filter: blur(10px);
-        }
-
-        .content-wrapper {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            margin: 20px;
-            padding: 20px;
-        }
-    </style>
-{% endblock %}
-
-{% block javascripts %}
-    <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
-    <script src="{{ asset('assets/js/config.js') }}"></script>
-{% endblock %}
+{% block title %}Détails de la Réclamation{% endblock %}
 
 {% block body %}
-    <div class="layout-wrapper layout-content-navbar">
-        <div class="layout-container">
-            <!-- Layout container -->
-            <div class="layout-page">
-                <!-- Navbar -->
+    <!-- Navbar -->
                 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <!-- Logo -->
@@ -173,22 +137,138 @@
                     </div>
                 </nav>
                 <!-- / Navbar -->
-
-                <!-- Content wrapper -->
-                <div class="content-wrapper">
-                    {% block content %}{% endblock %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="col-xl" style="margin-left: 120px; width: 500px; margin-top: 200px;">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle"></i> Détails de la Réclamation
+                        </h5>
+                        <small class="text-body float-end">Informations détaillées</small>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <i class="fas fa-hashtag"></i> <strong>ID :</strong> {{ reclamation.id }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-file-alt"></i> <strong>Description :</strong> {{ reclamation.description }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-bullseye"></i> <strong>Cible :</strong> {{ reclamation.cible }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-tag"></i> <strong>Type :</strong> {{ reclamation.type.value }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-calendar-alt"></i> <strong>Date de Création :</strong> {{ reclamation.datecreation|date('d/m/Y H:i') }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-layer-group"></i> <strong>Catégorie :</strong> {{ reclamation.categorie.nom }}
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-exclamation-circle"></i> <strong>Statut :</strong>
+                                {% if reclamation.statut.value == 'en_attente' %}
+                                    <span class="badge bg-warning text-dark">🕒 {{ reclamation.statut.value }}</span>
+                                {% elseif reclamation.statut.value == 'en_cours' %}
+                                    <span class="badge bg-info text-dark">🔄 {{ reclamation.statut.value }}</span>
+                                {% elseif reclamation.statut.value == 'résolue' %}
+                                    <span class="badge bg-success">✅ {{ reclamation.statut.value }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">❌ {{ reclamation.statut.value }}</span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <!-- Content wrapper -->
+                
+                <div class="card mb-4">
+    
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-tasks"></i> Détails des Traitements
+            </h5>
+            <small class="text-body float-end">Liste des traitements</small>
+        </div>
+        <div class="card-body">
+            {% if reclamation.traitementReclamations is empty %}
+                <p class="text-muted">Aucun traitement pour cette réclamation.</p>
+            {% else %}
+                <ul class="list-group">
+                    {% for traitement in reclamation.traitementReclamations %}
+                        <li class="list-group-item">
+                            <i class="fas fa-comment-dots"></i> <strong>Commentaire :</strong> {{ traitement.commentaire }}
+                            <br>
+                            <i class="fas fa-calendar-check"></i> <strong>Date de traitement :</strong> {{ traitement.dateTraitement|date('d/m/Y H:i') }}
+                            <br>
+                            <i class="fas fa-flag"></i> <strong>Statut :</strong>
+                            {% if traitement.etat.value == 'en_cours' %}
+                                <span class="badge bg-info text-dark">🔄 {{ traitement.etat.value }}</span>
+                            {% elseif traitement.etat.value == 'résolue' %}
+                                <span class="badge bg-success">✅ {{ traitement.etat.value }}</span>
+                            {% elseif traitement.etat.value == 'rejeté' %}
+                                <span class="badge bg-danger">❌ {{ traitement.etat.value }}</span>
+                            {% endif %}
+                            <br>
+                            <i class="fas fa-star"></i> <strong>Note :</strong>
+                            {% if traitement.rating %}
+                                {{ traitement.rating }}/5
+                            {% else %}
+                                <form action="{{ path('traitement_rate1', {'id': traitement.id}) }}" method="POST" class="d-inline">
+                                    <div class="rating">
+                                        <input type="radio" id="star5_{{ traitement.id }}" name="rating" value="5" />
+                                        <label for="star5_{{ traitement.id }}" title="5 stars">★</label>
+                                        <input type="radio" id="star4_{{ traitement.id }}" name="rating" value="4" />
+                                        <label for="star4_{{ traitement.id }}" title="4 stars">★</label>
+                                        <input type="radio" id="star3_{{ traitement.id }}" name="rating" value="3" />
+                                        <label for="star3_{{ traitement.id }}" title="3 stars">★</label>
+                                        <input type="radio" id="star2_{{ traitement.id }}" name="rating" value="2" />
+                                        <label for="star2_{{ traitement.id }}" title="2 stars">★</label>
+                                        <input type="radio" id="star1_{{ traitement.id }}" name="rating" value="1" />
+                                        <label for="star1_{{ traitement.id }}" title="1 star">★</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-primary">Noter</button>
+                                </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="d-flex justify-content-between align-items-center gap-2">
+            <a href="{{ path('reclamation_index1') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ path('reclamation_edit1', {'id': reclamation.id}) }}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+                
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block scripts %}
-    <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
-    <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
-    <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
-    <script src="{{ asset('assets/js/main.js') }}"></script>
+</div>
+<style>
+    .rating {
+        display: inline-block;
+        unicode-bidi: bidi-override;
+        direction: rtl;
+    }
+    .rating > input {
+        display: none;
+    }
+    .rating > label {
+        display: inline-block;
+        font-size: 24px;
+        color: #ddd;
+        cursor: pointer;
+    }
+    .rating > input:checked ~ label,
+    .rating > input:hover ~ label {
+        color: #ffcc00;
+    }
+    </style>
 {% endblock %}

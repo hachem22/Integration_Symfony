@@ -1,0 +1,75 @@
+{{ form_errors(form) }} 
+
+{{ form_start(form) }}
+
+
+<div class="mb-3">
+    <label class="form-label" for="{{ form.description.vars.id }}">
+        <i class="bx bx-text"></i> Description
+    </label>
+    {{ form_widget(form.description, {
+        'attr': {
+            'class': 'form-control' ~ (form.description.vars.errors|length > 0 ? ' is-invalid' : ''),
+            'placeholder': 'Décrivez votre réclamation...'
+        }
+    }) }}
+    {% for error in form.description.vars.errors %}
+        <div class="invalid-feedback">
+            {{ error.message }}
+        </div>
+    {% endfor %}
+</div>
+<div class="mb-3">
+    <label class="form-label" for="{{ form.cible.vars.id }}">
+        <i class="bx bx-user"></i> Cible
+    </label>
+    {{ form_widget(form.cible, {
+        'attr': {
+            'class': 'form-control' ~ (form.cible.vars.errors|length > 0 ? ' is-invalid' : ''),
+            'placeholder': 'À qui est adressée cette réclamation ?'
+        }
+    }) }}
+    {% for error in form.cible.vars.errors %}
+        <div class="invalid-feedback">
+            {{ error.message }}
+        </div>
+    {% endfor %}
+</div>
+
+<div class="mb-3">
+    <label class="form-label" for="{{ form.type.vars.id }}">
+        <i class="bx bx-category"></i> Type
+    </label>
+    {{ form_widget(form.type, {
+        'attr': {
+            'class': 'form-select' ~ (form.type.vars.errors|length > 0 ? ' is-invalid' : '')
+        }
+    }) }}
+    {% for error in form.type.vars.errors %}
+        <div class="invalid-feedback">
+            {{ error.message }}
+        </div>
+    {% endfor %}
+</div>
+
+<div class="mb-3">
+    <label class="form-label" for="{{ form.categorie.vars.id }}">
+        <i class="bx bx-category-alt"></i> Catégorie
+    </label>
+    {{ form_widget(form.categorie, {
+        'attr': {
+            'class': 'form-select' ~ (form.categorie.vars.errors|length > 0 ? ' is-invalid' : '')
+        }
+    }) }}
+    {% for error in form.categorie.vars.errors %}
+        <div class="invalid-feedback">
+            {{ error.message }}
+        </div>
+    {% endfor %}
+</div>
+
+<button type="submit" class="btn btn-success">
+    <i class="bx bx-save"></i> Sauvegarder
+</button>
+
+{{ form_end(form) }}

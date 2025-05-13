@@ -37,9 +37,9 @@
                             </li>
                             <li class="list-group-item">
                                 <i class="fas fa-exclamation-circle"></i> <strong>Statut :</strong>
-                                {% if reclamation.statut.value == 'en attente' %}
+                                {% if reclamation.statut.value == 'en_attente' %}
                                     <span class="badge bg-warning text-dark">🕒 {{ reclamation.statut.value }}</span>
-                                {% elseif reclamation.statut.value == 'en cours' %}
+                                {% elseif reclamation.statut.value == 'en_cours' %}
                                     <span class="badge bg-info text-dark">🔄 {{ reclamation.statut.value }}</span>
                                 {% elseif reclamation.statut.value == 'résolue' %}
                                     <span class="badge bg-success">✅ {{ reclamation.statut.value }}</span>

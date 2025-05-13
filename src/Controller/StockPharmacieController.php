@@ -17,6 +17,7 @@ use App\Entity\Commande;
 use App\Form\CommandeType;
 use App\Repository\EvenementRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Repository\ReclamationRepository;
 
 #[Route('/stock/pharmacie')]
 class StockPharmacieController extends AbstractController
@@ -216,68 +217,78 @@ class StockPharmacieController extends AbstractController
         ]);
     }
 
-    #[Route('/dashboard-test', name: 'app_test_dashboard')]
-    public function testDashboard(EvenementRepository $evenementRepository, StockPharmacieRepository $stockPharmacieRepository): Response
-    {
-        $stock_pharmacies = $stockPharmacieRepository->findAll();
-        $evenements = $evenementRepository->findAll();
-        
-        // Calculer les statistiques de stock
-        $stock_total = count($stock_pharmacies);
-        $stock_disponible = 0;
-        $stock_rupture = 0;
-        $stock_alerte = 0;  // Nouveau compteur pour les produits en alerte
-        
-        foreach ($stock_pharmacies as $stock) {
-            if ($stock->getStatu()) {
-                $stock_disponible++;
-                // Vérifier si le stock est en alerte (< 10)
-                if ($stock->getQuantite() < 10) {
-                    $stock_alerte++;
-                }
-            } else {
-                $stock_rupture++;
+   #[Route('/dashboard-test', name: 'app_test_dashboard')]
+public function testDashboard(
+    EvenementRepository $evenementRepository,
+    StockPharmacieRepository $stockPharmacieRepository,
+    ReclamationRepository $reclamationRepository
+): Response {
+    $stock_pharmacies = $stockPharmacieRepository->findAll();
+    $evenements = $evenementRepository->findAll();
+    
+    $stock_total = count($stock_pharmacies);
+    $stock_disponible = 0;
+    $stock_rupture = 0;
+    $stock_alerte = 0;
+
+    foreach ($stock_pharmacies as $stock) {
+        if ($stock->getStatu()) {
+            $stock_disponible++;
+            if ($stock->getQuantite() < 10) {
+                $stock_alerte++;
             }
+        } else {
+            $stock_rupture++;
         }
-
-        // Récupérer les commandes avec livraison proche (dans l'heure)
-        $now = new \DateTime();
-        $oneHourLater = (new \DateTime())->modify('+1 hour');
-
-        $prochainesLivraisons = $this->entityManager->getRepository(Commande::class)->createQueryBuilder('c')
-            ->where('c.dateLivraison BETWEEN :now AND :oneHourLater')
-            ->andWhere('c.statut = :statut')
-            ->setParameter('now', $now)
-            ->setParameter('oneHourLater', $oneHourLater)
-            ->setParameter('statut', 'En attente')
-            ->getQuery()
-            ->getResult();
-
-        $notifications = [];
-        foreach ($prochainesLivraisons as $livraison) {
-            $notifications[] = [
-                'type' => 'livraison',
-                'message' => sprintf(
-                    'Livraison prévue pour la commande #%d (%s) dans moins d\'une heure',
-                    $livraison->getId(),
-                    $livraison->getStockPharmacie()->getNom()
-                ),
-                'date' => $livraison->getDateLivraison(),
-                'id' => $livraison->getId()
-            ];
-        }
-
-        return $this->render('pharmacien/dashboard.html.twig', [
-            'stock_pharmacies' => $stock_pharmacies,
-            'evenements' => $evenements,
-            'stock_total' => $stock_total,
-            'stock_disponible' => $stock_disponible,
-            'stock_rupture' => $stock_rupture,
-            'stock_alerte' => $stock_alerte,  // Nouvelle variable
-            'notifications' => $notifications
-        ]);
     }
-   
+
+    $now = new \DateTime();
+    $oneHourLater = (new \DateTime())->modify('+1 hour');
+
+    $prochainesLivraisons = $this->entityManager->getRepository(Commande::class)->createQueryBuilder('c')
+        ->where('c.dateLivraison BETWEEN :now AND :oneHourLater')
+        ->andWhere('c.statut = :statut')
+        ->setParameter('now', $now)
+        ->setParameter('oneHourLater', $oneHourLater)
+        ->setParameter('statut', 'En attente')
+        ->getQuery()
+        ->getResult();
+
+    $notifications = [];
+    foreach ($prochainesLivraisons as $livraison) {
+        $notifications[] = [
+            'type' => 'livraison',
+            'message' => sprintf(
+                'Livraison prévue pour la commande #%d (%s) dans moins d\'une heure',
+                $livraison->getId(),
+                $livraison->getStockPharmacie()->getNom()
+            ),
+            'date' => $livraison->getDateLivraison(),
+            'id' => $livraison->getId()
+        ];
+    }
+
+    // ✅ Récupérer l'utilisateur connecté
+    $user = $this->getUser();
+
+    // ✅ Filtrer les réclamations en attente de cet utilisateur uniquement
+    $reclamations_en_attente = $reclamationRepository->count([
+        'statut' => 'EN_ATTENTE',
+        'utilisateur' => $user
+    ]);
+
+    return $this->render('pharmacien/dashboard.html.twig', [
+        'stock_pharmacies' => $stock_pharmacies,
+        'evenements' => $evenements,
+        'stock_total' => $stock_total,
+        'stock_disponible' => $stock_disponible,
+        'stock_rupture' => $stock_rupture,
+        'stock_alerte' => $stock_alerte,
+        'notifications' => $notifications,
+        'reclamations_en_attente' => $reclamations_en_attente,
+    ]);
+}
+
 
 
     #[Route('/stock/alert/pdf', name: 'app_stock_alert_pdf')]
